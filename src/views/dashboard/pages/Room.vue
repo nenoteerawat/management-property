@@ -57,8 +57,11 @@
                   cols="12"
                   md="6"
                 >
-                <!-- <dropdown :options="arrayOfObjects" :selected="object" v-on:updateOption="methodToRunOnSelect"></dropdown> -->
-
+               <v-select
+                  :items="unitStatus"
+                  label="Standard"
+                  placeholder="Select Unit Status"
+                ></v-select>
                 </v-col>
 
                 <v-col
@@ -198,6 +201,9 @@
 
 <script>
   export default {
-   
+    data: () => ({
+      dropdown_font: ['Arial', 'Calibri', 'Courier', 'Verdana'],
+      unitStatus : ['Broken', 'Old', 'Good', 'Perfect'],
+    })
   }
 </script>
