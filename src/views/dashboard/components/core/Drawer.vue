@@ -113,6 +113,11 @@
         },
         {
           icon: 'mdi-account',
+          title: 'Room',
+          to: '/pages/room',
+        },
+        {
+          icon: 'mdi-account',
           title: 'user',
           to: '/pages/user',
         },

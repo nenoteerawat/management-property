@@ -69,7 +69,7 @@
       origin="top right"
       transition="scale-transition"
     >
-      <template v-slot:activator="{ attrs, on }">
+      <!-- <template v-slot:activator="{ attrs, on }">
         <v-btn
           class="ml-2"
           min-width="0"
@@ -88,6 +88,17 @@
 
             <v-icon>mdi-bell</v-icon>
           </v-badge>
+        </v-btn>
+      </template> -->
+      <template v-slot:activator="{ attrs, on }">
+        <v-btn
+          class="ml-2"
+          min-width="0"
+          text
+          v-bind="attrs"
+          v-on="on"
+        >
+            <v-icon>mdi-bell</v-icon>
         </v-btn>
       </template>
 
@@ -160,15 +171,15 @@
       },
     },
 
-    data: () => ({
-      notifications: [
-        'Mike John Responded to your email',
-        'You have 5 new tasks',
-        'You\'re now friends with Andrew',
-        'Another Notification',
-        'Another one',
-      ],
-    }),
+    // data: () => ({
+    //   notifications: [
+    //     'Mike John Responded to your email',
+    //     'You have 5 new tasks',
+    //     'You\'re now friends with Andrew',
+    //     'Another Notification',
+    //     'Another one',
+    //   ],
+    // }),
 
     computed: {
       ...mapState(['drawer']),

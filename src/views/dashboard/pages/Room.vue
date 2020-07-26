@@ -1,6 +1,6 @@
 <template>
   <v-container
-    id="user-profile"
+    id="room"
     fluid
     tag="section"
   >
@@ -12,11 +12,7 @@
         <base-material-card>
           <template v-slot:heading>
             <div class="display-2 font-weight-light">
-              Edit Profile test
-            </div>
-
-            <div class="subtitle-1 font-weight-light">
-              Complete your profile
+              Room
             </div>
           </template>
 
@@ -25,22 +21,44 @@
               <v-row>
                 <v-col
                   cols="12"
-                  md="4"
+                  md="12"
                 >
-                  <v-text-field
-                    label="Company (disabled)"
-                    disabled
-                  />
+                <v-radio-group v-model="row" row>
+                  <v-radio label="Chill" color="cyan accent-3" value="01"></v-radio>
+                  <v-radio label="Alert" color="orange lighten-1" value="02"></v-radio>
+                  <v-radio label="Critical" color="red lighten-2" value="03"></v-radio>
+                </v-radio-group>
                 </v-col>
-
                 <v-col
                   cols="12"
-                  md="4"
+                  md="6"
                 >
                   <v-text-field
-                    class="purple-input"
-                    label="User Name"
+                    label="Listing Code"
                   />
+                </v-col>
+                <v-col
+                  cols="12"
+                  md="6"
+                >
+                  <v-text-field
+                    label="Owner Name"
+                  />
+                </v-col>
+                <v-col
+                  cols="12"
+                  md="6"
+                >
+                  <v-text-field
+                    label="Project"
+                  />
+                </v-col>
+                <v-col
+                  cols="12"
+                  md="6"
+                >
+                <!-- <dropdown :options="arrayOfObjects" :selected="object" v-on:updateOption="methodToRunOnSelect"></dropdown> -->
+
                 </v-col>
 
                 <v-col
@@ -142,8 +160,15 @@
       >
         <base-material-card
           class="v-card-profile"
-          avatar="https://demos.creative-tim.com/vue-material-dashboard/img/marc.aba54d65.jpg"
+          
+          
         >
+        <template v-slot:heading>
+            <div class="display-2 font-weight-light">
+              Daily Plan
+            </div>
+          </template>
+
           <v-card-text class="text-center">
             <h6 class="display-1 mb-1 grey--text">
               CEO / CO-FOUNDER
@@ -173,6 +198,6 @@
 
 <script>
   export default {
-    //
+   
   }
 </script>
