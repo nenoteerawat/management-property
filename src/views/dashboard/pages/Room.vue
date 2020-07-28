@@ -126,6 +126,34 @@
                     class="purple-input"
                   />
                 </v-col>
+                <v-col
+                  cols="12"
+                  md="4"
+                >
+                  <v-text-field
+                    label="Line"
+                    class="purple-input"
+                  />
+                </v-col>
+                <v-col
+                  cols="12"
+                  md="4"
+                >
+                  <v-text-field
+                    label="Phone"
+                    class="purple-input"
+                  />
+                </v-col>
+                <v-col
+                  cols="12"
+                  md="2"
+                >
+                <v-switch v-model="dense" label="Exclusive">
+
+                </v-switch>
+                  
+                </v-col>
+              
 
                 <!-- <v-col
                   cols="12"
