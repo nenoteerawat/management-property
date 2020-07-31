@@ -13,7 +13,7 @@
                 <v-form
                   v-model="valid"
                   id="login-form"
-                  @submit.prevent="handleSubmit()"
+                  @submit.prevent="handleSubmit"
                 >
                   <v-text-field
                     label="Login"
