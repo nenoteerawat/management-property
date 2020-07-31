@@ -10,7 +10,11 @@
                 <v-spacer></v-spacer>
               </v-toolbar>
               <v-card-text>
-                <v-form v-model="valid">
+                <v-form
+                  v-model="valid"
+                  id="login-form"
+                  @submit.prevent="handleSubmit()"
+                >
                   <v-text-field
                     label="Login"
                     name="login"
@@ -35,7 +39,13 @@
               </v-card-text>
               <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn color="primary" :disabled="!valid" @click="handleSubmit">Login</v-btn>
+                <v-btn
+                  color="primary"
+                  :disabled="!valid"
+                  type="submit"
+                  form="login-form"
+                  >Login</v-btn
+                >
               </v-card-actions>
             </v-card>
           </v-col>
@@ -52,13 +62,9 @@ export default {
   data: () => ({
     valid: false,
     username: "",
-    usernameRules: [
-      v => !!v || 'Username is required'
-    ],
+    usernameRules: [v => !!v || "Username is required"],
     password: "",
-    passwordRules: [
-      v => !!v || 'Password is required'
-    ],
+    passwordRules: [v => !!v || "Password is required"],
     submitted: false
   }),
   computed: {
