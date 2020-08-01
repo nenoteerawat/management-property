@@ -24,6 +24,11 @@ export default new Router({
           component: () => import('@/views/dashboard/pages/UserProfile'),
         },
         {
+          name: 'Room List',
+          path: 'pages/roomlist',
+          component: () => import('@/views/dashboard/pages/RoomList'),
+        },
+        {
           name: 'Room',
           path: 'pages/room',
           component: () => import('@/views/dashboard/pages/Room'),

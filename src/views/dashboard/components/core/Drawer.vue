@@ -112,6 +112,11 @@
           to: '/',
         },
         {
+          icon: 'mdi-animation',
+          title: 'Room List',
+          to: '/pages/roomlist',
+        },
+        {
           icon: 'mdi-account',
           title: 'Room',
           to: '/pages/room',

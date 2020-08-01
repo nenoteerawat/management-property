@@ -6,7 +6,9 @@
 
     <dashboard-core-view />
 
-    <dashboard-core-settings />
+    <!-- <dashboard-core-settings /> -->
+
+    <dashboard-core-daily-plan />
   </v-app>
 </template>
 
@@ -17,8 +19,9 @@
     components: {
       DashboardCoreAppBar: () => import('./components/core/AppBar'),
       DashboardCoreDrawer: () => import('./components/core/Drawer'),
-      DashboardCoreSettings: () => import('./components/core/Settings'),
+      // DashboardCoreSettings: () => import('./components/core/Settings'),
       DashboardCoreView: () => import('./components/core/View'),
+      DashboardCoreDailyPlan: () => import('./components/core/DailyPlan'),
     },
 
     data: () => ({
