@@ -114,12 +114,12 @@
         {
           icon: 'mdi-animation',
           title: 'Room List',
-          to: '/pages/roomlist',
+          to: '/pages/room',
         },
         {
-          icon: 'mdi-account',
-          title: 'Room',
-          to: '/pages/room',
+          icon: 'mdi-animation',
+          title: 'Daily Plan',
+          to: '/pages/dailyPlan',
         },
         {
           icon: 'mdi-account',

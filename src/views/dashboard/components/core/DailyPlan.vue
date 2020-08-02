@@ -1,96 +1,112 @@
 <template>
-  <div id="settings-wrapper">
-    <v-card
-      id="settings"
-      class="py-2 px-4"
-      color="rgba(0, 0, 0, .3)"
-      dark
-      flat
-      link
-      min-width="100"
-      style="position: fixed; top: 115px; right: -15px; border-radius: 8px;"
-    >
-          <strong class="d-inline-block" color="red">Daily Plan</strong>
-    </v-card>
+  <v-row justify="center">
+      <v-card>
+        <v-toolbar color="green" dark>
 
-    <v-menu
-      v-model="menu"
-      :close-on-content-click="false"
-      activator="#settings"
-      bottom
-      content-class="v-settings"
-      left
-      nudge-left="8"
-      offset-x
-      origin="top right"
-      transition="scale-transition"
-    >
-      <v-card class="text-center mb-0" width="400">
-        <v-card-text>
-          <strong class="mb-3 d-inline-block">DAILY PLAN</strong>
-        </v-card-text>
-          <v-data-table :headers="headers" :items="dailyPlanList" hide-default-footer>
-            <template v-slot:item.action="{ item }">
-              <v-icon small class="mr-2" color="blue" @click="edit(item)">{{ icons.mdiPencil }}</v-icon>
-              <v-icon small color="red" @click="delete(item.id)">{{ icons.mdiDelete }}</v-icon>
-            </template>
-            <!-- <v-data-table :headers="headers" :items="desserts" :search="search"> -->
-          </v-data-table>
-          <!-- model Daily plan create  -->
-          <v-row justify="center">
-            <v-dialog v-model="dialog" persistent max-width="290">
-              <template v-slot:activator="{ on, attrs }">
-                <div class="my-2">
-                <v-btn color="primary" dark v-bind="attrs" v-on="on">Open Dialog</v-btn>
-                </div>
-              </template>
-              <v-card>
-                <v-card-title class="headline">Use Google's location service?</v-card-title>
-                <v-card-text>Let Google help apps determine location. This means sending anonymous location data to Google, even when no apps are running.</v-card-text>
-                <v-card-actions>
-                  <v-spacer></v-spacer>
-                  <v-btn color="green darken-1" text @click="dialog = false">Disagree</v-btn>
-                  <v-btn color="green darken-1" text @click="dialog = false">Agree</v-btn>
-                </v-card-actions>
-              </v-card>
-            </v-dialog>
-          </v-row>
+          <v-toolbar-title>Daily Plan</v-toolbar-title>
+
+          <v-spacer></v-spacer>
+
+          <v-btn to="/pages/dailyPlan" icon>
+            <v-icon>{{ icons.mdiPlus }}</v-icon>
+          </v-btn>
+        </v-toolbar>
+
+        <v-list two-line>
+          <template v-for="(item, index) in items">
+            <v-subheader v-if="item.header" :key="item.header" inset>{{ item.header }}</v-subheader>
+
+            <v-divider v-else-if="item.divider" :key="index" inset></v-divider>
+
+            <v-list-item v-else :key="item.title" ripple @click="edit(item)">
+              <v-list-item-avatar>
+                <img :src="item.avatar" />
+              </v-list-item-avatar>
+              <v-list-item-content>
+                <v-list-item-title v-html="item.title"></v-list-item-title>
+                <v-list-item-subtitle v-html="item.subtitle"></v-list-item-subtitle>
+              </v-list-item-content>
+            </v-list-item>
+          </template>
+        </v-list>
       </v-card>
-    </v-menu>
-  </div>
+  </v-row>
+  <!-- model Daily plan create  -->
 </template>
 
 <script>
-import { mdiAccount, mdiPencil, mdiShareVariant, mdiDelete } from "@mdi/js";
+import {
+ mdiPlus
+} from "@mdi/js";
 
 export default {
-  data() {
-    return {
-      icons: {
-        mdiAccount,
-        mdiPencil,
-        mdiShareVariant,
-        mdiDelete
+  data: () => ({
+    icons: {
+      mdiPlus
+    },
+    items: [
+      {
+        header: "Today"
       },
-      dialog: false,
-      search: "",
-      headers: [
-        {
-          text: "Type",
-          align: "start",
-          //   sortable: false,
-          value: "dailyPlanType"
-        },
-        { text: "Detail", value: "detail" },
-        { text: "Action", value: "action", sortable: false }
-      ],
-      dailyPlanList: [
-        {
-          dailyPlanType: "Frozen Yogurt",
-          detail: "test"
-        }
-      ]
-    };
-  }
+      { divider: true },
+      {
+        avatar: "https://picsum.photos/250/300?image=660",
+        title: "Meeting @ Noon",
+        subtitle:
+          "<span class='font-weight-bold'>Spike Lee</span> &mdash; I'll be in your neighborhood"
+      },
+      {
+        avatar: "https://picsum.photos/250/300?image=821",
+        title: 'Summer BBQ <span class="grey--text text--lighten-1"></span>',
+        subtitle:
+          "<span class='font-weight-bold'>to Operations support</span> &mdash; Wish I could come."
+      },
+      {
+        avatar: "https://picsum.photos/250/300?image=783",
+        title: "Yes yes",
+        subtitle:
+          "<span class='font-weight-bold'>Bella</span> &mdash; Do you have Paris recommendations"
+      },
+      {
+        header: "Yesterday"
+      },
+      { divider: true },
+      {
+        avatar: "https://picsum.photos/250/300?image=1006",
+        title: "Dinner tonight?",
+        subtitle:
+          "<span class='font-weight-bold'>LaToya</span> &mdash; Do you want to hang out?"
+      },
+      {
+        avatar: "https://picsum.photos/250/300?image=146",
+        title: "So long",
+        subtitle:
+          "<span class='font-weight-bold'>Nancy</span> &mdash; Do you see what time it is?"
+      },
+      {
+        header: "Last Week"
+      },
+      { divider: true },
+      {
+        avatar: "https://picsum.photos/250/300?image=1008",
+        title: "Breakfast?",
+        subtitle:
+          "<span class='font-weight-bold'>LaToya</span> &mdash; Do you want to hang out?"
+      },
+      {
+        avatar: "https://picsum.photos/250/300?image=839",
+        title:
+          'Winter Porridge <span class="grey--text text--lighten-1"></span>',
+        subtitle:
+          "<span class='font-weight-bold'>cc: Daniel</span> &mdash; Tell me more..."
+      },
+      {
+        avatar: "https://picsum.photos/250/300?image=145",
+        title: "Oui oui",
+        subtitle:
+          "<span class='font-weight-bold'>Nancy</span> &mdash; Do you see what time it is?"
+      }
+    ]
+  })
 };
 </script>

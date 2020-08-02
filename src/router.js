@@ -24,13 +24,18 @@ export default new Router({
           component: () => import('@/views/dashboard/pages/UserProfile'),
         },
         {
+          name: 'Daily Plan',
+          path: 'pages/dailyPlan',
+          component: () => import('@/views/dashboard/pages/DailyPlan'),
+        },
+        {
           name: 'Room List',
-          path: 'pages/roomlist',
+          path: 'pages/room',
           component: () => import('@/views/dashboard/pages/RoomList'),
         },
         {
           name: 'Room',
-          path: 'pages/room',
+          path: 'pages/room/create',
           component: () => import('@/views/dashboard/pages/Room'),
         },
         {

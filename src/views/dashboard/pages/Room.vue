@@ -1,10 +1,10 @@
 <template>
   <v-container id="room" fluid tag="section">
     <v-row justify="center">
-      <v-col cols="12" md="8">
+      <v-col cols="12" md="11">
         <base-material-card>
           <template v-slot:heading>
-            <div class="display-2 font-weight-light">Room</div>
+            <div class="display-2 font-weight-light">Create Room</div>
           </template>
 
           <v-form ref="form" v-model="valid" lazy-validation>
@@ -79,125 +79,17 @@
                 <v-col cols="12" md="2">
                   <v-switch v-model="dense" label="Exclusive"></v-switch>
                 </v-col>
-
-                <!-- <v-col
-                  cols="12"
-                  md="6"
-                >
-                  <v-text-field
-                    label="First Name"
-                    class="purple-input"
-                  />
-                </v-col>
-
-                <v-col
-                  cols="12"
-                  md="6"
-                >
-                  <v-text-field
-                    label="Last Name"
-                    class="purple-input"
-                  />
-                </v-col>
-
-                <v-col cols="12">
-                  <v-text-field
-                    label="Adress"
-                    class="purple-input"
-                  />
-                </v-col>
-
-                <v-col
-                  cols="12"
-                  md="4"
-                >
-                  <v-text-field
-                    label="City"
-                    class="purple-input"
-                  />
-                </v-col>
-
-                <v-col
-                  cols="12"
-                  md="4"
-                >
-                  <v-text-field
-                    label="Country"
-                    class="purple-input"
-                  />
-                </v-col>
-
-                <v-col
-                  cols="12"
-                  md="4"
-                >
-                  <v-text-field
-                    class="purple-input"
-                    label="Postal Code"
-                    type="number"
-                  />
-                </v-col>
-
-                <v-col cols="12">
-                  <v-textarea
-                    class="purple-input"
-                    label="About Me"
-                    value="Lorem ipsum dolor sit amet, consectetur adipiscing elit."
-                  />
-                </v-col>-->
-
                 <v-col cols="12" class="text-right">
                   <v-btn
                     :disabled="!valid"
                     color="success"
                     class="mr-0"
                     v-on:click="validate"
-                  >Create Room</v-btn>
+                  >Add</v-btn>
                 </v-col>
               </v-row>
             </v-container>
           </v-form>
-        </base-material-card>
-      </v-col>
-
-      <v-col cols="12" md="4">
-        <base-material-card class="v-card-profile">
-          <daily-plan-core />
-
-          <!-- <template v-slot:heading>
-            <div class="display-2 font-weight-light">
-              Daily Plan
-            </div>
-          </template>-->
-          <!-- <v-btn
-            color="primary"
-            dark
-            v-bind="attrs"
-            v-on="on"
-          >
-            Open Dialog
-          </v-btn>-->
-          <!-- <v-card-text class="text-center">
-            <h6 class="display-1 mb-1 grey--text">
-              CEO / CO-FOUNDER
-            </h6>
-
-            <h4 class="display-2 font-weight-light mb-3 black--text">
-              Alec Thompson
-            </h4>
-
-            <p class="font-weight-light grey--text">
-              Don't be scared of the truth because we need to restart the human foundation in truth And I love you like Kanye loves Kanye I love Rick Owens’ bed design but the back is...
-            </p>
-
-            <v-btn
-              color="success"
-              rounded
-              class="mr-0"
-            >
-              Follow
-            </v-btn>
-          </v-card-text>-->
         </base-material-card>
       </v-col>
     </v-row>
@@ -205,8 +97,6 @@
 </template>
 
 <script>
-import DailyPlanCore from "../components/core/DailyPlan";
-
 export default {
   data: () => ({
     valid: true,
@@ -244,7 +134,6 @@ export default {
   }),
 
   components: {
-    DailyPlanCore
   },
 
   methods: {

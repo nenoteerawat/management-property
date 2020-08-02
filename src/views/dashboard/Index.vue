@@ -8,7 +8,7 @@
 
     <!-- <dashboard-core-settings /> -->
 
-    <dashboard-core-daily-plan />
+    <!-- <dashboard-core-daily-plan /> -->
   </v-app>
 </template>
 
@@ -21,7 +21,7 @@
       DashboardCoreDrawer: () => import('./components/core/Drawer'),
       // DashboardCoreSettings: () => import('./components/core/Settings'),
       DashboardCoreView: () => import('./components/core/View'),
-      DashboardCoreDailyPlan: () => import('./components/core/DailyPlan'),
+      // DashboardCoreDailyPlan: () => import('./components/core/DailyPlan'),
     },
 
     data: () => ({
