@@ -19,10 +19,10 @@
             item-key="name"
             class="elevation-1"
           >
-            <template v-slot:item.action="{ item }">
+            <!-- <template v-slot:item.action="{ item }">
               <v-icon medium class="mr-2" color="blue" @click="edit(item)">{{ icons.mdiPencil }}</v-icon>
               <v-icon medium color="red" @click="delete(item.id)">{{ icons.mdiDelete }}</v-icon>
-            </template>
+            </template> -->
             <!-- <v-data-table :headers="headers" :items="desserts" :search="search"> -->
           </v-data-table>
         </v-card>

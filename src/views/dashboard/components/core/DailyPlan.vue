@@ -7,7 +7,7 @@
 
           <v-spacer></v-spacer>
 
-          <v-btn to="/pages/dailyPlan" icon>
+          <v-btn to="/pages/calendar/create" icon>
             <v-icon>{{ icons.mdiPlus }}</v-icon>
           </v-btn>
         </v-toolbar>

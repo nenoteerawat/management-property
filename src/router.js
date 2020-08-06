@@ -25,8 +25,13 @@ export default new Router({
         },
         {
           name: 'Daily Plan',
-          path: 'pages/dailyPlan',
+          path: '/pages/calendar/create',
           component: () => import('@/views/dashboard/pages/DailyPlan'),
+        },
+        {
+          name: 'Daily Plan',
+          path: 'pages/calendar',
+          component: () => import('@/views/dashboard/pages/DailyPlanCalendar'),
         },
         {
           name: 'Room List',

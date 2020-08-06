@@ -119,7 +119,7 @@
         {
           icon: 'mdi-animation',
           title: 'Daily Plan',
-          to: '/pages/dailyPlan',
+          to: '/pages/calendar',
         },
         {
           icon: 'mdi-account',
