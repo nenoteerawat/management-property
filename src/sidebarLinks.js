@@ -5,6 +5,11 @@ export default [
     path: '/admin/overview'
   },
   {
+    name: 'Owner',
+    icon: 'nc-icon nc-shop',
+    path: '/admin/owner'
+  },
+  {
     name: 'Pages',
     icon: 'nc-icon nc-book-bookmark',
     children: [

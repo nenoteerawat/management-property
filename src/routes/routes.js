@@ -4,6 +4,7 @@ import NotFound from '../components/GeneralViews/NotFoundPage.vue'
 // Dashboard pages
 const Overview = () => import(/* webpackChunkName: "widgets" */ 'src/components/Dashboard/Views/Dashboard/Overview.vue')
 const Widgets = () => import(/* webpackChunkName: "widgets" */ 'src/components/Dashboard/Views/Dashboard/Widgets.vue')
+const OwnerList = () => import(/* webpackChunkName: "widgets" */ 'src/components/Dashboard/Views/Pages/Owner/OwnerList.vue')
 
 // Pages
 import User from 'src/components/Dashboard/Views/Pages/UserProfile.vue'
@@ -84,6 +85,7 @@ let componentsMenu = {
 
   ]
 }
+
 let formsMenu = {
   path: '/forms',
   component: DashboardLayout,
@@ -174,7 +176,6 @@ let pagesMenu = {
     }
   ]
 }
-
 let loginPage = {
   path: '/login',
   name: 'Login',
@@ -219,6 +220,7 @@ const routes = [
   loginPage,
   registerPage,
   lockPage,
+  
   {
     path: '/admin',
     component: DashboardLayout,
@@ -233,7 +235,12 @@ const routes = [
         path: 'widgets',
         name: 'Widgets',
         component: Widgets
-      }
+      },
+      {
+        path: 'owner',
+        name: 'owner',
+        component: OwnerList
+      },
     ]
   },
   {path: '*', component: NotFound}

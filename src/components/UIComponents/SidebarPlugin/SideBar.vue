@@ -16,9 +16,7 @@
       </a>
     </div>
     <div class="sidebar-wrapper" ref="sidebarScrollArea">
-      <slot>
-
-      </slot>
+      <slot/>
       <ul class="nav">
         <slot name="links">
           <sidebar-item v-for="(link, index) in sidebarLinks"
