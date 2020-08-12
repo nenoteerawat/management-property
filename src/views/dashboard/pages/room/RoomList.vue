@@ -178,7 +178,7 @@ export default {
 
   components: {
     // DailyPlanCore: () => import('../components/core/DailyPlan')
-    DailyPlanCore: () => import('../components/core/DailyPlan')
+    DailyPlanCore: () => import('../../components/core/DailyPlan')
   }
 };
 </script>

@@ -26,22 +26,22 @@ export default new Router({
         {
           name: 'Daily Plan',
           path: '/pages/calendar/create',
-          component: () => import('@/views/dashboard/pages/DailyPlan'),
+          component: () => import('@/views/dashboard/pages/daily_plan/DailyPlanCreate'),
         },
         {
           name: 'Daily Plan',
           path: 'pages/calendar',
-          component: () => import('@/views/dashboard/pages/DailyPlanCalendar'),
+          component: () => import('@/views/dashboard/pages/daily_plan/DailyPlanCalendar'),
         },
         {
           name: 'Room List',
           path: 'pages/room',
-          component: () => import('@/views/dashboard/pages/RoomList'),
+          component: () => import('@/views/dashboard/pages/room/RoomList'),
         },
         {
           name: 'Room',
           path: 'pages/room/create',
-          component: () => import('@/views/dashboard/pages/Room'),
+          component: () => import('@/views/dashboard/pages/room/RoomCreate'),
         },
         {
           name: 'Notifications',

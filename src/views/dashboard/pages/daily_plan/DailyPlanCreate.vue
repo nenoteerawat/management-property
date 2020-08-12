@@ -2,7 +2,7 @@
   <v-container id="daily-plan" fluid tag="section">
     <v-row justify="center">
       <v-col cols="12" md="6">
-        <base-material-card>
+        <v-card>
           <template v-slot:heading>
             <div class="display-2 font-weight-light">Create Daily Plan</div>
           </template>
@@ -65,7 +65,7 @@
               </v-col>
             </v-row>
           </v-form>
-        </base-material-card>
+        </v-card>
       </v-col>
       <v-col cols="12" md="3">
         <daily-plan-core />
@@ -94,7 +94,7 @@ export default {
   }),
 
   components: {
-    DailyPlanCore: () => import("../components/core/DailyPlan")
+    DailyPlanCore: () => import("../../components/core/DailyPlan")
   },
 
   methods: {
