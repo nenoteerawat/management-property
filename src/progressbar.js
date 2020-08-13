@@ -12,10 +12,17 @@ function tryInitProgress() {
     }
   }, progressShowDelay);
 }
-export default function initProgress(router) {
+export default function initProgress(router, store) {
   router.beforeEach((to, from, next) => {
     tryInitProgress();
-    return next();
+    if(to.matched.some(record => record.meta.requiresAuth)) {
+      if (store.getters.isLoggedIn) {
+        return next()
+      }
+      return next('/login') 
+    } else {
+      return next() 
+    }
   });
 
   router.afterEach(() => {

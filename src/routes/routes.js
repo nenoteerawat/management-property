@@ -165,7 +165,8 @@ let pagesMenu = {
     {
       path: 'user',
       name: 'User Page',
-      component: User
+      component: User,
+      meta: { requiresAuth: true }
     },
     {
       path: 'timeline',
@@ -227,7 +228,8 @@ const routes = [
       {
         path: 'overview',
         name: 'Overview',
-        component: Overview
+        component: Overview,
+        meta: { requiresAuth: true }
       },
       {
         path: 'widgets',

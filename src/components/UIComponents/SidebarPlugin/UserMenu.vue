@@ -32,6 +32,12 @@
                 <span class="sidebar-normal">Settings</span>
               </a>
             </li>
+            <li>
+              <a href="#">
+                <span class="sidebar-mini-icon">L</span>
+                <span class="sidebar-normal">Logout</span>
+              </a>
+            </li>
           </ul>
         </collapse-transition>
       </div>
@@ -42,6 +48,9 @@
   import { CollapseTransition } from 'vue2-transitions'
 
   export default {
+    computed : {
+      isLoggedIn : function(){ return this.$store.getters.isLoggedIn}
+    },
     components: {
       CollapseTransition
     },
@@ -53,6 +62,12 @@
     methods: {
       toggleMenu() {
         this.isClosed = !this.isClosed
+      },
+      logout: function () {
+        this.$store.dispatch('logout')
+        .then(() => {
+          this.$router.push('/login')
+        })
       }
     }
   }
