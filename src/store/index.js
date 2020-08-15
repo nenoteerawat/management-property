@@ -1,8 +1,11 @@
 import Vue from "vue";
 import Vuex from "vuex";
 import axios from "axios";
+import createPersistedState from 'vuex-persistedstate'
+import VueCookies from 'vue-cookies';
 
 Vue.use(Vuex);
+Vue.use(VueCookies);
 
 export default new Vuex.Store({
   state: {
@@ -74,6 +77,13 @@ export default new Vuex.Store({
   modules: {},
   getters: {
     isLoggedIn: state => !!state.token,
-    authStatus: state => state.status
-  }
+    authStatus: state => state.status,
+    getUser: state => state.user
+  },
+  plugins: [
+    createPersistedState({
+      getState: (key) => Vue.$cookies.get(key),
+      setState: (key, state) => Vue.$cookies.set(key, state, { expires: 3, secure: true })
+    })
+  ]
 });

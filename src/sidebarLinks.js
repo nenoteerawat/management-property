@@ -1,3 +1,5 @@
+import { geoClipAntimeridian } from "d3";
+
 export default [
   {
     name: 'Dashboard',
@@ -7,6 +9,7 @@ export default [
   {
     name: 'Pages',
     icon: 'nc-icon nc-book-bookmark',
+    role: 'ROLE_ADMIN',
     children: [
       {
         name: 'Timeline',
@@ -33,6 +36,7 @@ export default [
   {
     name: 'Components',
     icon: 'nc-icon nc-layout-11',
+    role: 'ROLE_ADMIN',
     children: [{
       name: 'Buttons',
       path: '/components/buttons'
@@ -65,6 +69,7 @@ export default [
   {
     name: 'Forms',
     icon: 'nc-icon nc-ruler-pencil',
+    role: 'ROLE_SALE',
     children: [{
       name: 'Regular Forms',
       path: '/forms/regular'
@@ -86,6 +91,7 @@ export default [
   {
     name: 'Table List',
     icon: 'nc-icon nc-single-copy-04',
+    role: 'ROLE_SALE',
     collapsed: true,
     children: [{
       name: 'Regular Tables',
@@ -104,6 +110,7 @@ export default [
   {
     name: 'Maps',
     icon: 'nc-icon nc-pin-3',
+    role: 'ROLE_SALE',
     children: [{
       name: 'Google Maps',
       path: '/maps/google'
@@ -131,6 +138,7 @@ export default [
   {
     name: 'Calendar',
     icon: 'nc-icon nc-calendar-60',
-    path: '/calendar'
+    path: '/calendar',
+    role: 'ROLE_SALE',
   },
 ]

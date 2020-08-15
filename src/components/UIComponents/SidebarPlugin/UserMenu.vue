@@ -6,7 +6,7 @@
     <div class="info">
       <a data-toggle="collapse" :aria-expanded="!isClosed" @click="toggleMenu" href="#">
          <span>
-           {{user.firstName}} {{user.lastName}}
+           {{getUser.firstName}} {{getUser.lastName}}
            <b class="caret"></b>
         </span>
       </a>
@@ -50,10 +50,9 @@
 
   export default {
     computed : {
-      isLoggedIn : function(){ return this.$store.getters.isLoggedIn},
-      user() {
-        return this.$store.state.user
-      }
+      ...mapGetters({getUser: 'getUser'}),
+      isLoggedIn : function(){ return this.$store.getters.isLoggedIn}
+      
     },
     components: {
       CollapseTransition

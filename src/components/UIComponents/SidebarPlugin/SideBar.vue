@@ -21,7 +21,7 @@
       </slot>
       <ul class="nav">
         <slot name="links">
-          <sidebar-item v-for="(link, index) in sidebarLinks"
+          <sidebar-item v-for="(link, index) in sidebarLinks" v-if="getUser.roles.includes(link.role)"
                         :key="link.name + index"
                         :link="link">
 
@@ -38,7 +38,12 @@
 </template>
 <script>
   import 'perfect-scrollbar/css/perfect-scrollbar.css'
+  import {mapGetters} from 'vuex'
+
   export default {
+    computed : {
+      ...mapGetters({getUser: 'getUser'})
+    },
     props: {
       title: {
         type: String,
