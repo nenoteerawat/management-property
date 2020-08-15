@@ -1,6 +1,6 @@
 import Vue from "vue";
 import Vuex from "vuex";
-import axios from 'axios'
+import axios from "axios";
 
 Vue.use(Vuex);
 
@@ -14,9 +14,9 @@ export default new Vuex.Store({
     auth_request(state) {
       state.status = "loading";
     },
-    auth_success(state, token, user) {
+    auth_success(state, user) {
       state.status = "success";
-      state.token = token;
+      state.token = user.token;
       state.user = user;
     },
     auth_error(state) {
@@ -32,8 +32,7 @@ export default new Vuex.Store({
       return new Promise((resolve, reject) => {
         commit("auth_request");
         axios({
-          url:
-            "http://localhost:8090/api/auth/signin",
+          url: "http://localhost:8090/api/auth/signin",
           data: {
             username: user.username,
             password: user.password
@@ -44,11 +43,16 @@ export default new Vuex.Store({
           }
         })
           .then(resp => {
-            const token = resp.data.token.accessToken;
-            const user = resp.data.username;
-            localStorage.setItem("token", token);
-            axios.defaults.headers.common["Authorization"] = token;
-            commit("auth_success", token, user);
+            const user = {
+              token: resp.data.token,
+              firstName: resp.data.firstName,
+              lastName: resp.data.lastName,
+              email: resp.data.email,
+              roles: resp.data.roles
+            };
+            localStorage.setItem("token", user.token);
+            axios.defaults.headers.common["Authorization"] = user.token;
+            commit("auth_success", user);
             resolve(resp);
           })
           .catch(err => {
