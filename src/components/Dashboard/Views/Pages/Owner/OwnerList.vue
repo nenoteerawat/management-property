@@ -3,7 +3,20 @@
     <div class="col-md-9">
       <card>
         <div class="card-header">
-          <h5 class="card-title">Room</h5>
+          <div class="row">
+            <div class="col-md-6">
+              <h5 class="card-title">Room</h5>
+            </div>
+            <div class="col-md-6">
+              <div class="pull-right">
+                <router-link to="owner/create">
+                  <p-button type="success" outline round>
+                    <i class="nc-icon nc-simple-add"></i> Add
+                  </p-button>
+                </router-link>
+              </div>
+            </div>
+          </div>
         </div>
         <div class="card-body">
           <div class="row">
@@ -35,7 +48,7 @@
               <el-table-column min-width="60">
                 <template slot-scope="props">
                   <div class="img-container">
-                    <img :src="props.row.image" alt="Agenda" />
+                    <img :src="props.row.image" />
                   </div>
                 </template>
               </el-table-column>
@@ -45,6 +58,7 @@
                 :min-width="column.minWidth"
                 :prop="column.prop"
                 :label="column.label"
+                sortable
               ></el-table-column>
               <el-table-column class-name="action-buttons td-actions" align="right" label="Actions">
                 <template slot-scope="props">
@@ -147,7 +161,7 @@ export default {
         {
           prop: "name",
           label: "Name",
-          minWidth: 200,
+          minWidth: 150,
         },
         {
           prop: "job",
@@ -161,35 +175,35 @@ export default {
       tableData: [
         {
           name: "Andrew Mike",
-          image: "static/img/tables/agenda.png",
+          image: "/static/img/faces/ayo-ogunseinde-2.jpg",
           job: "Develop",
           salary: "€ 99,225",
           active: true,
         },
         {
           name: "John Doe",
-          image: "static/img/tables/agenda.png",
+          image: "/static/img/tables/agenda.png",
           job: "Design",
           salary: "€ 89,241",
           active: false,
         },
         {
           name: "Alex Mike",
-          image: "static/img/tables/agenda.png",
+          image: "/static/img/tables/agenda.png",
           job: "Design",
           salary: "€ 92,144",
           active: false,
         },
         {
           name: "Mike Monday",
-          image: "static/img/tables/agenda.png",
+          image: "/static/img/tables/agenda.png",
           job: "Marketing",
           salary: "€ 49,990",
           active: true,
         },
         {
           name: "Paul dickens",
-          image: "static/img/tables/agenda.png",
+          image: "/static/img/tables/agenda.png",
           job: "Communication",
           salary: "€ 69,201",
           active: true,
@@ -198,25 +212,25 @@ export default {
       tasks: [
         {
           done: true,
-          img: "static/img/faces/ayo-ogunseinde-2.jpg",
+          img: "/static/img/faces/ayo-ogunseinde-2.jpg",
           title:
             'Sign contract for "What are conference organizers afraid of?"',
         },
         {
           done: false,
-          img: "static/img/faces/erik-lucatero-2.jpg",
+          img: "/static/img/faces/erik-lucatero-2.jpg",
           title:
             "Lines From Great Russian Literature? Or E-mails From My Boss?",
         },
         {
           done: true,
-          img: "static/img/faces/kaci-baum-2.jpg",
+          img: "/static/img/faces/kaci-baum-2.jpg",
           title:
             "Using dummy content or fake information in the Web design process can result in products with unrealistic",
         },
         {
           done: false,
-          img: "static/img/faces/joe-gardner-2.jpg",
+          img: "/static/img/faces/joe-gardner-2.jpg",
           title:
             "But I must explain to you how all this mistaken idea of denouncing pleasure",
         },
@@ -226,7 +240,7 @@ export default {
 
   methods: {
     handleLike(index, row) {
-      alert(`Your clicked on Like button`);
+      alert(`Your clicked on Like button ${index}`);
     },
     handleEdit(index, row) {
       alert(`Your want to edit ${row.name}`);

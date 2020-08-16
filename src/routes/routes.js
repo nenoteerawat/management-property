@@ -5,6 +5,7 @@ import NotFound from '../components/GeneralViews/NotFoundPage.vue'
 const Overview = () => import(/* webpackChunkName: "widgets" */ 'src/components/Dashboard/Views/Dashboard/Overview.vue')
 const Widgets = () => import(/* webpackChunkName: "widgets" */ 'src/components/Dashboard/Views/Dashboard/Widgets.vue')
 const OwnerList = () => import(/* webpackChunkName: "widgets" */ 'src/components/Dashboard/Views/Pages/Owner/OwnerList.vue')
+const OwnerCreate = () => import(/* webpackChunkName: "widgets" */ 'src/components/Dashboard/Views/Pages/Owner/OwnerCreate.vue')
 
 // Pages
 import User from 'src/components/Dashboard/Views/Pages/UserProfile.vue'
@@ -238,8 +239,13 @@ const routes = [
       },
       {
         path: 'owner',
-        name: 'owner',
+        name: 'Owner',
         component: OwnerList
+      },
+      {
+        path: 'owner/create',
+        name: 'Owner Create',
+        component: OwnerCreate
       },
     ]
   },
