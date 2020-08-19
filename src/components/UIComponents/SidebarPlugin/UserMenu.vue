@@ -6,7 +6,7 @@
     <div class="info">
       <a data-toggle="collapse" :aria-expanded="!isClosed" @click="toggleMenu" href="#">
          <span>
-           Chet Faker
+           {{getUser.firstName}} {{getUser.lastName}}
            <b class="caret"></b>
         </span>
       </a>
@@ -32,6 +32,12 @@
                 <span class="sidebar-normal">Settings</span>
               </a>
             </li>
+            <li>
+              <a href="#" @click="logout">
+                <span class="sidebar-mini-icon">L</span>
+                <span class="sidebar-normal">Logout</span>
+              </a>
+            </li>
           </ul>
         </collapse-transition>
       </div>
@@ -40,19 +46,32 @@
 </template>
 <script>
   import { CollapseTransition } from 'vue2-transitions'
+  import {mapGetters} from 'vuex'
 
   export default {
+    computed : {
+      ...mapGetters({getUser: 'getUser'}),
+      isLoggedIn : function(){ return this.$store.getters.isLoggedIn}
+      
+    },
     components: {
       CollapseTransition
     },
     data() {
       return {
-        isClosed: true
+        isClosed: true,
+        username: ''
       }
     },
     methods: {
       toggleMenu() {
         this.isClosed = !this.isClosed
+      },
+      logout: function () {
+        this.$store.dispatch('logout')
+        .then(() => {
+          this.$router.push('/login')
+        })
       }
     }
   }
