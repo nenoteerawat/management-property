@@ -21,18 +21,6 @@
               </a>
             </li>
             <li>
-              <a href="#">
-                <span class="sidebar-mini-icon">Ep</span>
-                <span class="sidebar-normal">Edit Profile</span>
-              </a>
-            </li>
-            <li>
-              <a href="#">
-                <span class="sidebar-mini-icon">S</span>
-                <span class="sidebar-normal">Settings</span>
-              </a>
-            </li>
-            <li>
               <a href="#" @click="logout">
                 <span class="sidebar-mini-icon">L</span>
                 <span class="sidebar-normal">Logout</span>
