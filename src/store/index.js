@@ -35,7 +35,7 @@ export default new Vuex.Store({
       return new Promise((resolve, reject) => {
         commit("auth_request");
         axios({
-          url: "http://api-manage-property:8090/api/auth/signin",
+          url: "http://api.manage.property:8090/api/auth/signin",
           data: {
             username: user.username,
             password: user.password
