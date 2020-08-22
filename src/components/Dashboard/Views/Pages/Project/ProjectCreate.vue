@@ -3,7 +3,7 @@
     <div class="col-md-10">
       <card>
         <h5 slot="header" class="card-title">
-          Owner
+          Project
           <hr />
         </h5>
         <div class="row">
@@ -372,13 +372,6 @@
               <div class="el-upload__tip" slot="tip">jpg/png files with a size less than 500kb</div>
             </el-upload>
           </div>
-          <div class="col-md-6">
-            <div>
-            <label>Exclusive</label>
-
-            </div>
-            <p-switch v-model="room.exclusive"></p-switch>
-          </div>
         </div>
 
         <template slot="footer">
@@ -397,7 +390,6 @@ import { Card } from "src/components/UIComponents";
 import Autocomplete from "@trevoreyre/autocomplete-vue";
 import "@trevoreyre/autocomplete-vue/dist/style.css";
 import { Select, Option, Tag, Upload } from "element-ui";
-  import PSwitch from 'src/components/UIComponents/Switch.vue'
 
 export default {
   components: {
@@ -407,7 +399,6 @@ export default {
     [Option.name]: Option,
     [Tag.name]: Tag,
     [Upload.name]: Upload,
-    PSwitch
   },
 
   data() {
@@ -564,7 +555,6 @@ export default {
       room: {
         area: "",
         rentDetail: "",
-        exclusive: false,
       },
       fileList: [
         {

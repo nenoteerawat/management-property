@@ -1,4 +1,6 @@
 import {Radio, Checkbox, FgInput, Button, Dropdown, Card} from 'src/components/UIComponents';
+// import {Switch} from 'src/components'
+
 import { ValidationProvider } from "vee-validate";
 import { ValidationObserver } from "vee-validate";
 /**
@@ -15,6 +17,7 @@ const GlobalComponents = {
     Vue.component(Radio.name, Radio)
     Vue.component(Button.name, Button)
     Vue.component(Card.name, Card)
+    // Vue.component(Switch.name, Switch)
     Vue.component("ValidationProvider", ValidationProvider);
     Vue.component("ValidationObserver", ValidationObserver);
   }

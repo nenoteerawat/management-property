@@ -75,6 +75,12 @@ export default [
     role: "ROLE_SALE"
   },
   {
+    name: 'Project',
+    icon: 'nc-icon nc-bank',
+    path: '/admin/project',
+    role: "ROLE_SALE"
+  },
+  {
     name: 'Pages',
     icon: 'nc-icon nc-book-bookmark',
     role: 'ROLE_ADMIN',

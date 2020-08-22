@@ -6,6 +6,8 @@ const Overview = () => import(/* webpackChunkName: "widgets" */ 'src/components/
 const Widgets = () => import(/* webpackChunkName: "widgets" */ 'src/components/Dashboard/Views/Dashboard/Widgets.vue')
 const OwnerList = () => import(/* webpackChunkName: "widgets" */ 'src/components/Dashboard/Views/Pages/Owner/OwnerList.vue')
 const OwnerCreate = () => import(/* webpackChunkName: "widgets" */ 'src/components/Dashboard/Views/Pages/Owner/OwnerCreate.vue')
+const ProjectList = () => import(/* webpackChunkName: "widgets" */ 'src/components/Dashboard/Views/Pages/Project/ProjectList.vue')
+const ProjectCreate = () => import(/* webpackChunkName: "widgets" */ 'src/components/Dashboard/Views/Pages/Project/ProjectCreate.vue')
 
 // Pages
 import User from 'src/components/Dashboard/Views/Pages/UserProfile.vue'
@@ -248,6 +250,16 @@ const routes = [
         path: 'owner/create',
         name: 'Owner Create',
         component: OwnerCreate
+      },
+      {
+        path: 'project',
+        name: 'Project',
+        component: ProjectList
+      },
+      {
+        path: 'project/create',
+        name: 'Project Create',
+        component: ProjectCreate
       },
     ]
   },
