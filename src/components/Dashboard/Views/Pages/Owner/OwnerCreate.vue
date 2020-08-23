@@ -374,8 +374,7 @@
           </div>
           <div class="col-md-6">
             <div>
-            <label>Exclusive</label>
-
+              <label>Exclusive</label>
             </div>
             <p-switch v-model="room.exclusive"></p-switch>
           </div>
@@ -397,7 +396,7 @@ import { Card } from "src/components/UIComponents";
 import Autocomplete from "@trevoreyre/autocomplete-vue";
 import "@trevoreyre/autocomplete-vue/dist/style.css";
 import { Select, Option, Tag, Upload } from "element-ui";
-  import PSwitch from 'src/components/UIComponents/Switch.vue'
+import PSwitch from "src/components/UIComponents/Switch.vue";
 
 export default {
   components: {
@@ -407,7 +406,7 @@ export default {
     [Option.name]: Option,
     [Tag.name]: Tag,
     [Upload.name]: Upload,
-    PSwitch
+    PSwitch,
   },
 
   data() {

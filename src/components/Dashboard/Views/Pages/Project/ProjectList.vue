@@ -9,7 +9,7 @@
             </div>
             <div class="col-md-6">
               <div class="pull-right">
-                <router-link to="owner/create">
+                <router-link to="project/create">
                   <p-button type="success" outline round>
                     <i class="nc-icon nc-simple-add"></i> Add
                   </p-button>
