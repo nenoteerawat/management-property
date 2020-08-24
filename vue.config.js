@@ -5,7 +5,6 @@ function resolveSrc(_path) {
 }
 module.exports = {
   configureWebpack: {
-    // Set up all the aliases we use in our app.
     resolve: {
       alias: {
         'src': resolveSrc('src'),
@@ -26,7 +25,6 @@ module.exports = {
     appleMobileWebAppStatusBarStyle: '#66615B'
   },
   css: {
-    // Enable CSS source maps.
     sourceMap: process.env.NODE_ENV !== 'production'
   }
 };
