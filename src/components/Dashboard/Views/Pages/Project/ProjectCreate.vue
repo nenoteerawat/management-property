@@ -20,11 +20,7 @@
             </fieldset>
           </div>
           <div class="col-md-6">
-            <div class="row">
-              <div class="col-md-6">
-                <fg-input placeholder label="โครงการ" v-model="project.name"></fg-input>
-              </div>
-            </div>
+            <fg-input placeholder label="โครงการ" v-model="project.name"></fg-input>
           </div>
           <div class="col-md-2">
             <fg-input placeholder label="ชั้น" type="number" v-model="project.floor"></fg-input>
@@ -82,7 +78,7 @@
               multiple
               class="select-primary select-width-100"
               placeholder="Select"
-              v-model="facilitySelects.simple"
+              v-model="facilitySelects.selects"
             >
               <el-option
                 v-for="option in facilitySelects.data"
@@ -99,11 +95,7 @@
             </div>
             <div class="row" v-for="(transport,k) in transports" :key="k">
               <div class="col-md-2">
-                <el-select
-                  class="select-primary"
-                  placeholder="Select"
-                  v-model="transportTypeSelect.simple"
-                >
+                <el-select class="select-primary" placeholder="Select" v-model="transport.type">
                   <el-option
                     v-for="option in transportTypeSelect.data"
                     class="select-primary"
@@ -114,11 +106,7 @@
                 </el-select>
               </div>
               <div class="col-md-2">
-                <el-select
-                  class="select-primary"
-                  placeholder="Select"
-                  v-model="transportNameSelect.simple"
-                >
+                <el-select class="select-primary" placeholder="Select" v-model="transport.name">
                   <el-option
                     v-for="option in transportNameSelect.data"
                     class="select-primary"
@@ -134,7 +122,7 @@
                     type="number"
                     class="form-control"
                     placeholder="0"
-                    v-model="transportDistance"
+                    v-model="transport.range"
                   />
                   <div class="input-group-append">
                     <span class="input-group-text bg-grey" id="basic-addon2">ม.</span>
@@ -197,15 +185,17 @@ export default {
     return {
       transports: [
         {
+          type: "",
           name: "",
+          range: "",
         },
       ],
       transportTypeSelect: {
         simple: "",
         data: [
-          { value: "1", label: "BTS" },
-          { value: "2", label: "MRT" },
-          { value: "3", label: "AIRLINK" },
+          { value: "BTS", label: "BTS" },
+          { value: "MRT", label: "MRT" },
+          { value: "AIRLINK", label: "AIRLINK" },
         ],
       },
       transportNameSelect: {
@@ -216,24 +206,23 @@ export default {
           { value: "3", label: "สยาม" },
         ],
       },
-      transportDistance: "",
       facilitySelects: {
-        simple: "",
+        selects: "",
         data: [
-          { value: "1", label: "ฟิตเนส" },
-          { value: "2", label: "สระว่ายน้ำ (Indoor)" },
-          { value: "3", label: "สระว่ายน้ำ (Outdoor)" },
-          { value: "4", label: "ห้องสมุด" },
-          { value: "5", label: "ห้องรับรอง" },
-          { value: "6", label: "ห้องเด็กเล่น" },
-          { value: "7", label: "Co-Working Space" },
-          { value: "8", label: "สวน" },
-          { value: "9", label: "ซาวน่า" },
-          { value: "10", label: "สนามเด็กเล่น" },
-          { value: "11", label: "ห้องอเนกประสงค์" },
-          { value: "12", label: "สนามเทนนิส" },
-          { value: "13", label: "สนามบาส" },
-          { value: "14", label: "ตู้ซักผ้าหยอดเหรียญ" },
+          { value: "ฟิตเนส", label: "ฟิตเนส" },
+          { value: "สระว่ายน้ำ (Indoor)", label: "สระว่ายน้ำ (Indoor)" },
+          { value: "สระว่ายน้ำ (Outdoor)", label: "สระว่ายน้ำ (Outdoor)" },
+          { value: "ห้องสมุด", label: "ห้องสมุด" },
+          { value: "ห้องรับรอง", label: "ห้องรับรอง" },
+          { value: "ห้องเด็กเล่น", label: "ห้องเด็กเล่น" },
+          { value: "Co-Working Space", label: "Co-Working Space" },
+          { value: "สวน", label: "สวน" },
+          { value: "ซาวน่า", label: "ซาวน่า" },
+          { value: "สนามเด็กเล่น", label: "สนามเด็กเล่น" },
+          { value: "ห้องอเนกประสงค์", label: "ห้องอเนกประสงค์" },
+          { value: "สนามเทนนิส", label: "สนามเทนนิส" },
+          { value: "สนามบาส", label: "สนามบาส" },
+          { value: "ตู้ซักผ้าหยอดเหรียญ", label: "ตู้ซักผ้าหยอดเหรียญ" },
         ],
       },
       // เก็บข้อมูลที่อยู่ที่ได้จาก input ไว้ใน data return {
@@ -255,7 +244,7 @@ export default {
 
   methods: {
     add(index) {
-      this.transports.push({ name: "" });
+      this.transports.push({ type: "", name: "", range: "" });
     },
     remove(index) {
       this.transports.splice(index, 1);
@@ -267,22 +256,37 @@ export default {
       this.zipcode = address.zipcode;
     },
     createProject() {
-      let postBody = "";
-      console.log("test");
+      let token = localStorage.getItem("token");
+      console.log("token : " + token);
+      let postBody = {
+        type: this.project.type,
+        name: this.project.name,
+        floor: this.project.floor,
+        builing: this.project.builing,
+        developer: this.project.developer,
+        address: this.project.address,
+        district: this.district,
+        amphoe: this.amphoe,
+        province: this.province,
+        zipcode: this.zipcode,
+        facilities: this.facilitySelects.selects,
+        transports: this.transports,
+      };
+      console.log("postBody : " + JSON.stringify(postBody));
+
+      axios.defaults.headers.common["Authorization"] =
+        "Bearer " + localStorage.getItem("token");
+
       axios({
         url: "http://localhost:8090/api/project/create",
-        data: {
-          
-        },
+        data: postBody,
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
       })
         .then((resp) => {
-          const user = {
-            
-          };
+          const user = {};
         })
         .catch((err) => {
           reject(err);
