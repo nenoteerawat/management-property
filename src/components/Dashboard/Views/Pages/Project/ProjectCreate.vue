@@ -167,7 +167,7 @@
         <template slot="footer">
           <hr />
           <div class="stats">
-            <p-button type="info" round>Add</p-button>
+            <p-button type="info" @click="createProject" round>Add</p-button>
           </div>
         </template>
       </card>
@@ -181,6 +181,7 @@ import { Card } from "src/components/UIComponents";
 import "@trevoreyre/autocomplete-vue/dist/style.css";
 import { Select, Option, Tag } from "element-ui";
 import ThailandAutoComplete from "vue-thailand-address-autocomplete";
+import axios from "axios";
 
 export default {
   components: {
@@ -264,6 +265,28 @@ export default {
       this.amphoe = address.amphoe;
       this.province = address.province;
       this.zipcode = address.zipcode;
+    },
+    createProject() {
+      let postBody = "";
+      console.log("test");
+      axios({
+        url: "http://localhost:8090/api/project/create",
+        data: {
+          
+        },
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+        .then((resp) => {
+          const user = {
+            
+          };
+        })
+        .catch((err) => {
+          reject(err);
+        });
     },
   },
 };
