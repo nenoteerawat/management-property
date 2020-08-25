@@ -34,18 +34,10 @@ export default new Vuex.Store({
     login({ commit }, user) {
       return new Promise((resolve, reject) => {
         commit("auth_request");
-        axios({
-          // url: "http://localhost:8090/api/auth/signin",
-          url: "http://api:8090/api/auth/signin",
-          data: {
-            username: user.username,
-            password: user.password
-          },
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          }
-        })
+        const AXIOS = axios.create({
+          baseURL: `http://ec2-3-1-24-172.ap-southeast-1.compute.amazonaws.com:8090/`
+        });
+        AXIOS.post(`api/auth/signin`, {username: user.username, password: user.password}, {headers : {"Content-Type": "application/json"}})
           .then(resp => {
             const user = {
               token: resp.data.token,
