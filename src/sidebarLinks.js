@@ -5,12 +5,12 @@ export default [
     name: "Dashboard",
     icon: "nc-icon nc-bank",
     path: "/admin/overview",
-    roles : ['ROLE_ADMIN','ROLE_SALE']
+    roles : ["ROLE_ADMIN", "ROLE_MANAGER", "ROLE_SALE_MANAGER", "ROLE_SALE"]
   },
   {
     name: "Pages",
     icon: "nc-icon nc-book-bookmark",
-    roles: ["ROLE_ADMIN"],
+    roles: ["ROLE_ADMIN","ROLE_MANAGER"],
     children: [
       {
         name: "Timeline",
@@ -37,7 +37,7 @@ export default [
   {
     name: "Components",
     icon: "nc-icon nc-layout-11",
-    roles: ["ROLE_ADMIN"],
+    roles: ["ROLE_ADMIN", "ROLE_MANAGER"],
     children: [
       {
         name: "Buttons",
@@ -78,7 +78,7 @@ export default [
   {
     name: 'Pages',
     icon: 'nc-icon nc-book-bookmark',
-    roles: ['ROLE_ADMIN'],
+    roles: ['ROLE_ADMIN', "ROLE_MANAGER"],
     children: [
       {
         name: "Regular Forms",
@@ -117,6 +117,12 @@ export default [
         path: "/table-list/paginated"
       }
     ]
+  },
+  {
+    name: "Approve Change",
+    icon: "nc-icon nc-single-copy-04",
+    roles: ["ROLE_ADMIN", "ROLE_MANAGER"],
+    path: "/approve-change/approve"
   },
   {
     name: "Maps",

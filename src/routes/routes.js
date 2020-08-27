@@ -33,6 +33,10 @@ const Wizard = () => import(/* webpackChunkName: "forms" */ 'src/components/Dash
 const RegularTables = () => import(/* webpackChunkName: "tables" */ 'src/components/Dashboard/Views/Tables/RegularTables.vue');
 const ExtendedTables = () => import(/* webpackChunkName: "tables" */ 'src/components/Dashboard/Views/Tables/ExtendedTables.vue');
 const PaginatedTables = () => import(/* webpackChunkName: "tables" */ 'src/components/Dashboard/Views/Tables/PaginatedTables.vue');
+
+// Approve Change page
+const ApproveChange = () => import(/* webpackChunkName: "tables" */ 'src/components/Dashboard/Views/Pages/Approve/ApproveChange.vue');
+
 // Maps pages
 const GoogleMaps = () => import(/* webpackChunkName: "maps" */ 'src/components/Dashboard/Views/Maps/GoogleMaps.vue')
 const FullScreenMap = () => import(/* webpackChunkName: "maps" */ 'src/components/Dashboard/Views/Maps/FullScreenMap.vue')
@@ -137,6 +141,18 @@ let tablesMenu = {
     }]
 }
 
+let approveChangeMenu = {
+  path: '/approve-change',
+  component: DashboardLayout,
+  redirect: '/approve-change/approve',
+  children: [
+    {
+      path: 'approve',
+      name: 'Approve Change Tables',
+      component: ApproveChange
+    }]
+}
+
 let mapsMenu = {
   path: '/maps',
   component: DashboardLayout,
@@ -217,6 +233,7 @@ const routes = [
   componentsMenu,
   formsMenu,
   tablesMenu,
+  approveChangeMenu,
   mapsMenu,
   pagesMenu,
   loginPage,
