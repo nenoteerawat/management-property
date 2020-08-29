@@ -4,12 +4,13 @@ export default [
   {
     name: "Dashboard",
     icon: "nc-icon nc-bank",
-    path: "/admin/overview"
+    path: "/admin/overview",
+    roles : ["ROLE_ADMIN", "ROLE_MANAGER", "ROLE_SALE_MANAGER", "ROLE_SALE"]
   },
   {
     name: "Pages",
     icon: "nc-icon nc-book-bookmark",
-    role: "ROLE_ADMIN",
+    roles: ["ROLE_ADMIN","ROLE_MANAGER"],
     children: [
       {
         name: "Timeline",
@@ -36,7 +37,7 @@ export default [
   {
     name: "Components",
     icon: "nc-icon nc-layout-11",
-    role: "ROLE_ADMIN",
+    roles: ["ROLE_ADMIN", "ROLE_MANAGER"],
     children: [
       {
         name: "Buttons",
@@ -72,18 +73,18 @@ export default [
     name: 'Owner',
     icon: 'nc-icon nc-shop',
     path: '/admin/owner',
-    role: "ROLE_SALE"
+    roles: ["ROLE_ADMIN", "ROLE_MANAGER", "ROLE_SALE_MANAGER", "ROLE_SALE"]
   },
   {
     name: 'Project',
     icon: 'nc-icon nc-bank',
     path: '/admin/project',
-    role: "ROLE_SALE"
+    role: ["ROLE_ADMIN", "ROLE_MANAGER", "ROLE_SALE_MANAGER", "ROLE_SALE"]
   },
   {
     name: 'Pages',
     icon: 'nc-icon nc-book-bookmark',
-    role: 'ROLE_ADMIN',
+    roles: ['ROLE_ADMIN', "ROLE_MANAGER"],
     children: [
       {
         name: "Regular Forms",
@@ -106,7 +107,7 @@ export default [
   {
     name: "Table List",
     icon: "nc-icon nc-single-copy-04",
-    role: "ROLE_SALE",
+    roles: ["ROLE_SALE"],
     collapsed: true,
     children: [
       {
@@ -124,9 +125,15 @@ export default [
     ]
   },
   {
+    name: "Approve Change",
+    icon: "nc-icon nc-single-copy-04",
+    roles: ["ROLE_ADMIN", "ROLE_MANAGER"],
+    path: "/approve-change/approve"
+  },
+  {
     name: "Maps",
     icon: "nc-icon nc-pin-3",
-    role: "ROLE_SALE",
+    roles: ["ROLE_SALE"],
     children: [
       {
         name: "Google Maps",
@@ -145,17 +152,19 @@ export default [
   {
     name: "Widgets",
     icon: "nc-icon nc-box",
-    path: "/admin/widgets"
+    path: "/admin/widgets",
+    roles: []
   },
   {
     name: "Charts",
     icon: "nc-icon nc-chart-bar-32",
-    path: "/charts"
+    path: "/charts",
+    roles: []
   },
   {
     name: "Calendar",
     icon: "nc-icon nc-calendar-60",
     path: "/calendar",
-    role: "ROLE_SALE"
+    roles: ["ROLE_SALE"]
   }
 ];

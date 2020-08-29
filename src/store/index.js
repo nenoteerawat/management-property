@@ -35,7 +35,7 @@ export default new Vuex.Store({
       return new Promise((resolve, reject) => {
         commit("auth_request");
         const AXIOS = axios.create({
-          baseURL: `http://localhost:8090/`
+          baseURL: process.env.VUE_APP_BACKEND_URL
         });
         AXIOS.post(`api/auth/signin`, {username: user.username, password: user.password}, {headers : {"Content-Type": "application/json"}})
           .then(resp => {
