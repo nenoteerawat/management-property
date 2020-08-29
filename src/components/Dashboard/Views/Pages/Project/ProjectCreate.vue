@@ -155,7 +155,12 @@
         <template slot="footer">
           <hr />
           <div class="stats">
-            <p-button type="info" @click="createProject" round>Add</p-button>
+            <p-button
+              type="info"
+              @click="createProject"
+              round
+              v-loading.fullscreen.lock="fullscreenLoading"
+            >Add</p-button>
           </div>
         </template>
       </card>
@@ -183,6 +188,7 @@ export default {
 
   data() {
     return {
+      fullscreenLoading: false,
       transports: [
         {
           type: "",
@@ -232,10 +238,10 @@ export default {
       zipcode: "",
 
       project: {
-        type: "1",
+        type: "",
         name: "",
         floor: "",
-        builing: "",
+        building: "",
         developer: "",
         address: "",
       },
@@ -256,13 +262,14 @@ export default {
       this.zipcode = address.zipcode;
     },
     createProject() {
+      this.fullscreenLoading = true;
       let token = localStorage.getItem("token");
       console.log("token : " + token);
       let postBody = {
         type: this.project.type,
         name: this.project.name,
         floor: this.project.floor,
-        builing: this.project.builing,
+        building: this.project.building,
         developer: this.project.developer,
         address: this.project.address,
         district: this.district,
@@ -286,9 +293,10 @@ export default {
         },
       })
         .then((resp) => {
-          const user = {};
+          this.fullscreenLoading = false;
         })
         .catch((err) => {
+          this.fullscreenLoading = false;
           reject(err);
         });
     },
