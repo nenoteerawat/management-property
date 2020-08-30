@@ -43,12 +43,25 @@
             </div>
           </div>
           <div class="col-md-12">
-            <el-table :data="queriedData" header-row-class-name="text-primary">
+            <el-table
+              :data="queriedData"
+              header-row-class-name="text-primary"
+            >
               <el-table-column type="index"></el-table-column>
-              <el-table-column min-width="60">
+              <!-- <el-table-column min-width="60">
                 <template slot-scope="props">
                   <div class="img-container">
                     <img :src="props.row.image" />
+                  </div>
+                </template>
+              </el-table-column>-->
+              <el-table-column min-width="200" label="Project" >
+                <template slot-scope="props">
+                  <div class="col-md-12">
+                    <h4>{{ props.row.name}}</h4>
+                  </div>
+                  <div class="col-md-12">
+                    <h6>ตำบล : {{ props.row.amphoe}} อำเภอ : {{ props.row.district}} จังหวัด : {{ props.row.province}}</h6>
                   </div>
                 </template>
               </el-table-column>
@@ -58,13 +71,12 @@
                 :min-width="column.minWidth"
                 :prop="column.prop"
                 :label="column.label"
-                sortable
               ></el-table-column>
               <el-table-column class-name="action-buttons td-actions" align="right" label="Actions">
                 <template slot-scope="props">
-                  <p-button type="info" size="sm" icon @click="handleLike(props.$index, props.row)">
+                  <!-- <p-button type="info" size="sm" icon @click="handleLike(props.$index, props.row)">
                     <i class="fa fa-user"></i>
-                  </p-button>
+                  </p-button> -->
                   <p-button
                     type="success"
                     size="sm"
@@ -135,6 +147,7 @@ import { Table, TableColumn, Select, Option } from "element-ui";
 import PPagination from "src/components/UIComponents/Pagination.vue";
 import DailyBar from "../Daily/DailyBar";
 import { Card } from "src/components/UIComponents";
+import axios from "axios";
 
 Vue.use(Table);
 Vue.use(TableColumn);
@@ -147,67 +160,99 @@ export default {
     PPagination,
   },
 
+  created: function () {
+    // `this` points to the vm instance
+    let postBody = {
+      role: "",
+      userId: "",
+    };
+    const AXIOS = axios.create({
+      baseURL: process.env.VUE_APP_BACKEND_URL,
+    });
+    AXIOS.post(`api/project/list`, postBody, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + localStorage.getItem("token"),
+      },
+    }).then((resp) => {
+      this.tableData = resp.data;
+      console.log("resp : " + JSON.stringify(resp));
+      console.log("tableData : " + JSON.stringify(this.tableData));
+    });
+  },
+
   data() {
     return {
       pagination: {
         perPage: 5,
         currentPage: 1,
-        perPageOptions: [1, 2, 3, 5, 10, 25, 50],
+        perPageOptions: [5, 10, 25, 50],
         total: 0,
       },
       searchQuery: "",
-      propsToSearch: ["name", "job"],
+      propsToSearch: ["name"],
       tableColumns: [
+        // {
+        //   prop: "name",
+        //   label: "Name",
+        //   minWidth: 150,
+        // },
         {
-          prop: "name",
-          label: "Name",
-          minWidth: 150,
+          prop: "floor",
+          label: "Floor",
         },
         {
-          prop: "job",
-          label: "Job",
+          prop: "building",
+          label: "Building",
         },
         {
-          prop: "salary",
-          label: "Salary",
+          prop: "developer",
+          label: "Developer",
+          minWidth: 100,
         },
+        // private String developer;
+        // private String address;
+        // private String district;
+        // private String amphoe;
+        // private String province;
+        // private String zipcode;
       ],
       tableData: [
-        {
-          name: "Andrew Mike",
-          image: "/static/img/faces/ayo-ogunseinde-2.jpg",
-          job: "Develop",
-          salary: "€ 99,225",
-          active: true,
-        },
-        {
-          name: "John Doe",
-          image: "/static/img/tables/agenda.png",
-          job: "Design",
-          salary: "€ 89,241",
-          active: false,
-        },
-        {
-          name: "Alex Mike",
-          image: "/static/img/tables/agenda.png",
-          job: "Design",
-          salary: "€ 92,144",
-          active: false,
-        },
-        {
-          name: "Mike Monday",
-          image: "/static/img/tables/agenda.png",
-          job: "Marketing",
-          salary: "€ 49,990",
-          active: true,
-        },
-        {
-          name: "Paul dickens",
-          image: "/static/img/tables/agenda.png",
-          job: "Communication",
-          salary: "€ 69,201",
-          active: true,
-        },
+        // {
+        //   name: "Andrew Mike",
+        //   image: "/static/img/faces/ayo-ogunseinde-2.jpg",
+        //   job: "Develop",
+        //   salary: "€ 99,225",
+        //   active: true,
+        // },
+        // {
+        //   name: "John Doe",
+        //   image: "/static/img/tables/agenda.png",
+        //   job: "Design",
+        //   salary: "€ 89,241",
+        //   active: false,
+        // },
+        // {
+        //   name: "Alex Mike",
+        //   image: "/static/img/tables/agenda.png",
+        //   job: "Design",
+        //   salary: "€ 92,144",
+        //   active: false,
+        // },
+        // {
+        //   name: "Mike Monday",
+        //   image: "/static/img/tables/agenda.png",
+        //   job: "Marketing",
+        //   salary: "€ 49,990",
+        //   active: true,
+        // },
+        // {
+        //   name: "Paul dickens",
+        //   image: "/static/img/tables/agenda.png",
+        //   job: "Communication",
+        //   salary: "€ 69,201",
+        //   active: true,
+        // },
       ],
       tasks: [
         {
@@ -243,6 +288,7 @@ export default {
       alert(`Your clicked on Like button ${index}`);
     },
     handleEdit(index, row) {
+      window.location.href = "/#/admin/project/create?id="+row.id;
       alert(`Your want to edit ${row.name}`);
     },
     handleDelete(index, row) {

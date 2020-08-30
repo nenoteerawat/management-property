@@ -165,7 +165,7 @@
               @click="createProject"
               round
               v-loading.fullscreen.lock="fullscreenLoading"
-            >Add</p-button>
+            >{{ btnAction }}</p-button>
           </div>
         </template>
       </card>
@@ -191,9 +191,63 @@ export default {
     // TransportBox,
   },
 
+  created: function () {
+    // `this` points to the vm instance
+    if (this.$route.query.id) {
+      let postBody = {
+        role: "",
+        userId: this.$route.query.id,
+      };
+      const AXIOS = axios.create({
+        baseURL: process.env.VUE_APP_BACKEND_URL,
+      });
+      AXIOS.post(`api/project/list`, postBody, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+      }).then((resp) => {
+        console.log("resp : " + JSON.stringify(resp));
+        this.btnAction = "Edit";
+        this.project.name = resp.data[0].name;
+        this.project.type = resp.data[0].type;
+        this.project.name = resp.data[0].name;
+        this.project.floor = resp.data[0].floor;
+        this.project.building = resp.data[0].building;
+        this.project.developer = resp.data[0].developer;
+        this.project.address = resp.data[0].address;
+        this.district = resp.data[0].district;
+        this.amphoe = resp.data[0].amphoe;
+        this.province = resp.data[0].province;
+        this.zipcode = resp.data[0].zipcode;
+        this.facilitySelects.selects = resp.data[0].facilities;
+        this.transports.splice(0, 1);
+        let i = 0;
+        for (let value of resp.data[0].transports) {
+          console.log("transport : " + JSON.stringify(value));
+          console.log("transport.index : " + i);
+          let transportOption;
+          if (value.type == "BTS") transportOption = this.transportBTSSelect;
+          else if (value.type == "MRT")
+            transportOption = this.transportMRTSelect;
+          else if (value.type == "AIRLINK")
+            transportOption = this.transportAIRLINKSelect;
+          this.transports.push({
+            type: value.type,
+            name: value.name,
+            range: value.range,
+            transportOption: transportOption,
+          });
+          i++;
+        }
+      });
+    }
+  },
+
   data() {
     return {
       fullscreenLoading: false,
+      btnAction: "Add",
       transports: [
         {
           type: "",
@@ -211,14 +265,14 @@ export default {
         ],
       },
       transportBTSSelect: [
-        { value: "1", label: "บางนา" },
-        { value: "3", label: "สยาม" },
+        { value: "บางนา", label: "บางนา" },
+        { value: "สยาม", label: "สยาม" },
       ],
-      transportMRTSelect: [{ value: "1", label: "พระราม 9" }],
-      transportAIRLINKSelect: [
-        { value: "1", label: "AIRLINK" },
-        { value: "3", label: "สยาม" },
+      transportMRTSelect: [
+        { value: "พระราม 9", label: "พระราม 9" },
+        { value: "ลำโพง", label: "ลำโพง" },
       ],
+      transportAIRLINKSelect: [{ value: "AIRLINK", label: "AIRLINK" }],
       facilitySelects: {
         selects: "",
         data: [
@@ -280,12 +334,11 @@ export default {
         this.transports[k].transportOption = this.transportMRTSelect;
       else if (event == "AIRLINK")
         this.transports[k].transportOption = this.transportAIRLINKSelect;
-      console.log(this.transports);
-      console.log("key : " + k);
     },
     createProject() {
       this.fullscreenLoading = true;
       let token = localStorage.getItem("token");
+      let path = "api/project/create";
       console.log("token : " + token);
       let postBody = {
         type: this.project.type,
@@ -301,12 +354,29 @@ export default {
         facilities: this.facilitySelects.selects,
         transports: this.transports,
       };
+      if (this.$route.query.id) {
+        path = "api/project/edit";
+        postBody = {
+          id: this.$route.query.id,
+          type: this.project.type,
+          name: this.project.name,
+          floor: this.project.floor,
+          building: this.project.building,
+          developer: this.project.developer,
+          address: this.project.address,
+          district: this.district,
+          amphoe: this.amphoe,
+          province: this.province,
+          zipcode: this.zipcode,
+          facilities: this.facilitySelects.selects,
+          transports: this.transports,
+        };
+      }
       console.log("postBody : " + JSON.stringify(postBody));
-
       const AXIOS = axios.create({
         baseURL: process.env.VUE_APP_BACKEND_URL,
       });
-      AXIOS.post(`api/project/create`, postBody, {
+      AXIOS.post(path, postBody, {
         headers: {
           "Content-Type": "application/json",
           Authorization: "Bearer " + localStorage.getItem("token"),
@@ -314,25 +384,26 @@ export default {
       })
         .then((resp) => {
           this.fullscreenLoading = false;
-          this.$notify(
-          {
-            message: 'Add Success',
-            icon: 'fa fa-gift',
+          this.$notify({
+            message: "Success",
+            icon: "fa fa-gift",
             horizontalAlign: "center",
             verticalAlign: "top",
-            type: "success"
-          })
+            type: "success",
+          });
+          window.location.href = "/#/admin/project";
         })
         .catch((err) => {
           this.fullscreenLoading = false;
-          this.$notify(
-          {
-            message: 'Error',
+          this.$notify({
+            message: "Error",
             // icon: 'fa fa-gift',
+            // component: NotificationTemplate,
             horizontalAlign: "center",
             verticalAlign: "top",
-            type: "warning"
-          })
+            type: "warning",
+          });
+          // window.location.href = "/#/admin/project";
           reject(err);
         });
     },
