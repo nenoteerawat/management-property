@@ -1,5 +1,4 @@
 import { geoClipAntimeridian } from "d3";
-
 export default [
   {
     name: "Dashboard",
@@ -73,13 +72,13 @@ export default [
     name: 'Owner',
     icon: 'nc-icon nc-shop',
     path: '/admin/owner',
-    roles: ["ROLE_ADMIN", "ROLE_MANAGER", "ROLE_SALE_MANAGER", "ROLE_SALE"]
+    roles: ["ROLE_SALE"]
   },
   {
     name: 'Project',
     icon: 'nc-icon nc-bank',
     path: '/admin/project',
-    role: ["ROLE_ADMIN", "ROLE_MANAGER", "ROLE_SALE_MANAGER", "ROLE_SALE"]
+    roles: ["ROLE_SALE"]
   },
   {
     name: 'Pages',
@@ -107,7 +106,7 @@ export default [
   {
     name: "Table List",
     icon: "nc-icon nc-single-copy-04",
-    roles: ["ROLE_SALE"],
+    roles: ["ROLE_SALE","ROLE_ADMIN"],
     collapsed: true,
     children: [
       {
@@ -153,13 +152,13 @@ export default [
     name: "Widgets",
     icon: "nc-icon nc-box",
     path: "/admin/widgets",
-    roles: []
+    roles: ["ROLE_ADMIN"]
   },
   {
     name: "Charts",
     icon: "nc-icon nc-chart-bar-32",
     path: "/charts",
-    roles: []
+    roles: ["ROLE_ADMIN"]
   },
   {
     name: "Calendar",

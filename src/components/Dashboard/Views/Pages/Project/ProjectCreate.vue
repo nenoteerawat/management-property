@@ -95,7 +95,12 @@
             </div>
             <div class="row" v-for="(transport,k) in transports" :key="k">
               <div class="col-md-2">
-                <el-select class="select-primary" placeholder="Select" v-model="transport.type">
+                <el-select
+                  class="select-primary"
+                  placeholder="Select"
+                  v-model="transport.type"
+                  @change="onChangeTransports($event, k)"
+                >
                   <el-option
                     v-for="option in transportTypeSelect.data"
                     class="select-primary"
@@ -106,9 +111,9 @@
                 </el-select>
               </div>
               <div class="col-md-2">
-                <el-select class="select-primary" placeholder="Select" v-model="transport.name">
+                <el-select class="select-primary" v-model="transport.name">
                   <el-option
-                    v-for="option in transportNameSelect.data"
+                    v-for="option in transport.transportOption"
                     class="select-primary"
                     :value="option.value"
                     :label="option.label"
@@ -194,6 +199,7 @@ export default {
           type: "",
           name: "",
           range: "",
+          transportOption: [],
         },
       ],
       transportTypeSelect: {
@@ -204,14 +210,15 @@ export default {
           { value: "AIRLINK", label: "AIRLINK" },
         ],
       },
-      transportNameSelect: {
-        simple: "",
-        data: [
-          { value: "1", label: "บางนา" },
-          { value: "2", label: "สีลม" },
-          { value: "3", label: "สยาม" },
-        ],
-      },
+      transportBTSSelect: [
+        { value: "1", label: "บางนา" },
+        { value: "3", label: "สยาม" },
+      ],
+      transportMRTSelect: [{ value: "1", label: "พระราม 9" }],
+      transportAIRLINKSelect: [
+        { value: "1", label: "AIRLINK" },
+        { value: "3", label: "สยาม" },
+      ],
       facilitySelects: {
         selects: "",
         data: [
@@ -250,7 +257,12 @@ export default {
 
   methods: {
     add(index) {
-      this.transports.push({ type: "", name: "", range: "" });
+      this.transports.push({
+        type: "",
+        name: "",
+        range: "",
+        transportOption: [],
+      });
     },
     remove(index) {
       this.transports.splice(index, 1);
@@ -260,6 +272,16 @@ export default {
       this.amphoe = address.amphoe;
       this.province = address.province;
       this.zipcode = address.zipcode;
+    },
+    onChangeTransports(event, k) {
+      if (event == "BTS")
+        this.transports[k].transportOption = this.transportBTSSelect;
+      else if (event == "MRT")
+        this.transports[k].transportOption = this.transportMRTSelect;
+      else if (event == "AIRLINK")
+        this.transports[k].transportOption = this.transportAIRLINKSelect;
+      console.log(this.transports);
+      console.log("key : " + k);
     },
     createProject() {
       this.fullscreenLoading = true;
@@ -281,26 +303,47 @@ export default {
       };
       console.log("postBody : " + JSON.stringify(postBody));
 
-      axios.defaults.headers.common["Authorization"] =
-        "Bearer " + localStorage.getItem("token");
-
-      axios({
-        url: "http://localhost:8090/api/project/create",
-        data: postBody,
-        method: "POST",
+      const AXIOS = axios.create({
+        baseURL: process.env.VUE_APP_BACKEND_URL,
+      });
+      AXIOS.post(`api/project/create`, postBody, {
         headers: {
           "Content-Type": "application/json",
+          Authorization: "Bearer " + localStorage.getItem("token"),
         },
       })
         .then((resp) => {
           this.fullscreenLoading = false;
+          this.$notify(
+          {
+            message: 'Add Success',
+            icon: 'fa fa-gift',
+            horizontalAlign: "center",
+            verticalAlign: "top",
+            type: "success"
+          })
         })
         .catch((err) => {
           this.fullscreenLoading = false;
+          this.$notify(
+          {
+            message: 'Error',
+            // icon: 'fa fa-gift',
+            horizontalAlign: "center",
+            verticalAlign: "top",
+            type: "warning"
+          })
           reject(err);
         });
     },
   },
+  // computed: {
+  //   secondInputOptions(event){
+
+  //     return this.selected === 'fruit' ? this.fruit : this.vegetables
+  //     return
+  //   }
+  // },
 };
 </script>
 <style lang="scss">
