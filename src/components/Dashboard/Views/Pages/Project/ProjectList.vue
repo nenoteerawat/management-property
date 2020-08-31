@@ -43,10 +43,7 @@
             </div>
           </div>
           <div class="col-md-12">
-            <el-table
-              :data="queriedData"
-              header-row-class-name="text-primary"
-            >
+            <el-table :data="queriedData" header-row-class-name="text-primary">
               <el-table-column type="index"></el-table-column>
               <!-- <el-table-column min-width="60">
                 <template slot-scope="props">
@@ -55,28 +52,49 @@
                   </div>
                 </template>
               </el-table-column>-->
-              <el-table-column min-width="200" label="Project" >
+              <el-table-column min-width="200" label="Project">
                 <template slot-scope="props">
                   <div class="col-md-12">
                     <h4>{{ props.row.name}}</h4>
                   </div>
-                  <div class="col-md-12">
-                    <h6>ตำบล : {{ props.row.amphoe}} อำเภอ : {{ props.row.district}} จังหวัด : {{ props.row.province}}</h6>
+                  <div class="col-md-12 cell">
+                    ตำบล : {{ props.row.amphoe}} อำเภอ : {{ props.row.district}} จังหวัด : {{ props.row.province}}
                   </div>
                 </template>
               </el-table-column>
-              <el-table-column
+              <el-table-column label="floor">
+                <template slot-scope="props">
+                  <div class="cell">
+                    ชั้น {{ props.row.floor}} 
+                  </div>
+                </template>
+              </el-table-column>
+              <el-table-column label="building">
+                <template slot-scope="props">
+                  <div class="cell">
+                    ตึก {{ props.row.building}} 
+                  </div>
+                </template>
+              </el-table-column>
+              <el-table-column label="developer">
+                <template slot-scope="props">
+                  <div class="cell">
+                    ปี {{ props.row.developer}} 
+                  </div>
+                </template>
+              </el-table-column>
+              <!-- <el-table-column
                 v-for="column in tableColumns"
                 :key="column.label"
                 :min-width="column.minWidth"
                 :prop="column.prop"
                 :label="column.label"
-              ></el-table-column>
+              ></el-table-column> -->
               <el-table-column class-name="action-buttons td-actions" align="right" label="Actions">
                 <template slot-scope="props">
                   <!-- <p-button type="info" size="sm" icon @click="handleLike(props.$index, props.row)">
                     <i class="fa fa-user"></i>
-                  </p-button> -->
+                  </p-button>-->
                   <p-button
                     type="success"
                     size="sm"
@@ -143,16 +161,13 @@
 </template>
 <script>
 import Vue from "vue";
-import { Table, TableColumn, Select, Option } from "element-ui";
+import ElementUI from "element-ui";
 import PPagination from "src/components/UIComponents/Pagination.vue";
 import DailyBar from "../Daily/DailyBar";
 import { Card } from "src/components/UIComponents";
 import axios from "axios";
 
-Vue.use(Table);
-Vue.use(TableColumn);
-Vue.use(Select);
-Vue.use(Option);
+Vue.use(ElementUI);
 export default {
   components: {
     Card,
@@ -164,7 +179,7 @@ export default {
     // `this` points to the vm instance
     let postBody = {
       role: "",
-      userId: "",
+      id: "",
     };
     const AXIOS = axios.create({
       baseURL: process.env.VUE_APP_BACKEND_URL,
@@ -210,50 +225,8 @@ export default {
           label: "Developer",
           minWidth: 100,
         },
-        // private String developer;
-        // private String address;
-        // private String district;
-        // private String amphoe;
-        // private String province;
-        // private String zipcode;
       ],
-      tableData: [
-        // {
-        //   name: "Andrew Mike",
-        //   image: "/static/img/faces/ayo-ogunseinde-2.jpg",
-        //   job: "Develop",
-        //   salary: "€ 99,225",
-        //   active: true,
-        // },
-        // {
-        //   name: "John Doe",
-        //   image: "/static/img/tables/agenda.png",
-        //   job: "Design",
-        //   salary: "€ 89,241",
-        //   active: false,
-        // },
-        // {
-        //   name: "Alex Mike",
-        //   image: "/static/img/tables/agenda.png",
-        //   job: "Design",
-        //   salary: "€ 92,144",
-        //   active: false,
-        // },
-        // {
-        //   name: "Mike Monday",
-        //   image: "/static/img/tables/agenda.png",
-        //   job: "Marketing",
-        //   salary: "€ 49,990",
-        //   active: true,
-        // },
-        // {
-        //   name: "Paul dickens",
-        //   image: "/static/img/tables/agenda.png",
-        //   job: "Communication",
-        //   salary: "€ 69,201",
-        //   active: true,
-        // },
-      ],
+      tableData: [],
       tasks: [
         {
           done: true,
@@ -288,11 +261,45 @@ export default {
       alert(`Your clicked on Like button ${index}`);
     },
     handleEdit(index, row) {
-      window.location.href = "/#/admin/project/create?id="+row.id;
-      alert(`Your want to edit ${row.name}`);
+      window.location.href = "/#/admin/project/create?id=" + row.id;
+      // alert(`Your want to edit ${row.name}`);
     },
     handleDelete(index, row) {
-      alert(`Your want to delete ${row.name}`);
+      this.$confirm(
+        "This will permanently delete project. Continue?",
+        "Warning",
+        {
+          confirmButtonText: "OK",
+          cancelButtonText: "Cancel",
+          type: "warning",
+        }
+      )
+        .then(() => {
+          let postBody = {
+            id: row.id,
+          };
+          console.log("postBody : " + JSON.stringify(postBody));
+          const AXIOS = axios.create({
+            baseURL: process.env.VUE_APP_BACKEND_URL,
+          });
+          AXIOS.post(`api/project/delete`, postBody, {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: "Bearer " + localStorage.getItem("token"),
+            },
+          }).then((resp) => {
+            this.$message({
+              type: "success",
+              message: "Delete completed",
+            });
+          });
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "Delete canceled",
+          });
+        });
     },
     handleTaskEdit(index) {
       alert(`You want to edit task: ${JSON.stringify(this.tasks[index])}`);

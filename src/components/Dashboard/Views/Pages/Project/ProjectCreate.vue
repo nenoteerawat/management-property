@@ -180,6 +180,7 @@ import "@trevoreyre/autocomplete-vue/dist/style.css";
 import { Select, Option, Tag } from "element-ui";
 import ThailandAutoComplete from "vue-thailand-address-autocomplete";
 import axios from "axios";
+import { mapGetters } from "vuex";
 
 export default {
   components: {
@@ -196,7 +197,7 @@ export default {
     if (this.$route.query.id) {
       let postBody = {
         role: "",
-        userId: this.$route.query.id,
+        id: this.$route.query.id,
       };
       const AXIOS = axios.create({
         baseURL: process.env.VUE_APP_BACKEND_URL,
@@ -224,8 +225,6 @@ export default {
         this.transports.splice(0, 1);
         let i = 0;
         for (let value of resp.data[0].transports) {
-          console.log("transport : " + JSON.stringify(value));
-          console.log("transport.index : " + i);
           let transportOption;
           if (value.type == "BTS") transportOption = this.transportBTSSelect;
           else if (value.type == "MRT")
@@ -309,6 +308,13 @@ export default {
     };
   },
 
+  computed: {
+    ...mapGetters({ getUser: "getUser" }),
+    isLoggedIn: function () {
+      return this.$store.getters.isLoggedIn;
+    },
+  },
+
   methods: {
     add(index) {
       this.transports.push({
@@ -353,6 +359,7 @@ export default {
         zipcode: this.zipcode,
         facilities: this.facilitySelects.selects,
         transports: this.transports,
+        username: this.getUser.username,
       };
       if (this.$route.query.id) {
         path = "api/project/edit";
@@ -370,6 +377,7 @@ export default {
           zipcode: this.zipcode,
           facilities: this.facilitySelects.selects,
           transports: this.transports,
+          username: this.getUser.username,
         };
       }
       console.log("postBody : " + JSON.stringify(postBody));
