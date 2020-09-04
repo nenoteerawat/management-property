@@ -64,7 +64,7 @@
             <div>
               <label>Project</label>
             </div>
-            <autocomplete :search="search"></autocomplete>
+            <!-- <autocomplete :search="search"></autocomplete> -->
           </div>
           <div class="col-md-6">
             <div>

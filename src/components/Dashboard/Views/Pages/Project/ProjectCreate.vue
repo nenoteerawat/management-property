@@ -1,177 +1,223 @@
 <template>
-  <div class="row center">
-    <div class="col-md-10">
-      <card>
-        <h5 slot="header" class="card-title">
-          Project
-          <hr />
-        </h5>
-        <div class="row">
-          <div class="col-md-6">
-            <fieldset>
-              <div class="form-group">
-                <label class="control-label">ประเภท</label>
-                <div class="col-md-12">
-                  <p-radio label="1" v-model="project.type" value="1" :inline="true">คอนโด</p-radio>
-                  <p-radio label="2" v-model="project.type" value="2" :inline="true">บ้าน</p-radio>
-                  <p-radio label="3" v-model="project.type" value="3" :inline="true">ที่ดิน</p-radio>
-                </div>
-              </div>
-            </fieldset>
-          </div>
-          <div class="col-md-6">
-            <fg-input placeholder label="โครงการ" v-model="project.name"></fg-input>
-          </div>
-          <div class="col-md-2">
-            <fg-input placeholder label="ชั้น" type="number" v-model="project.floor"></fg-input>
-          </div>
-          <div class="col-md-2">
-            <fg-input placeholder label="ตึก" v-model="project.building"></fg-input>
-          </div>
-          <div class="col-md-2">
-            <fg-input placeholder label="ปีที่สร้างเสร็จ" type="number" v-model="project.developer"></fg-input>
-          </div>
-          <div class="col-md-6">
-            <fg-input placeholder label="ที่อยู่" v-model="project.address"></fg-input>
-          </div>
-          <div class="col-md-3">
-            <ThailandAutoComplete
-              v-model="district"
-              type="district"
-              @select="select"
-              label="ตำบล"
-              placeholder="ตำบล..."
-            />
-          </div>
-          <div class="col-md-3">
-            <ThailandAutoComplete
-              v-model="amphoe"
-              type="amphoe"
-              @select="select"
-              label="อำเภอ"
-              placeholder="อำเภอ..."
-            />
-          </div>
-          <div class="col-md-3">
-            <ThailandAutoComplete
-              v-model="province"
-              type="province"
-              @select="select"
-              label="จังหวัด"
-              placeholder="จังหวัด..."
-            />
-          </div>
-          <div class="col-md-3">
-            <ThailandAutoComplete
-              v-model="zipcode"
-              type="zipcode"
-              @select="select"
-              label="รหัสไปรษณีย์"
-              placeholder="รหัสไปรษณีย์..."
-            />
-          </div>
-          <div class="col-md-12">
-            <div>
-              <label>ส่วนกลาง</label>
-            </div>
-            <el-select
-              multiple
-              class="select-primary select-width-100"
-              placeholder="Select"
-              v-model="facilitySelects.selects"
-            >
-              <el-option
-                v-for="option in facilitySelects.data"
-                class="select-primary"
-                :value="option.value"
-                :label="option.label"
-                :key="option.label"
-              ></el-option>
-            </el-select>
-          </div>
-          <div class="col-md-12">
-            <div>
-              <label>การเดินทาง</label>
-            </div>
-            <div class="row" v-for="(transport,k) in transports" :key="k">
-              <div class="col-md-2">
-                <el-select
-                  class="select-primary"
-                  placeholder="Select"
-                  v-model="transport.type"
-                  @change="onChangeTransports($event, k)"
-                >
-                  <el-option
-                    v-for="option in transportTypeSelect.data"
-                    class="select-primary"
-                    :value="option.value"
-                    :label="option.label"
-                    :key="option.label"
-                  ></el-option>
-                </el-select>
-              </div>
-              <div class="col-md-2">
-                <el-select class="select-primary" v-model="transport.name">
-                  <el-option
-                    v-for="option in transport.transportOption"
-                    class="select-primary"
-                    :value="option.value"
-                    :label="option.label"
-                    :key="option.label"
-                  ></el-option>
-                </el-select>
-              </div>
-              <div class="col-md-2">
-                <div class="input-group">
-                  <input
-                    type="number"
-                    class="form-control"
-                    placeholder="0"
-                    v-model="transport.range"
-                  />
-                  <div class="input-group-append">
-                    <span class="input-group-text bg-grey" id="basic-addon2">ม.</span>
+  <ValidationObserver v-slot="{ handleSubmit }">
+    <form @submit.prevent="handleSubmit(submit)">
+      <div class="row center">
+        <div class="col-md-10">
+          <card>
+            <h5 slot="header" class="card-title">
+              Project
+              <hr />
+            </h5>
+            <div class="row">
+              <div class="col-md-6">
+                <fieldset>
+                  <div class="form-group">
+                    <label class="control-label">ประเภท</label>
+                    <div class="col-md-12">
+                      <p-radio label="1" v-model="project.type" value="1" :inline="true">คอนโด</p-radio>
+                      <p-radio label="2" v-model="project.type" value="2" :inline="true">บ้าน</p-radio>
+                      <p-radio label="3" v-model="project.type" value="3" :inline="true">ที่ดิน</p-radio>
+                    </div>
                   </div>
+                </fieldset>
+              </div>
+              <div class="col-md-6">
+                <ValidationProvider name="name" rules="required" v-slot="{ passed, failed }">
+                  <fg-input
+                    placeholder
+                    label="โครงการ"
+                    v-model="project.name"
+                    :error="failed ? 'The field is required': null"
+                    :hasSuccess="passed"
+                  ></fg-input>
+                </ValidationProvider>
+              </div>
+              <div class="col-md-2">
+                <ValidationProvider name="floor" rules="required" v-slot="{ passed, failed }">
+                  <fg-input
+                    placeholder
+                    label="ชั้น"
+                    type="number"
+                    v-model="project.floor"
+                    :error="failed ? 'The field is required': null"
+                    :hasSuccess="passed"
+                  ></fg-input>
+                </ValidationProvider>
+              </div>
+              <div class="col-md-2">
+                <ValidationProvider name="building" rules="required" v-slot="{ passed, failed }">
+                  <fg-input
+                    placeholder
+                    label="ตึก"
+                    v-model="project.building"
+                    :error="failed ? 'The field is required': null"
+                    :hasSuccess="passed"
+                  ></fg-input>
+                </ValidationProvider>
+              </div>
+              <div class="col-md-2">
+                <ValidationProvider name="developer" rules="required" v-slot="{ passed, failed }">
+                  <fg-input
+                    placeholder
+                    label="ปีที่สร้างเสร็จ"
+                    type="number"
+                    v-model="project.developer"
+                    :error="failed ? 'The field is required': null"
+                    :hasSuccess="passed"
+                  ></fg-input>
+                </ValidationProvider>
+              </div>
+              <div class="col-md-6">
+                <ValidationProvider name="address" rules="required" v-slot="{ passed, failed }">
+                  <fg-input
+                    placeholder
+                    label="ที่อยู่"
+                    v-model="project.address"
+                    :error="failed ? 'The field is required': null"
+                    :hasSuccess="passed"
+                  ></fg-input>
+                </ValidationProvider>
+              </div>
+              <div class="col-md-3">
+                <ThailandAutoComplete
+                  v-model="district"
+                  type="district"
+                  @select="select"
+                  label="ตำบล"
+                  placeholder="ตำบล..."
+                />
+              </div>
+              <div class="col-md-3">
+                <ThailandAutoComplete
+                  v-model="amphoe"
+                  type="amphoe"
+                  @select="select"
+                  label="อำเภอ"
+                  placeholder="อำเภอ..."
+                />
+              </div>
+              <div class="col-md-3">
+                <ThailandAutoComplete
+                  v-model="province"
+                  type="province"
+                  @select="select"
+                  label="จังหวัด"
+                  placeholder="จังหวัด..."
+                />
+              </div>
+              <div class="col-md-3">
+                <ThailandAutoComplete
+                  v-model="zipcode"
+                  type="zipcode"
+                  @select="select"
+                  label="รหัสไปรษณีย์"
+                  placeholder="รหัสไปรษณีย์..."
+                />
+              </div>
+              <div class="col-md-12">
+                <div>
+                  <label>ส่วนกลาง</label>
+                </div>
+                <el-select
+                  multiple
+                  class="select-primary select-width-100"
+                  placeholder="Select"
+                  v-model="facilitySelects.selects"
+                >
+                  <el-option
+                    v-for="option in facilitySelects.data"
+                    class="select-primary"
+                    :value="option.value"
+                    :label="option.label"
+                    :key="option.label"
+                  ></el-option>
+                </el-select>
+              </div>
+              <div class="col-md-12">
+                <div>
+                  <label>การเดินทาง</label>
+                </div>
+                <div class="row" v-for="(transport,k) in transports" :key="k">
+                  <div class="col-md-2">
+                    <el-select
+                      class="select-primary"
+                      placeholder="Select"
+                      v-model="transport.type"
+                      @change="onChangeTransports($event, k)"
+                    >
+                      <el-option
+                        v-for="option in transportTypeSelect.data"
+                        class="select-primary"
+                        :value="option.value"
+                        :label="option.label"
+                        :key="option.label"
+                      ></el-option>
+                    </el-select>
+                  </div>
+                  <div class="col-md-2">
+                    <el-select class="select-primary" v-model="transport.name">
+                      <el-option
+                        v-for="option in transport.transportOption"
+                        class="select-primary"
+                        :value="option.value"
+                        :label="option.label"
+                        :key="option.label"
+                      ></el-option>
+                    </el-select>
+                  </div>
+                  <div class="col-md-2">
+                    <div class="input-group">
+                      <input
+                        type="number"
+                        class="form-control"
+                        placeholder="0"
+                        v-model="transport.range"
+                      />
+                      <div class="input-group-append">
+                        <span class="input-group-text bg-grey" id="basic-addon2">ม.</span>
+                      </div>
+                    </div>
+                  </div>
+                  <span>
+                    <p-button
+                      type="danger"
+                      size="sm"
+                      icon
+                      @click="remove(k)"
+                      v-show="k || ( !k && transports.length > 1)"
+                    >
+                      <i class="nc-icon nc-simple-remove"></i>
+                    </p-button>
+                    <p-button
+                      type="primary"
+                      size="sm"
+                      icon
+                      v-show="k == transports.length-1"
+                      @click="add(k)"
+                    >
+                      <i class="nc-icon nc-simple-add"></i>
+                    </p-button>
+                  </span>
                 </div>
               </div>
-              <span>
-                <p-button
-                  type="danger"
-                  size="sm"
-                  icon
-                  @click="remove(k)"
-                  v-show="k || ( !k && transports.length > 1)"
-                >
-                  <i class="nc-icon nc-simple-remove"></i>
-                </p-button>
-                <p-button
-                  type="primary"
-                  size="sm"
-                  icon
-                  v-show="k == transports.length-1"
-                  @click="add(k)"
-                >
-                  <i class="nc-icon nc-simple-add"></i>
-                </p-button>
-              </span>
             </div>
-          </div>
+            <template slot="footer">
+              <hr />
+              <div class="stats">
+                <p-button
+                  type="info"
+                  round
+                  native-type="submit"
+                  v-loading.fullscreen.lock="fullscreenLoading"
+                >{{ btnAction }}</p-button>
+              </div>
+            </template>
+          </card>
+          <!-- end card -->
         </div>
-        <template slot="footer">
-          <hr />
-          <div class="stats">
-            <p-button
-              type="info"
-              @click="createProject"
-              round
-              v-loading.fullscreen.lock="fullscreenLoading"
-            >{{ btnAction }}</p-button>
-          </div>
-        </template>
-      </card>
-      <!-- end card -->
-    </div>
-  </div>
+      </div>
+    </form>
+  </ValidationObserver>
 </template>
 <script>
 import Vue from "vue";
@@ -181,6 +227,11 @@ import { Select, Option, Tag } from "element-ui";
 import ThailandAutoComplete from "vue-thailand-address-autocomplete";
 import axios from "axios";
 import { mapGetters } from "vuex";
+import { extend } from "vee-validate";
+import { required, confirmed } from "vee-validate/dist/rules";
+
+extend("required", required);
+extend("confirmed", confirmed);
 
 export default {
   components: {
@@ -199,6 +250,7 @@ export default {
         role: "",
         id: this.$route.query.id,
       };
+      console.log("postBody : " + JSON.stringify(postBody));
       const AXIOS = axios.create({
         baseURL: process.env.VUE_APP_BACKEND_URL,
       });
@@ -226,6 +278,7 @@ export default {
         let i = 0;
         for (let value of resp.data[0].transports) {
           let transportOption;
+          console.log("value : " + JSON.stringify(value));
           if (value.type == "BTS") transportOption = this.transportBTSSelect;
           else if (value.type == "MRT")
             transportOption = this.transportMRTSelect;
@@ -298,7 +351,7 @@ export default {
       zipcode: "",
 
       project: {
-        type: "",
+        type: "1",
         name: "",
         floor: "",
         building: "",
@@ -340,6 +393,9 @@ export default {
         this.transports[k].transportOption = this.transportMRTSelect;
       else if (event == "AIRLINK")
         this.transports[k].transportOption = this.transportAIRLINKSelect;
+    },
+    submit() {
+      this.createProject();
     },
     createProject() {
       this.fullscreenLoading = true;
@@ -411,7 +467,7 @@ export default {
             verticalAlign: "top",
             type: "warning",
           });
-          // window.location.href = "/#/admin/project";
+          console.log("err : " + JSON.stringify(err));
           reject(err);
         });
     },

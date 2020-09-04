@@ -57,30 +57,24 @@
                   <div class="col-md-12">
                     <h4>{{ props.row.name}}</h4>
                   </div>
-                  <div class="col-md-12 cell">
-                    ตำบล : {{ props.row.amphoe}} อำเภอ : {{ props.row.district}} จังหวัด : {{ props.row.province}}
-                  </div>
+                  <div
+                    class="col-md-12 cell"
+                  >ตำบล : {{ props.row.amphoe}} อำเภอ : {{ props.row.district}} จังหวัด : {{ props.row.province}}</div>
                 </template>
               </el-table-column>
               <el-table-column label="floor">
                 <template slot-scope="props">
-                  <div class="cell">
-                    ชั้น {{ props.row.floor}} 
-                  </div>
+                  <div class="cell">ชั้น {{ props.row.floor}}</div>
                 </template>
               </el-table-column>
               <el-table-column label="building">
                 <template slot-scope="props">
-                  <div class="cell">
-                    ตึก {{ props.row.building}} 
-                  </div>
+                  <div class="cell">ตึก {{ props.row.building}}</div>
                 </template>
               </el-table-column>
               <el-table-column label="developer">
                 <template slot-scope="props">
-                  <div class="cell">
-                    ปี {{ props.row.developer}} 
-                  </div>
+                  <div class="cell">ปี {{ props.row.developer}}</div>
                 </template>
               </el-table-column>
               <!-- <el-table-column
@@ -89,7 +83,7 @@
                 :min-width="column.minWidth"
                 :prop="column.prop"
                 :label="column.label"
-              ></el-table-column> -->
+              ></el-table-column>-->
               <el-table-column class-name="action-buttons td-actions" align="right" label="Actions">
                 <template slot-scope="props">
                   <!-- <p-button type="info" size="sm" icon @click="handleLike(props.$index, props.row)">
@@ -176,24 +170,7 @@ export default {
   },
 
   created: function () {
-    // `this` points to the vm instance
-    let postBody = {
-      role: "",
-      id: "",
-    };
-    const AXIOS = axios.create({
-      baseURL: process.env.VUE_APP_BACKEND_URL,
-    });
-    AXIOS.post(`api/project/list`, postBody, {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: "Bearer " + localStorage.getItem("token"),
-      },
-    }).then((resp) => {
-      this.tableData = resp.data;
-      console.log("resp : " + JSON.stringify(resp));
-      console.log("tableData : " + JSON.stringify(this.tableData));
-    });
+    this.getProject();
   },
 
   data() {
@@ -257,10 +234,33 @@ export default {
   },
 
   methods: {
+    getProject: function () {
+      let postBody = {
+        role: "",
+        id: "",
+      };
+      const AXIOS = axios.create({
+        baseURL: process.env.VUE_APP_BACKEND_URL,
+      });
+      AXIOS.post(`api/project/list`, postBody, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+      }).then((resp) => {
+        this.tableData = resp.data;
+        console.log("resp : " + JSON.stringify(resp));
+        console.log("tableData : " + JSON.stringify(this.tableData));
+      }).catch((err) => {
+          console.log("err : " + JSON.stringify(err));
+          reject(err);
+        });
+    },
     handleLike(index, row) {
       alert(`Your clicked on Like button ${index}`);
     },
     handleEdit(index, row) {
+      console.log("row : "+row);
       window.location.href = "/#/admin/project/create?id=" + row.id;
       // alert(`Your want to edit ${row.name}`);
     },
@@ -292,6 +292,7 @@ export default {
               type: "success",
               message: "Delete completed",
             });
+            this.getProject();
           });
         })
         .catch(() => {
