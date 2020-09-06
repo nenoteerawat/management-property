@@ -264,7 +264,6 @@ export default {
         this.btnAction = "Edit";
         this.project.name = resp.data[0].name;
         this.project.type = resp.data[0].type;
-        this.project.name = resp.data[0].name;
         this.project.floor = resp.data[0].floor;
         this.project.building = resp.data[0].building;
         this.project.developer = resp.data[0].developer;
