@@ -1,7 +1,7 @@
 <template>
   <div class="user">
     <div class="photo">
-      <img src="static/img/faces/face-2.jpg" alt="user avatar"/>
+      <img src="https://property-s3.s3-ap-southeast-1.amazonaws.com/1444207414-118720831j-o.png" alt="user avatar"/>
     </div>
     <div class="info">
       <a data-toggle="collapse" :aria-expanded="!isClosed" @click="toggleMenu" href="#">

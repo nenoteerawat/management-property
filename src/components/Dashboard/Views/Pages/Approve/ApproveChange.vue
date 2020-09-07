@@ -156,8 +156,8 @@ export default {
           minWidth: 100,
         },
         {
-          prop: "roomeCode",
-          label: "Roome Code",
+          prop: "type",
+          label: "Type",
         },
         {
           prop: "comment",
@@ -165,12 +165,12 @@ export default {
           minWidth: 150,
         },
         {
-          prop: "sale",
-          label: "Sale",
+          prop: "user",
+          label: "User",
         },
         {
-          prop: "date",
-          label: "Date",
+          prop: "datetime",
+          label: "Date Time",
         },
       ],
       tableData: [
