@@ -44,7 +44,8 @@ export default new Vuex.Store({
               firstName: resp.data.firstName,
               lastName: resp.data.lastName,
               email: resp.data.email,
-              roles: resp.data.roles
+              roles: resp.data.roles,
+              username: resp.data.username
             };
             localStorage.setItem("token", user.token);
             axios.defaults.headers.common["Authorization"] = user.token;

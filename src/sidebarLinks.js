@@ -1,5 +1,4 @@
 import { geoClipAntimeridian } from "d3";
-
 export default [
   {
     name: "Dashboard",
@@ -73,6 +72,12 @@ export default [
     name: 'Owner',
     icon: 'nc-icon nc-shop',
     path: '/admin/owner',
+    roles: ["ROLE_SALE"]
+  },
+  {
+    name: 'Project',
+    icon: 'nc-icon nc-bank',
+    path: '/admin/project',
     roles: ["ROLE_SALE"]
   },
   {
