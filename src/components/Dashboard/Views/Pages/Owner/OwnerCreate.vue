@@ -102,7 +102,7 @@
                 <div>
                   <label>Project</label>
                 </div>
-                <autocomplete :search="search" @submit="projectSearch"></autocomplete>
+                <autocomplete :search="search" @submit="projectSearch" v-model="project.name"></autocomplete>
               </div>
               <div class="col-md-6">
                 <div>
@@ -140,26 +140,7 @@
               <div class="col-md-6">
                 <fg-input :disabled="true" label="ที่อยู่" v-model="project.address"></fg-input>
               </div>
-              <div class="col-md-12">
-                <div>
-                  <label>ส่วนกลาง</label>
-                </div>
-                <el-select
-                  multiple
-                  class="select-primary select-width-100"
-                  placeholder="Select"
-                  disabled
-                  v-model="facilitySelects.selects"
-                >
-                  <el-option
-                    v-for="option in facilitySelects.data"
-                    class="select-primary"
-                    :value="option.value"
-                    :label="option.label"
-                    :key="option.label"
-                  ></el-option>
-                </el-select>
-              </div>
+
               <div class="col-md-12">
                 <div class="row-">
                   <div>
@@ -283,7 +264,14 @@
                 </el-select>
               </div>
               <div class="col-md-6">
-                <fg-input type="number" placeholder label="ราคา" v-model="room.price"></fg-input>
+                <div class="row">
+                  <div class="col-md-6">
+                    <fg-input type="number" placeholder label="ราคา" v-model="room.price"></fg-input>
+                  </div>
+                  <div class="col-md-6" v-show="activeRent">
+                    <fg-input type="number" placeholder label="เช่า" v-model="room.priceRent"></fg-input>
+                  </div>
+                </div>
               </div>
               <div class="col-md-6">
                 <div>
@@ -361,6 +349,26 @@
                 >
                   <el-option
                     v-for="option in scenerySelects.data"
+                    class="select-primary"
+                    :value="option.value"
+                    :label="option.label"
+                    :key="option.label"
+                  ></el-option>
+                </el-select>
+              </div>
+              <div class="col-md-12">
+                <div>
+                  <label>ส่วนกลาง</label>
+                </div>
+                <el-select
+                  multiple
+                  class="select-primary select-width-100"
+                  placeholder="Select"
+                  disabled
+                  v-model="facilitySelects.selects"
+                >
+                  <el-option
+                    v-for="option in facilitySelects.data"
                     class="select-primary"
                     :value="option.value"
                     :label="option.label"
@@ -472,7 +480,7 @@
                   round
                   native-type="submit"
                   v-loading.fullscreen.lock="fullscreenLoading"
-                >Add</p-button>
+                >{{ btnAction }}</p-button>
               </div>
             </template>
           </card>
@@ -531,11 +539,62 @@ export default {
       });
       console.log("projects : " + JSON.stringify(this.projects));
     });
+
+    //edit
+    if (this.$route.query.id) {
+      let postBody = {
+        role: "",
+        id: this.$route.query.id,
+      };
+      console.log("postBody : " + JSON.stringify(postBody));
+      const AXIOS = axios.create({
+        baseURL: process.env.VUE_APP_BACKEND_URL,
+      });
+      AXIOS.post(`api/lead/list`, postBody, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+      }).then((resp) => {
+        console.log("resp : " + JSON.stringify(resp.data[0]));
+        this.owner.listingCode = resp.data[0].owner.listingCode;
+        this.owner.name = resp.data[0].owner.name;
+        this.owner.line = resp.data[0].owner.line;
+        this.owner.phone = resp.data[0].owner.phone;
+        this.owner.name = resp.data[0].owner.name;
+        this.owner.email = resp.data[0].owner.email;
+        this.project.id = resp.data[0].room.projectId;
+        this.radiosTypeRole = resp.data[0].room.type;
+        this.radios.level = resp.data[0].room.level;
+        this.standardSelects.select = resp.data[0].room.standard;
+        this.gradeSelects.select = resp.data[0].room.grade;
+        this.toiletSelects.select = resp.data[0].room.toilet;
+        this.bedSelects.select = resp.data[0].room.bed;
+        this.room.area = resp.data[0].room.area;
+        this.room.floor = resp.data[0].room.floor;
+        this.room.price = resp.data[0].room.price;
+        this.room.priceRent = resp.data[0].room.priceRent;
+        this.room.rentDetail = resp.data[0].room.rentDetail;
+        this.directionSelects.select = resp.data[0].room.direction;
+        this.positionSelects.select = resp.data[0].room.position;
+        this.scenerySelects.select = resp.data[0].room.scenery;
+        this.featureSelects.select = resp.data[0].room.feature;
+        this.sellDetailSelects.select = resp.data[0].room.sellDetail;
+        this.tags.dynamicTags = resp.data[0].room.tags;
+        this.room.description = resp.data[0].room.description;
+        this.room.remark = resp.data[0].room.remark;
+        this.exclusive = resp.data[0].room.exclusive;
+        this.room.exclusiveDate = resp.data[0].room.exclusiveDate;
+        this.projectSearch(resp.data[0].projects[0].name);
+        this.btnAction = "Edit";
+      });
+    }
   },
 
   data() {
     return {
       fieldRequired: "The field is required",
+      btnAction: "Add",
       activeCondo: false,
       activeHome: false,
       activeRent: false,
@@ -546,7 +605,6 @@ export default {
       bakProjects: [],
       exclusiveShow: false,
       exclusive: false,
-
       radios: {
         level: "",
       },
@@ -664,6 +722,7 @@ export default {
         area: "",
         floor: "",
         rentDetail: "",
+        priceRent: "",
         exclusiveDate: "",
         description: "",
         remark: "",
@@ -744,6 +803,7 @@ export default {
         },
       }).then((resp) => {
         console.log("resp : " + JSON.stringify(resp));
+        console.log("this.autocomplete : " + JSON.stringify(Autocomplete));
         this.project.id = resp.data[0].id;
         this.project.name = resp.data[0].name;
         this.project.type = resp.data[0].type;
@@ -780,19 +840,19 @@ export default {
       this.tags.dynamicTags.splice(this.tags.dynamicTags.indexOf(tag), 1);
     },
     onBeforeUploadImage(file) {
-      const isIMAGE = file.type === 'image/jpeg' || 'image/jpg' || 'image/png'
-      const isLt1M = file.size / 1024 / 1024 < 2
+      const isIMAGE = file.type === "image/jpeg" || "image/jpg" || "image/png";
+      const isLt1M = file.size / 1024 / 1024 < 2;
       if (!isIMAGE) {
-        this.$message.error('Upload file can only be in image format!')
+        this.$message.error("Upload file can only be in image format!");
       }
       if (!isLt1M) {
-        this.$message.error('Upload file size cannot exceed 1MB!')
+        this.$message.error("Upload file size cannot exceed 1MB!");
       }
-      return isIMAGE && isLt1M
+      return isIMAGE && isLt1M;
     },
     UploadImage(param) {
-      const formData = new FormData()
-      formData.append('file', param.file)
+      const formData = new FormData();
+      formData.append("file", param.file);
 
       const AXIOS = axios.create({
         baseURL: process.env.VUE_APP_BACKEND_URL,
@@ -845,8 +905,11 @@ export default {
         area: this.room.area,
         floor: this.room.floor,
         price: this.room.price,
+        priceRent: this.room.priceRent,
+        rentDetail: this.room.rentDetail,
         direction: this.directionSelects.select,
         position: this.positionSelects.select,
+        sellDetail: this.sellDetailSelects.select,
         scenery: this.scenerySelects.select,
         feature: this.featureSelects.select,
         tags: this.tags.dynamicTags,
@@ -856,19 +919,30 @@ export default {
         exclusiveDate: this.room.exclusiveDate,
       };
       let fileIds = this.fileList.map((item) => {
-          return item.id;
-        });
+        return item.id;
+      });
+      let path = "api/lead/create";
       let postBody = {
         ownerRequest: owner,
         roomRequest: room,
         fileIds: fileIds,
         username: this.getUser.username,
       };
+      if (this.$route.query.id) {
+        path = "api/lead/edit";
+        postBody = {
+          id: this.$route.query.id,
+          ownerRequest: owner,
+          roomRequest: room,
+          fileIds: fileIds,
+          username: this.getUser.username,
+        };
+      }
       console.log("postBody : " + JSON.stringify(postBody));
       const AXIOS = axios.create({
         baseURL: process.env.VUE_APP_BACKEND_URL,
       });
-      AXIOS.post(`api/lead/create`, postBody, {
+      AXIOS.post(path, postBody, {
         headers: {
           "Content-Type": "application/json",
           Authorization: "Bearer " + localStorage.getItem("token"),

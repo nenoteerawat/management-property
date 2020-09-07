@@ -20,7 +20,100 @@
         </div>
         <div class="card-body">
           <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-3">
+              <div>
+                <label>โครงการ</label>
+              </div>
+              <el-select
+                class="select-primary"
+                placeholder="select"
+                v-model="projectSelects.select"
+              >
+                <el-option
+                  v-for="option in projectSelects.data"
+                  class="select-primary"
+                  :value="option.value"
+                  :label="option.label"
+                  :key="option.label"
+                ></el-option>
+              </el-select>
+              <div>
+                <label>sale</label>
+              </div>
+              <el-select
+                class="select-primary"
+                placeholder="select"
+                v-model="projectSelects.select"
+              >
+                <el-option
+                  v-for="option in projectSelects.data"
+                  class="select-primary"
+                  :value="option.value"
+                  :label="option.label"
+                  :key="option.label"
+                ></el-option>
+              </el-select>
+            </div>
+            <div class="col-md-3">
+              <div>
+                <label>ประเภท</label>
+              </div>
+              <el-select
+                class="select-primary"
+                placeholder="select"
+                v-model="propertySelects.select"
+              >
+                <el-option
+                  v-for="option in propertySelects.data"
+                  class="select-primary"
+                  :value="option.value"
+                  :label="option.label"
+                  :key="option.label"
+                ></el-option>
+              </el-select>
+              <fg-input placeholder label="search" v-model="search"></fg-input>
+            </div>
+            <div class="col-md-3">
+              <div>
+                <label>ราคา (บาท)</label>
+              </div>
+              <el-slider v-model="price" range :format-tooltip="formatTooltipPrice"></el-slider>
+              <div>
+                <label>พื้นที่ (ตร.ม.)</label>
+              </div>
+              <el-slider v-model="area" range :format-tooltip="formatTooltipArea"></el-slider>
+            </div>
+            <div class="col-md-3">
+              <div>
+                <label>ห้องนอน</label>
+              </div>
+              <el-select class="select-primary" placeholder="select" v-model="bedSelects.select">
+                <el-option
+                  v-for="option in bedSelects.data"
+                  class="select-primary"
+                  :value="option.value"
+                  :label="option.label"
+                  :key="option.label"
+                ></el-option>
+              </el-select>
+              <div>
+                <label>ห้องน้ำ</label>
+              </div>
+              <el-select class="select-primary" placeholder="select" v-model="toiletSelects.select">
+                <el-option
+                  v-for="option in toiletSelects.data"
+                  class="select-primary"
+                  :value="option.value"
+                  :label="option.label"
+                  :key="option.label"
+                ></el-option>
+              </el-select>
+            </div>
+            <div class="col-md-3 ml-auto mr-auto">
+                <p-button type="primary">
+                  <i class="fa fa-search"></i> Search</p-button>
+            </div>
+            <!-- <div class="col-md-6">
               <el-select class="select-default" v-model="pagination.perPage" placeholder="Per page">
                 <el-option
                   class="select-default"
@@ -30,8 +123,8 @@
                   :value="item"
                 ></el-option>
               </el-select>
-            </div>
-            <div class="col-md-6">
+            </div>-->
+            <!-- <div class="col-md-6">
               <div class="pull-right">
                 <fg-input
                   class="input-sm"
@@ -40,61 +133,206 @@
                   addon-right-icon="nc-icon nc-zoom-split"
                 ></fg-input>
               </div>
-            </div>
+            </div>-->
           </div>
           <div class="col-md-12">
-            <el-table :data="queriedData" header-row-class-name="text-primary">
-              <el-table-column type="index"></el-table-column>
-              <el-table-column min-width="60">
+            <el-table :data="queriedData" thead-class="hidden_header">
+              <el-table-column type="index" min-width="20"></el-table-column>
+              <el-table-column label>
                 <template slot-scope="props">
                   <div class="img-container">
                     <img :src="props.row.image" />
                   </div>
                 </template>
               </el-table-column>
-              <el-table-column
+              <el-table-column min-width="200" label>
+                <template slot-scope="props">
+                  <div class="row">
+                    <div class="col-md-12">
+                      <h5 class="title" style="margin-bottom: 0;">{{ props.row.projects[0].name}}</h5>
+                      <span>
+                        <small>Condominium</small>
+                        <badge v-show="props.row.owner.exclusive" slot="header" type="success">M</badge>
+                      </span>
+                    </div>
+                    <div class="col-md-12">
+                      <div class="row">
+                        <div class="col-md-12">
+                          <span>Owner : {{ props.row.owner.name}}</span>
+                        </div>
+                        <div class="col-md-3"></div>
+                        <div class="col-md-3">
+                          <div class="pull-right">
+                            <div class="row">
+                              <div class="col-md-4">
+                                <i class="fa fa-eye"></i>
+                              </div>
+                              <div class="col-md-6" style="padding-left: 0;">
+                                <span>14</span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-md-3">
+                          <div class="pull-right">
+                            <div class="row">
+                              <div class="col-md-4">
+                                <i class="fa fa-paper-plane"></i>
+                              </div>
+                              <div class="col-md-6" style="padding-left: 0;">
+                                <span>14</span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-md-3">
+                          <div class="pull-right">
+                            <div class="row">
+                              <div class="col-md-4">
+                                <i class="fa fa-key"></i>
+                              </div>
+                              <div class="col-md-6" style="padding-left: 0;">
+                                <span>14</span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <br />
+                  </div>
+                  <!-- <span>Condominium</span> -->
+                  <!-- <badge v-show="props.row.owner.exclusive" slot="header" type="success">M</badge> -->
+                </template>
+              </el-table-column>
+              <el-table-column min-width="200" label>
+                <template slot-scope="props">
+                  <div class="row">
+                    <div class="col-md-6" style="margin: 10px 0;">
+                      <div class="row">
+                        <div class="col-md-4">
+                          <i class="fa fa-area-chart"></i>
+                        </div>
+                        <div class="col-md-6" style="padding-left: 0;">
+                          <span>{{ props.row.room.area}} ตร.ม.</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-md-6" style="margin: 10px 0;">
+                      <div class="row">
+                        <div class="col-md-4">
+                          <i class="fa fa-arrows-v"></i>
+                        </div>
+                        <div class="col-md-6" style="padding-left: 0;">
+                          <span>{{ props.row.room.floor}} Fl.</span>
+                        </div>
+                      </div>
+                    </div>
+                    <br />
+                    <div class="col-md-6" style="margin: 10px 0;">
+                      <div class="row">
+                        <div class="col-md-4">
+                          <i class="fa fa-bed"></i>
+                        </div>
+                        <div class="col-md-6" style="padding-left: 0;">
+                          <span>{{ props.row.room.bed}}</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-md-6" style="margin: 10px 0;">
+                      <div class="row">
+                        <div class="col-md-4">
+                          <i class="fa fa-bath"></i>
+                        </div>
+                        <div class="col-md-6" style="padding-left: 0;">
+                          <span>{{ props.row.room.toilet}}</span>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- <span>Condominium</span> -->
+                    <!-- <badge v-show="props.row.owner.exclusive" slot="header" type="primary">M</badge> -->
+                  </div>
+                </template>
+              </el-table-column>
+              <el-table-column label>
+                <template slot-scope="props">
+                  <div class="cell">
+                    <h6>S {{ Number(props.row.room.price).toLocaleString() }}</h6>
+                  </div>
+                  <div class="cell" v-show="props.row.room.type == 2">
+                    <h6>R {{ Number(props.row.room.priceRent).toLocaleString() }}</h6>
+                  </div>
+                </template>
+              </el-table-column>
+              <!-- <el-table-column
                 v-for="column in tableColumns"
                 :key="column.label"
                 :min-width="column.minWidth"
                 :prop="column.prop"
                 :label="column.label"
                 sortable
-              ></el-table-column>
-              <el-table-column class-name="action-buttons td-actions" align="right" label="Actions">
+              ></el-table-column>-->
+              <el-table-column
+                class-name="action-buttons td-actions"
+                align="right"
+                label
+                min-width="50"
+              >
                 <template slot-scope="props">
-                  <p-button type="info" size="sm" icon @click="handleLike(props.$index, props.row)">
+                  <!-- <p-button type="info" size="sm" icon @click="handleLike(props.$index, props.row)">
                     <i class="fa fa-user"></i>
-                  </p-button>
-                  <p-button
-                    type="success"
-                    size="sm"
-                    icon
-                    @click="handleEdit(props.$index, props.row)"
-                  >
-                    <i class="fa fa-edit"></i>
-                  </p-button>
-                  <p-button
-                    type="danger"
-                    size="sm"
-                    icon
-                    @click="handleDelete(props.$index, props.row)"
-                  >
-                    <i class="fa fa-times"></i>
-                  </p-button>
+                  </p-button>-->
+                  <td class="td-actions text-right">
+                    <p-button
+                      type="info"
+                      size="sm"
+                      icon
+                      @click="handleAction(props.$index, props.row)"
+                    >
+                      <i class="fa fa-check"></i>
+                    </p-button>
+                    <p-button
+                      type="success"
+                      size="sm"
+                      icon
+                      @click="handleEdit(props.$index, props.row)"
+                    >
+                      <i class="fa fa-edit"></i>
+                    </p-button>
+                    <p-button
+                      type="danger"
+                      size="sm"
+                      icon
+                      @click="handleDelete(props.$index, props.row)"
+                    >
+                      <i class="fa fa-times"></i>
+                    </p-button>
+                  </td>
                 </template>
               </el-table-column>
             </el-table>
           </div>
-          <div class="col-sm-6 pagination-info">
+          <div class="col-md-6 pagination-info">
             <p class="category">Showing {{from + 1}} to {{to}} of {{total}} entries</p>
           </div>
-          <div class="col-sm-6">
+          <div class="col-md-6">
             <p-pagination
               class="pull-right"
               v-model="pagination.currentPage"
               :per-page="pagination.perPage"
               :total="pagination.total"
             ></p-pagination>
+          </div>
+          <div class="col-md-6">
+            <el-select class="select-default" v-model="pagination.perPage" placeholder="Per page">
+              <el-option
+                class="select-default"
+                v-for="item in pagination.perPageOptions"
+                :key="item"
+                :label="item"
+                :value="item"
+              ></el-option>
+            </el-select>
           </div>
         </div>
       </card>
@@ -131,20 +369,25 @@
 </template>
 <script>
 import Vue from "vue";
-import { Table, TableColumn, Select, Option } from "element-ui";
+import ElementUI from "element-ui";
 import PPagination from "src/components/UIComponents/Pagination.vue";
 import DailyBar from "../Daily/DailyBar";
-import { Card } from "src/components/UIComponents";
+import { Card, Badge } from "src/components/UIComponents";
+import axios from "axios";
+import en from "element-ui/lib/locale/lang/en.js";
 
-Vue.use(Table);
-Vue.use(TableColumn);
-Vue.use(Select);
-Vue.use(Option);
+Vue.use(ElementUI, { locale: en });
 export default {
   components: {
     Card,
+    Badge,
     DailyBar,
     PPagination,
+  },
+
+  created: function () {
+    this.getLead();
+    this.getProjectList();
   },
 
   data() {
@@ -152,11 +395,13 @@ export default {
       pagination: {
         perPage: 5,
         currentPage: 1,
-        perPageOptions: [1, 2, 3, 5, 10, 25, 50],
+        perPageOptions: [5, 10, 25, 50],
         total: 0,
       },
+      search: "",
       searchQuery: "",
-      propsToSearch: ["name", "job"],
+      price: [0, 0],
+      area: [0, 0],
       tableColumns: [
         {
           prop: "name",
@@ -172,43 +417,39 @@ export default {
           label: "Salary",
         },
       ],
-      tableData: [
-        {
-          name: "Andrew Mike",
-          image: "/static/img/faces/ayo-ogunseinde-2.jpg",
-          job: "Develop",
-          salary: "€ 99,225",
-          active: true,
-        },
-        {
-          name: "John Doe",
-          image: "/static/img/tables/agenda.png",
-          job: "Design",
-          salary: "€ 89,241",
-          active: false,
-        },
-        {
-          name: "Alex Mike",
-          image: "/static/img/tables/agenda.png",
-          job: "Design",
-          salary: "€ 92,144",
-          active: false,
-        },
-        {
-          name: "Mike Monday",
-          image: "/static/img/tables/agenda.png",
-          job: "Marketing",
-          salary: "€ 49,990",
-          active: true,
-        },
-        {
-          name: "Paul dickens",
-          image: "/static/img/tables/agenda.png",
-          job: "Communication",
-          salary: "€ 69,201",
-          active: true,
-        },
-      ],
+      projectSelects: {
+        select: "",
+        data: [],
+      },
+      propertySelects: {
+        select: "",
+        data: [
+          { value: "1", label: "คอนโด" },
+          { value: "2", label: "บ้าน" },
+          { value: "3", label: "ทาวน์เฮาส์" },
+        ],
+      },
+      bedSelects: {
+        select: "",
+        data: [
+          { value: "0", label: "ห้องสตูดิโอ" },
+          { value: "1", label: "1 ห้องนอน" },
+          { value: "2", label: "2 ห้องนอน" },
+          { value: "3", label: "3 ห้องนอน" },
+          { value: "4", label: "4 ห้องนอน" },
+        ],
+      },
+      toiletSelects: {
+        select: "",
+        data: [
+          { value: "0", label: "ไม่มี" },
+          { value: "1", label: "1 ห้องน้ำ" },
+          { value: "2", label: "2 ห้องน้ำ" },
+          { value: "3", label: "3 ห้องน้ำ" },
+          { value: "4", label: "4 ห้องน้ำ" },
+        ],
+      },
+      tableData: [],
       tasks: [
         {
           done: true,
@@ -239,14 +480,74 @@ export default {
   },
 
   methods: {
+    formatTooltipPrice(val) {
+      return val * 100000;
+    },
+    formatTooltipArea(val) {
+      return val * 5;
+    },
+    getProjectList: function () {
+      let postBody = {
+        role: "",
+        id: "",
+      };
+      const AXIOS = axios.create({
+        baseURL: process.env.VUE_APP_BACKEND_URL,
+      });
+      AXIOS.post(`api/project/list`, postBody, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+      })
+        .then((resp) => {
+          for (let value of resp.data) {
+            this.projectSelects.data.push({
+              value: value.id,
+              label: value.name,
+            });
+          }
+          console.log("resp : " + JSON.stringify(this.tableData));
+        })
+        .catch((err) => {
+          console.log("err : " + JSON.stringify(err));
+          reject(err);
+        });
+    },
+    getLead: function () {
+      let postBody = {
+        role: "",
+        id: "",
+      };
+      const AXIOS = axios.create({
+        baseURL: process.env.VUE_APP_BACKEND_URL,
+      });
+      AXIOS.post(`api/lead/list`, postBody, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+      })
+        .then((resp) => {
+          this.tableData = resp.data;
+          console.log("resp : " + JSON.stringify(this.tableData));
+        })
+        .catch((err) => {
+          console.log("err : " + JSON.stringify(err));
+          reject(err);
+        });
+    },
     handleLike(index, row) {
       alert(`Your clicked on Like button ${index}`);
     },
+    handleAction(index, row) {
+      alert(`Your want to action ${row.owner.name}`);
+    },
     handleEdit(index, row) {
-      alert(`Your want to edit ${row.name}`);
+      window.location.href = "/#/admin/owner/create?id=" + row.id;
     },
     handleDelete(index, row) {
-      alert(`Your want to delete ${row.name}`);
+      alert(`Your want to delete ${row.owner.name}`);
     },
     handleTaskEdit(index) {
       alert(`You want to edit task: ${JSON.stringify(this.tasks[index])}`);
@@ -300,6 +601,15 @@ export default {
 .el-table .td-actions {
   button.btn {
     margin-right: 2px;
+  }
+
+  .title-project {
+    font-size: 1.714em;
+    line-height: 1.45em;
+    font-weight: 400;
+  }
+
+  .font-icon-project {
   }
 }
 </style>

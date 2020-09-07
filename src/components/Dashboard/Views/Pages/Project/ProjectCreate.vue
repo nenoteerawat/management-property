@@ -398,9 +398,7 @@ export default {
     },
     createProject() {
       this.fullscreenLoading = true;
-      let token = localStorage.getItem("token");
       let path = "api/project/create";
-      console.log("token : " + token);
       let postBody = {
         type: this.project.type,
         name: this.project.name,
