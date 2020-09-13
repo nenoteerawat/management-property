@@ -54,7 +54,7 @@
               <div class="col-md-6">
                 <ValidationProvider name="ownerName" rules="required" v-slot="{ passed, failed }">
                   <fg-input
-                    placeholder="ชื่อ-นามสกุล"
+                    placeholder="ชื่อ"
                     label="Owner Name"
                     v-model="owner.name"
                     :error="failed ? fieldRequired: null"
@@ -101,8 +101,9 @@
               <div class="col-md-6">
                 <div>
                   <label>Project</label>
+                  <span style="font-size: 35px;">{{project.name}}</span>
                 </div>
-                <autocomplete :search="search" @submit="projectSearch" v-model="project.name"></autocomplete>
+                <autocomplete :search="search" @submit="projectSearch"></autocomplete>
               </div>
               <div class="col-md-6">
                 <div>
@@ -437,7 +438,6 @@
                   :file-list="fileList"
                   :before-upload="onBeforeUploadImage"
                   :http-request="UploadImage"
-                  list-type="picture"
                   multiple
                 >
                   <i class="el-icon-upload"></i>
@@ -448,6 +448,7 @@
                   <!-- <div class="el-upload__tip" slot="tip">jpg/png files with a size less than 500kb</div> -->
                 </el-upload>
               </div>
+              <vue-preview :slides="slides" @close="handleCloseImage"></vue-preview>
               <div class="col-md-8">
                 <div class="row">
                   <div class="col-md-4">
@@ -502,6 +503,10 @@ import en from "element-ui/lib/locale/lang/en.js";
 import { required, email, confirmed } from "vee-validate/dist/rules";
 import { extend } from "vee-validate";
 import { mapGetters } from "vuex";
+import VuePreview from "vue-preview";
+
+// defalut install
+Vue.use(VuePreview);
 
 extend("email", email);
 extend("required", required);
@@ -520,7 +525,6 @@ export default {
       role: "",
       id: "",
     };
-    console.log("postBody : " + JSON.stringify(postBody));
     const AXIOS = axios.create({
       baseURL: process.env.VUE_APP_BACKEND_URL,
     });
@@ -530,7 +534,7 @@ export default {
         Authorization: "Bearer " + localStorage.getItem("token"),
       },
     }).then((resp) => {
-      console.log("resp : " + JSON.stringify(resp));
+      console.log("getProject all resp : " + JSON.stringify(resp));
       this.projects = resp.data.map((item) => {
         return item.name;
       });
@@ -585,6 +589,18 @@ export default {
         this.room.remark = resp.data[0].room.remark;
         this.exclusive = resp.data[0].room.exclusive;
         this.room.exclusiveDate = resp.data[0].room.exclusiveDate;
+        this.fileList = resp.data[0].files;
+        for (let value of resp.data[0].files) {
+          this.slides.push({
+            id: value.id,
+            src: value.url,
+            msrc: value.url,
+            alt: value.id,
+            title: value.name,
+            w: 1100,
+          h: 800,
+          });
+        }
         this.projectSearch(resp.data[0].projects[0].name);
         this.btnAction = "Edit";
       });
@@ -593,6 +609,28 @@ export default {
 
   data() {
     return {
+      slides: [
+        // {
+        //   src:
+        //     "https://farm6.staticflickr.com/5591/15008867125_68a8ed88cc_b.jpg",
+        //   msrc:
+        //     "https://farm6.staticflickr.com/5591/15008867125_68a8ed88cc_m.jpg",
+        //   alt: "picture1",
+        //   title: "Image Caption 1",
+        //   w: 600,
+        //   h: 400,
+        // },
+        // {
+        //   src:
+        //     "https://farm4.staticflickr.com/3902/14985871946_86abb8c56f_b.jpg",
+        //   msrc:
+        //     "https://farm4.staticflickr.com/3902/14985871946_86abb8c56f_m.jpg",
+        //   alt: "picture2",
+        //   title: "Image Caption 2",
+        //   w: 1200,
+        //   h: 900,
+        // },
+      ],
       fieldRequired: "The field is required",
       btnAction: "Add",
       activeCondo: false,
@@ -605,6 +643,7 @@ export default {
       bakProjects: [],
       exclusiveShow: false,
       exclusive: false,
+      inputProjectSearch: "",
       radios: {
         level: "",
       },
@@ -738,18 +777,18 @@ export default {
         price: "",
       },
       fileList: [
-        {
-          id: "",
-          name: "food.jpeg",
-          url:
-            "https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100",
-        },
-        {
-          id: "",
-          name: "food2.jpeg",
-          url:
-            "https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100",
-        },
+        // {
+        //   id: "",
+        //   name: "food.jpeg",
+        //   url:
+        //     "https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100",
+        // },
+        // {
+        //   id: "",
+        //   name: "food2.jpeg",
+        //   url:
+        //     "https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100",
+        // },
       ],
     };
   },
@@ -804,6 +843,7 @@ export default {
       }).then((resp) => {
         console.log("resp : " + JSON.stringify(resp));
         console.log("this.autocomplete : " + JSON.stringify(Autocomplete));
+        this.inputProjectSearch = resp.data[0].name;
         this.project.id = resp.data[0].id;
         this.project.name = resp.data[0].name;
         this.project.type = resp.data[0].type;
@@ -841,7 +881,7 @@ export default {
     },
     onBeforeUploadImage(file) {
       const isIMAGE = file.type === "image/jpeg" || "image/jpg" || "image/png";
-      const isLt1M = file.size / 1024 / 1024 < 2;
+      const isLt1M = file.size / 1024 / 1024 < 1;
       if (!isIMAGE) {
         this.$message.error("Upload file can only be in image format!");
       }
@@ -851,8 +891,12 @@ export default {
       return isIMAGE && isLt1M;
     },
     UploadImage(param) {
+      this.fullscreenLoading = true;
       const formData = new FormData();
-      formData.append("file", param.file);
+      formData.append("files", param.file);
+
+      console.log("file upload : ", JSON.stringify(param.file.naturalWidth));
+      console.log("file upload : ", JSON.stringify(param));
 
       const AXIOS = axios.create({
         baseURL: process.env.VUE_APP_BACKEND_URL,
@@ -863,14 +907,78 @@ export default {
           Authorization: "Bearer " + localStorage.getItem("token"),
         },
       }).then((resp) => {
-        console.log("resp : " + JSON.stringify(resp));
+        this.fullscreenLoading = false;
+        this.$notify({
+          message: "Upload Success",
+          icon: "fa fa-gift",
+          horizontalAlign: "center",
+          verticalAlign: "top",
+          type: "success",
+        });
+        console.log("upload resp : " + JSON.stringify(resp.data));
+        let file = {
+          id: resp.data.id,
+          name: resp.data.name,
+          url: resp.data.url,
+        };
+        this.fileList.push(file);
+        console.log("fileList : ", JSON.stringify(this.fileList));
+        let slide = {
+          id: resp.data.id,
+          src: resp.data.url,
+          msrc: resp.data.url,
+          alt: resp.data.id,
+          title: resp.data.name,
+          w: 1100,
+          h: 800,
+        };
+        this.slides.push(slide);
       });
     },
+    handleCloseImage() {
+      console.log("close event");
+    },
     handlePreview(file) {
-      console.log("Preview", file);
+      console.log("Preview", JSON.stringify(file));
+      // let myWindow = window.open();
+      // myWindow.document.write(JSON.stringify(file.url));
+      // myWindow.document.close();
     },
     handleRemove(file, fileList) {
-      console.log("handleRemove", file, fileList);
+      console.log(
+        "handleRemove ",
+        JSON.stringify(file),
+        JSON.stringify(fileList)
+      );
+      const formData = new FormData();
+      formData.append("id", file.id);
+
+      const AXIOS = axios.create({
+        baseURL: process.env.VUE_APP_BACKEND_URL,
+      });
+      AXIOS.post(`api/file/delete`, formData, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+      }).then((resp) => {
+        this.fullscreenLoading = false;
+        this.$notify({
+          message: "Deleted Success",
+          icon: "fa fa-gift",
+          horizontalAlign: "center",
+          verticalAlign: "top",
+          type: "success",
+        });
+        console.log("deleted resp : " + JSON.stringify(resp.data));
+        this.fileList = fileList;
+        this.slides = this.slides.filter(function (item) {
+          if (item.id == file.id) {
+            return false;
+          }
+          return true;
+        });
+      });
     },
     showInput() {
       this.tags.inputVisible = true;
@@ -918,14 +1026,11 @@ export default {
         exclusive: this.exclusive,
         exclusiveDate: this.room.exclusiveDate,
       };
-      let fileIds = this.fileList.map((item) => {
-        return item.id;
-      });
       let path = "api/lead/create";
       let postBody = {
         ownerRequest: owner,
         roomRequest: room,
-        fileIds: fileIds,
+        files: this.fileList,
         username: this.getUser.username,
       };
       if (this.$route.query.id) {
@@ -934,7 +1039,7 @@ export default {
           id: this.$route.query.id,
           ownerRequest: owner,
           roomRequest: room,
-          fileIds: fileIds,
+          files: this.fileList,
           username: this.getUser.username,
         };
       }
