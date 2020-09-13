@@ -42,7 +42,12 @@ import "./assets/sass/demo.scss";
 import sidebarLinks from "./sidebarLinks";
 import "./registerServiceWorker";
 import store from './store'
+
+//new 
+import VueLazyload from 'vue-lazyload'
+
 // plugin setup
+Vue.use(VueLazyload)
 Vue.use(VueRouter);
 Vue.use(VueRouterPrefetch);
 Vue.use(GlobalDirectives);

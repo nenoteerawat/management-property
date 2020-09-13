@@ -110,8 +110,9 @@
               </el-select>
             </div>
             <div class="col-md-3 ml-auto mr-auto">
-                <p-button type="primary">
-                  <i class="fa fa-search"></i> Search</p-button>
+              <p-button type="primary">
+                <i class="fa fa-search"></i> Search
+              </p-button>
             </div>
             <!-- <div class="col-md-6">
               <el-select class="select-default" v-model="pagination.perPage" placeholder="Per page">
@@ -137,11 +138,18 @@
           </div>
           <div class="col-md-12">
             <el-table :data="queriedData" thead-class="hidden_header">
-              <el-table-column type="index" min-width="20"></el-table-column>
-              <el-table-column label>
+              <el-table-column type="index"></el-table-column>
+              <el-table-column min-width="126" label>
                 <template slot-scope="props">
                   <div class="img-container">
-                    <img :src="props.row.image" />
+                    <img
+                      v-if="props.row.files.length > 1"
+                      style="
+                          height: 125px;
+                          width: 125px;
+                      "
+                      :src="props.row.files[0].path"
+                    />
                   </div>
                 </template>
               </el-table-column>
@@ -152,7 +160,7 @@
                       <h5 class="title" style="margin-bottom: 0;">{{ props.row.projects[0].name}}</h5>
                       <span>
                         <small>Condominium</small>
-                        <badge v-show="props.row.owner.exclusive" slot="header" type="success">M</badge>
+                        <badge v-show="props.row.room.exclusive" slot="header" type="success">M</badge>
                       </span>
                     </div>
                     <div class="col-md-12">
@@ -254,7 +262,7 @@
                   </div>
                 </template>
               </el-table-column>
-              <el-table-column label>
+              <el-table-column min-width="105" label>
                 <template slot-scope="props">
                   <div class="cell">
                     <h6>S {{ Number(props.row.room.price).toLocaleString() }}</h6>
@@ -607,9 +615,6 @@ export default {
     font-size: 1.714em;
     line-height: 1.45em;
     font-weight: 400;
-  }
-
-  .font-icon-project {
   }
 }
 </style>
