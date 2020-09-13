@@ -148,7 +148,7 @@
                           height: 125px;
                           width: 125px;
                       "
-                      :src="props.row.files[0].url"
+                      :src="props.row.files[0].path"
                     />
                   </div>
                 </template>

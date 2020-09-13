@@ -428,7 +428,23 @@
                 <div>
                   <label>รูป</label>
                 </div>
-                <el-upload
+                <vue-upload-multiple-image
+                  @upload-success="uploadImageSuccess"
+                  @before-remove="beforeRemove"
+                  @edit-image="editImage"
+                  @mark-is-primary="markIsPrimary"
+                  :data-images="fileList"
+                  idUpload="myIdUpload"
+                  editUpload="myIdEdit"
+                  :maxImage="10"
+                  browseText="Browse Photo"
+                  dragText="click to upload"
+                  primaryText="Primary"
+                  markIsPrimaryText="mark is Primary"
+                  popupText="info"
+                  ref="myImages"
+                ></vue-upload-multiple-image>
+                <!-- <el-upload
                   class="upload"
                   drag
                   action="string"
@@ -445,10 +461,9 @@
                     Drop file here or
                     <em>click to upload</em>
                   </div>
-                  <!-- <div class="el-upload__tip" slot="tip">jpg/png files with a size less than 500kb</div> -->
-                </el-upload>
+                </el-upload>-->
               </div>
-              <vue-preview :slides="slides" @close="handleCloseImage"></vue-preview>
+              <!-- <vue-preview :slides="slides" @close="handleCloseImage"></vue-preview> -->
               <div class="col-md-8">
                 <div class="row">
                   <div class="col-md-4">
@@ -504,7 +519,7 @@ import { required, email, confirmed } from "vee-validate/dist/rules";
 import { extend } from "vee-validate";
 import { mapGetters } from "vuex";
 import VuePreview from "vue-preview";
-
+import VueUploadMultipleImage from "vue-upload-multiple-image";
 // defalut install
 Vue.use(VuePreview);
 
@@ -517,6 +532,7 @@ export default {
     Card,
     Autocomplete,
     PSwitch,
+    VueUploadMultipleImage,
   },
 
   created: function () {
@@ -590,17 +606,17 @@ export default {
         this.exclusive = resp.data[0].room.exclusive;
         this.room.exclusiveDate = resp.data[0].room.exclusiveDate;
         this.fileList = resp.data[0].files;
-        for (let value of resp.data[0].files) {
-          this.slides.push({
-            id: value.id,
-            src: value.url,
-            msrc: value.url,
-            alt: value.id,
-            title: value.name,
-            w: 1100,
-          h: 800,
-          });
-        }
+        // for (let value of resp.data[0].files) {
+        //   this.slides.push({
+        //     id: value.id,
+        //     src: value.url,
+        //     msrc: value.url,
+        //     alt: value.id,
+        //     title: value.name,
+        //     w: 1100,
+        //     h: 800,
+        //   });
+        // }
         this.projectSearch(resp.data[0].projects[0].name);
         this.btnAction = "Edit";
       });
@@ -643,6 +659,7 @@ export default {
       bakProjects: [],
       exclusiveShow: false,
       exclusive: false,
+      maxImage: 10,
       inputProjectSearch: "",
       radios: {
         level: "",
@@ -778,6 +795,13 @@ export default {
       },
       fileList: [
         // {
+        //   path:
+        //     "https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100",
+        //   default: 1,
+        //   highlight: 1,
+        //   caption: "caption to display. receive",
+        // },
+        // {
         //   id: "",
         //   name: "food.jpeg",
         //   url:
@@ -879,17 +903,131 @@ export default {
     handleClose(tag) {
       this.tags.dynamicTags.splice(this.tags.dynamicTags.indexOf(tag), 1);
     },
-    onBeforeUploadImage(file) {
-      const isIMAGE = file.type === "image/jpeg" || "image/jpg" || "image/png";
-      const isLt1M = file.size / 1024 / 1024 < 1;
-      if (!isIMAGE) {
-        this.$message.error("Upload file can only be in image format!");
-      }
-      if (!isLt1M) {
-        this.$message.error("Upload file size cannot exceed 1MB!");
-      }
-      return isIMAGE && isLt1M;
+    markIsPrimary(index, fileList) {
+      console.log("mark", JSON.stringify(index), JSON.stringify(fileList));
+      this.fileList = fileList;
+      console.log("mark fileList", JSON.stringify(this.fileList));
     },
+    uploadImageSuccess(formData, index, fileList) {
+      this.fullscreenLoading = true;
+      console.log("formData", JSON.stringify(formData));
+      console.log("index", JSON.stringify(index));
+      // console.log(
+      //   "fileList[index].path : ",
+      //   JSON.stringify(fileList[index].path)
+      // );
+      // Upload image api
+      const AXIOS = axios.create({
+        baseURL: process.env.VUE_APP_BACKEND_URL,
+      });
+      AXIOS.post(`api/v2/file/upload`, fileList[index], {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+      })
+        .then((resp) => {
+          this.fullscreenLoading = false;
+          this.$notify({
+            message: "Upload Success",
+            icon: "fa fa-gift",
+            horizontalAlign: "center",
+            verticalAlign: "top",
+            type: "success",
+          });
+          // console.log("upload resp : " + JSON.stringify(resp.data));
+          let file;
+          if (index == 0) {
+            file = {
+              id: resp.data.id,
+              name: resp.data.name,
+              path: resp.data.path,
+              default: fileList.default,
+              highlight: fileList.highlight,
+            };
+          } else {
+            file = {
+              id: resp.data.id,
+              name: resp.data.name,
+              path: resp.data.path,
+              default: fileList.default,
+              highlight: fileList.highlight,
+            };
+          }
+          this.fileList.push(file);
+          // console.log("fileList : ", JSON.stringify(this.fileList));
+          // this.fileList = fileList;
+          // console.log("fileList : ", fileList);
+        })
+        .catch((err) => {
+          this.fullscreenLoading = false;
+          this.$notify({
+            message: "Error",
+            // icon: 'fa fa-gift',
+            // component: NotificationTemplate,
+            horizontalAlign: "center",
+            verticalAlign: "top",
+            type: "warning",
+          });
+          console.log("err : " + JSON.stringify(err));
+          reject(err);
+        });
+    },
+    beforeRemove(index, done, fileList) {
+      // console.log("fileList beforeRemove", JSON.stringify(fileList));
+      var r = confirm("remove image");
+      if (r == true) {
+        done();
+        this.fullscreenLoading = true;
+
+        const formData = new FormData();
+        formData.append("id", fileList.id);
+
+        const AXIOS = axios.create({
+          baseURL: process.env.VUE_APP_BACKEND_URL,
+        });
+        AXIOS.post(`api/file/delete`, formData, {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + localStorage.getItem("token"),
+          },
+        }).then((resp) => {
+          this.fullscreenLoading = false;
+          this.$notify({
+            message: "Deleted Success",
+            icon: "fa fa-gift",
+            horizontalAlign: "center",
+            verticalAlign: "top",
+            type: "success",
+          });
+          console.log("deleted resp : " + JSON.stringify(resp.data));
+          this.fileList = fileList;
+          // this.fileList = this.fileList.filter(function (item) {
+          //   if (item.id == file.id) {
+          //     return false;
+          //   }
+          //   return true;
+          // });
+        });
+        console.log("fileList afterRemove", JSON.stringify(fileList));
+        console.log("this.fileList ", JSON.stringify(this.fileList));
+      } else {
+      }
+    },
+    editImage(formData, index, fileList) {
+      console.log("edit data", formData, index, fileList);
+    },
+    // onBeforeUploadImage(file) {
+    //   const isIMAGE = file.type === "image/jpeg" || "image/jpg" || "image/png";
+    //   const isLt1M = file.size / 1024 / 1024 < 1;
+    //   if (!isIMAGE) {
+    //     this.$message.error("Upload file can only be in image format!");
+    //   }
+    //   if (!isLt1M) {
+    //     this.$message.error("Upload file size cannot exceed 1MB!");
+    //   }
+    //   return isIMAGE && isLt1M;
+    // },
     UploadImage(param) {
       this.fullscreenLoading = true;
       const formData = new FormData();
@@ -906,44 +1044,58 @@ export default {
           "Content-Type": "application/json",
           Authorization: "Bearer " + localStorage.getItem("token"),
         },
-      }).then((resp) => {
-        this.fullscreenLoading = false;
-        this.$notify({
-          message: "Upload Success",
-          icon: "fa fa-gift",
-          horizontalAlign: "center",
-          verticalAlign: "top",
-          type: "success",
+      })
+        .then((resp) => {
+          this.fullscreenLoading = false;
+          this.$notify({
+            message: "Upload Success",
+            icon: "fa fa-gift",
+            horizontalAlign: "center",
+            verticalAlign: "top",
+            type: "success",
+          });
+          console.log("upload resp : " + JSON.stringify(resp.data));
+          let file = {
+            id: resp.data.id,
+            name: resp.data.name,
+            url: resp.data.url,
+          };
+          this.fileList.push(file);
+          console.log("fileList : ", JSON.stringify(this.fileList));
+          let slide = {
+            id: resp.data.id,
+            src: resp.data.url,
+            msrc: resp.data.url,
+            alt: resp.data.id,
+            title: resp.data.name,
+            w: 1100,
+            h: 800,
+          };
+          this.slides.push(slide);
+        })
+        .catch((err) => {
+          this.fullscreenLoading = false;
+          this.$notify({
+            message: "Error",
+            // icon: 'fa fa-gift',
+            // component: NotificationTemplate,
+            horizontalAlign: "center",
+            verticalAlign: "top",
+            type: "warning",
+          });
+          console.log("err : " + JSON.stringify(err));
+          reject(err);
         });
-        console.log("upload resp : " + JSON.stringify(resp.data));
-        let file = {
-          id: resp.data.id,
-          name: resp.data.name,
-          url: resp.data.url,
-        };
-        this.fileList.push(file);
-        console.log("fileList : ", JSON.stringify(this.fileList));
-        let slide = {
-          id: resp.data.id,
-          src: resp.data.url,
-          msrc: resp.data.url,
-          alt: resp.data.id,
-          title: resp.data.name,
-          w: 1100,
-          h: 800,
-        };
-        this.slides.push(slide);
-      });
     },
-    handleCloseImage() {
-      console.log("close event");
-    },
-    handlePreview(file) {
-      console.log("Preview", JSON.stringify(file));
-      // let myWindow = window.open();
-      // myWindow.document.write(JSON.stringify(file.url));
-      // myWindow.document.close();
-    },
+    // handleCloseImage() {
+    //   console.log("close event");
+    // },
+    // handlePreview(file) {
+    //   console.log("Preview", JSON.stringify(file));
+    //   // let myWindow = window.open();
+    //   // myWindow.document.write(JSON.stringify(file.url));
+    //   // myWindow.document.close();
+    // },
     handleRemove(file, fileList) {
       console.log(
         "handleRemove ",
@@ -1096,5 +1248,33 @@ export default {
 
 .el-tag.el-tag--info {
   color: #ffffff !important;
+}
+
+#my-strictly-unique-vue-upload-multiple-image {
+  font-family: "Avenir", Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-align: center;
+  color: #2c3e50;
+  margin-top: 60px;
+}
+
+h1,
+h2 {
+  font-weight: normal;
+}
+
+// ul {
+//   list-style-type: none;
+//   padding: 0;
+// }
+
+// li {
+//   display: inline-block;
+//   margin: 0 10px;
+// }
+
+a {
+  color: #42b983;
 }
 </style>
