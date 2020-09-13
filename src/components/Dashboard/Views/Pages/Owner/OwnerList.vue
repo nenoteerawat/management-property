@@ -494,6 +494,30 @@ export default {
     formatTooltipArea(val) {
       return val * 5;
     },
+    searchOwner: function () {
+      const AXIOS = axios.create({
+        baseURL: process.env.VUE_APP_BACKEND_URL,
+      });
+      AXIOS.post(`api/owner/list`, postBody, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+      })
+        .then((resp) => {
+          for (let value of resp.data) {
+            this.projectSelects.data.push({
+              value: value.id,
+              label: value.name,
+            });
+          }
+          console.log("resp : " + JSON.stringify(this.tableData));
+        })
+        .catch((err) => {
+          console.log("err : " + JSON.stringify(err));
+          reject(err);
+        });
+    },
     getProjectList: function () {
       let postBody = {
         role: "",
