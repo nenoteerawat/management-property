@@ -72,13 +72,13 @@ export default [
     name: 'Owner',
     icon: 'nc-icon nc-shop',
     path: '/admin/owner',
-    roles: ["ROLE_SALE"]
+    roles: ["ROLE_SALE","ROLE_ADMIN"]
   },
   {
     name: 'Project',
     icon: 'nc-icon nc-bank',
     path: '/admin/project',
-    roles: ["ROLE_SALE"]
+    roles: ["ROLE_SALE", "ROLE_ADMIN"]
   },
   {
     name: 'Pages',

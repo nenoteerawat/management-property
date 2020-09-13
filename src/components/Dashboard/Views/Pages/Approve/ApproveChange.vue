@@ -87,20 +87,19 @@
       <div class="col-md-12 text-center">
         <!-- Classic Modal -->
         <modal :show.sync="modals.classic" headerClasses="justify-content-center" modalClasses="modal-lg">
-          <h4 slot="header" class="title title-up">Modal title</h4>
+          <h4 slot="header" class="title title-up">Change Detail</h4>
           <template>
             <div class="row">
               <div class="col-md-12">
-                <el-table :data="tableData">
-                    <el-table-column label="Owner Name" property="ownerName" width="100px"></el-table-column>
-                    <el-table-column label="Owner Name" property="ownerName" width="100px"></el-table-column>
-                    <el-table-column label="Owner Name" property="ownerName" width="100px"></el-table-column>
-                    <el-table-column label="Owner Name" property="ownerName" width="100px"></el-table-column>
-                    <el-table-column label="Owner Name" property="ownerName" width="100px"></el-table-column>
-                    <el-table-column label="Owner Name" property="ownerName" width="100px"></el-table-column>
-                    <el-table-column label="Owner Name" property="ownerName" width="100px"></el-table-column>
-                    <el-table-column label="Owner Name" property="ownerName" width="100px"></el-table-column>
-                    <el-table-column label="Roome Code" property="roomeCode"></el-table-column>
+                <el-table :data="tableDetailData">
+                  <el-table-column
+                    v-for="column in tableDetailColumns"
+                    :key="column.label"
+                    :min-width="column.minWidth"
+                    :prop="column.prop"
+                    :label="column.label"
+                    sortable
+                  ></el-table-column>
                 </el-table>
               </div>
             </div>
@@ -125,6 +124,7 @@ import { Table, TableColumn, Select, Option } from "element-ui";
 import PPagination from "src/components/UIComponents/Pagination.vue";
 import DailyBar from "../Daily/DailyBar";
 import { Card, Modal, Button } from "src/components/UIComponents";
+import axios from "axios";
 
 Vue.use(Table);
 Vue.use(TableColumn);
@@ -151,11 +151,6 @@ export default {
       propsToSearch: ["ownerName", "roomeCode"],
       tableColumns: [
         {
-          prop: "ownerName",
-          label: "Owner Name",
-          minWidth: 100,
-        },
-        {
           prop: "type",
           label: "Type",
         },
@@ -169,20 +164,28 @@ export default {
           label: "User",
         },
         {
-          prop: "datetime",
+          prop: "updateDate",
           label: "Date Time",
         },
       ],
-      tableData: [
+      tableData: [],
+      tableDetailColumns: [
         {
-          ownerName: "Andrew Mike",
-          roomeCode: "Develop",
-          comment: "xxxxx",
-          sale: "sale",
-          date: "12-01-2020 16:11:00",
-          active: true,
+          prop: "key",
+          label: "Name",
+          minWidth: 100,
         },
+        {
+          prop: "fromValue",
+          label: "From Value",
+          minWidth: 100,
+        },
+        {
+          prop: "toValue",
+          label: "To Value",
+        }
       ],
+      tableDetailData: [],
       modals: {
         classic: false,
       }
@@ -191,6 +194,8 @@ export default {
 
   methods: {
     handleInfo(index, row) {
+      console.log(row);
+      this.getDetailChangeList(row.id)
       this.modals.classic = true;
     },
     handleEdit(index, row) {
@@ -198,7 +203,51 @@ export default {
     },
     handleDelete(index, row) {
       this.modals.classic = true;
-    }
+    },
+    getChangeList: function () {
+      const AXIOS = axios.create({
+        baseURL: process.env.VUE_APP_BACKEND_URL,
+      });
+      const paramsValue = {
+        state: 'WAIT_APPROVE'
+      };
+      AXIOS.get(`api/change/query`,{
+        headers: {
+          "Content-Type": "application/json",
+          // Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+        params: paramsValue
+      }).then((resp) => {
+        this.tableData = resp.data;
+        console.log("resp : " + JSON.stringify(resp));
+        console.log("tableData : " + JSON.stringify(this.tableData));
+      }).catch((err) => {
+          console.log("err : " + JSON.stringify(err));
+          reject(err);
+        });
+    },
+    getDetailChangeList: function (id) {
+      const AXIOS = axios.create({
+        baseURL: process.env.VUE_APP_BACKEND_URL,
+      });
+      const paramsValue = {
+        id: id
+      };
+      AXIOS.get(`api/change/get`,{
+        headers: {
+          "Content-Type": "application/json",
+          // Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+        params: paramsValue
+      }).then((resp) => {
+        this.tableDetailData = resp.data;
+        console.log("resp : " + JSON.stringify(resp));
+        console.log("tableData : " + JSON.stringify(this.tableData));
+      }).catch((err) => {
+          console.log("err : " + JSON.stringify(err));
+          reject(err);
+        });
+    },
   },
 
   computed: {
@@ -238,6 +287,9 @@ export default {
       this.pagination.total = this.tableData.length;
       return this.tableData.length;
     },
+  },
+  created: function () {
+    this.getChangeList();
   },
 };
 </script>
