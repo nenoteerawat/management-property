@@ -5,7 +5,7 @@
         <div class="card-header">
           <div class="row">
             <div class="col-md-6">
-              <h5 class="card-title">Approve Change</h5>
+              <h5 class="card-title">อนุมัติการแก้ไขข้อมูล</h5>
             </div>
           </div>
         </div>
@@ -44,7 +44,7 @@
                 :label="column.label"
                 sortable
               ></el-table-column>
-              <el-table-column class-name="action-buttons td-actions" align="right" label="Actions">
+              <el-table-column class-name="action-buttons td-actions" align="right" label="จัดการ">
                 <template slot-scope="props">
                   <p-button type="info" size="sm" icon @click="handleInfo(props.$index, props.row)">
                     <i class="nc-icon nc-paper"></i>
@@ -53,7 +53,7 @@
                     type="success"
                     size="sm"
                     icon
-                    @click="handleEdit(props.$index, props.row)"
+                    @click="handleApprove(props.$index, props.row)"
                   >
                     <i class="nc-icon nc-check-2"></i>
                   </p-button>
@@ -61,7 +61,7 @@
                     type="danger"
                     size="sm"
                     icon
-                    @click="handleDelete(props.$index, props.row)"
+                    @click="handleCancle(props.$index, props.row)"
                   >
                     <i class="nc-icon nc-simple-remove"></i>
                   </p-button>
@@ -85,13 +85,14 @@
     </div>
     <div class="row">
       <div class="col-md-12 text-center">
-        <!-- Classic Modal -->
+        <!-- Change log detail modal end -->
         <modal :show.sync="modals.classic" headerClasses="justify-content-center" modalClasses="modal-lg">
-          <h4 slot="header" class="title title-up">Change Detail</h4>
+          <h4 slot="header" class="title title-up">รายละเอียดการเปลี่ยนแปลงข้อมูล</h4>
           <template>
             <div class="row">
               <div class="col-md-12">
                 <el-table :data="tableDetailData">
+                <el-table-column type="index"></el-table-column>
                   <el-table-column
                     v-for="column in tableDetailColumns"
                     :key="column.label"
@@ -106,14 +107,15 @@
           </template>
           <template slot="footer">
             <div class="left-side">
-              <p-button type="success" link @click="modals.classic = false">Approve Change</p-button>
+              <p-button type="success" link @click="handleApprove(modalsIndex, modalsRow)">อนุมัติ</p-button>
             </div>
             <div class="divider"></div>
             <div class="right-side">
-              <p-button type="default" link @click="modals.classic = false">Close</p-button>
+              <p-button type="danger" link @click="handleCancle(modalsIndex, modalsRow)">ยกเลิก</p-button>
             </div>
           </template>
         </modal>
+        <!-- Change log detail modal end -->
       </div>
     </div>
   </div>
@@ -124,7 +126,6 @@ import { Table, TableColumn, Select, Option } from "element-ui";
 import PPagination from "src/components/UIComponents/Pagination.vue";
 import DailyBar from "../Daily/DailyBar";
 import { Card, Modal, Button } from "src/components/UIComponents";
-import axios from "axios";
 
 Vue.use(Table);
 Vue.use(TableColumn);
@@ -152,69 +153,97 @@ export default {
       tableColumns: [
         {
           prop: "type",
-          label: "Type",
+          label: "ประเภท",
         },
         {
           prop: "comment",
-          label: "Comment",
-          minWidth: 150,
+          label: "หมายเหตุ",
+          minWidth: 100,
         },
         {
-          prop: "user",
-          label: "User",
+          prop: "submitBy",
+          label: "ผู้ขอแก้ข้อมูล",
         },
         {
           prop: "updateDate",
-          label: "Date Time",
+          label: "เวลาในการแก้ไข",
         },
       ],
       tableData: [],
       tableDetailColumns: [
         {
           prop: "key",
-          label: "Name",
-          minWidth: 100,
+          label: "หัวข้อ",
         },
         {
           prop: "fromValue",
-          label: "From Value",
-          minWidth: 100,
+          label: "จากข้อมูล",
+          minWidth: 170,
         },
         {
           prop: "toValue",
-          label: "To Value",
+          label: "เป็นข้อมูล",
+          minWidth: 170,
         }
       ],
       tableDetailData: [],
       modals: {
         classic: false,
-      }
+      },
+      modalsIndex:{},
+      modalsRow:{}
     };
   },
 
   methods: {
     handleInfo(index, row) {
+      this.modalsIndex = index
+      this.modalsRow = row
       console.log(row);
       this.getDetailChangeList(row.id)
       this.modals.classic = true;
     },
-    handleEdit(index, row) {
-      this.modals.classic = true;
+    handleApprove(index, row) {
+      let headers = {"Content-Type": "application/json"}
+      let body = {
+        changeLogId: row.id,
+        isApprove: "true"
+      }
+      Vue.prototype.$http.post(`api/change/approve`, body,{headers})
+      .then((resp) => {
+        this.getChangeList()
+        this.modals.classic = false;
+        console.log("resp : " + JSON.stringify(resp));
+        console.log("tableData : " + JSON.stringify(this.tableData));
+      }).catch((err) => {
+        console.log("err : " + JSON.stringify(err));
+        reject(err);
+      });
     },
-    handleDelete(index, row) {
-      this.modals.classic = true;
+    handleCancle(index, row) {
+      let headers = {"Content-Type": "application/json"}
+      let body = {
+        changeLogId: row.id,
+        isApprove: "false"
+      }
+      Vue.prototype.$http.post(`api/change/approve`, body,{headers})
+      .then((resp) => {
+        this.getChangeList()
+        this.modals.classic = false;
+        console.log("resp : " + JSON.stringify(resp));
+        console.log("tableData : " + JSON.stringify(this.tableData));
+      }).catch((err) => {
+        console.log("err : " + JSON.stringify(err));
+        reject(err);
+      });
     },
     getChangeList: function () {
-      const AXIOS = axios.create({
-        baseURL: process.env.VUE_APP_BACKEND_URL,
-      });
       const paramsValue = {
         state: 'WAIT_APPROVE'
       };
-      AXIOS.get(`api/change/query`,{
+      Vue.prototype.$http.get(`api/change/query`,{
         headers: {
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + localStorage.getItem("token"),
+          "Content-Type": "application/json"
         },
         params: paramsValue
       }).then((resp) => {
@@ -227,16 +256,12 @@ export default {
         });
     },
     getDetailChangeList: function (id) {
-      const AXIOS = axios.create({
-        baseURL: process.env.VUE_APP_BACKEND_URL,
-      });
       const paramsValue = {
         id: id
       };
-      AXIOS.get(`api/change/get`,{
+      Vue.prototype.$http.get(`api/change/get`,{
         headers: {
-          "Content-Type": "application/json",
-          // Authorization: "Bearer " + localStorage.getItem("token"),
+          "Content-Type": "application/json"
         },
         params: paramsValue
       }).then((resp) => {
