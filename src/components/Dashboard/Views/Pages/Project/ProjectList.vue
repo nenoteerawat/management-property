@@ -52,7 +52,7 @@
                   </div>
                 </template>
               </el-table-column>-->
-              <el-table-column min-width="200" label="Project">
+              <el-table-column min-width="200" label="โครงการ">
                 <template slot-scope="props">
                   <div class="col-md-12">
                     <h4>{{ props.row.name}}</h4>
@@ -62,7 +62,7 @@
                   >ตำบล : {{ props.row.amphoe}} อำเภอ : {{ props.row.district}} จังหวัด : {{ props.row.province}}</div>
                 </template>
               </el-table-column>
-              <el-table-column label="floor">
+              <!-- <el-table-column label="floor">
                 <template slot-scope="props">
                   <div class="cell">ชั้น {{ props.row.floor}}</div>
                 </template>
@@ -76,14 +76,15 @@
                 <template slot-scope="props">
                   <div class="cell">ปี {{ props.row.developer}}</div>
                 </template>
-              </el-table-column>
-              <!-- <el-table-column
+              </el-table-column> -->
+              <el-table-column
                 v-for="column in tableColumns"
                 :key="column.label"
                 :min-width="column.minWidth"
                 :prop="column.prop"
                 :label="column.label"
-              ></el-table-column>-->
+                sortable
+              ></el-table-column>
               <el-table-column class-name="action-buttons td-actions" align="right" label="Actions">
                 <template slot-scope="props">
                   <!-- <p-button type="info" size="sm" icon @click="handleLike(props.$index, props.row)">
@@ -192,15 +193,15 @@ export default {
         // },
         {
           prop: "floor",
-          label: "Floor",
+          label: "ชั้น",
         },
         {
           prop: "building",
-          label: "Building",
+          label: "ตึก",
         },
         {
           prop: "developer",
-          label: "Developer",
+          label: "ปีที่สร้างเสร็จ (ปี)",
           minWidth: 100,
         },
       ],
@@ -239,6 +240,7 @@ export default {
       let postBody = {
         role: "",
         id: "",
+        groupBuilding: false,
       };
       const AXIOS = axios.create({
         baseURL: process.env.VUE_APP_BACKEND_URL,

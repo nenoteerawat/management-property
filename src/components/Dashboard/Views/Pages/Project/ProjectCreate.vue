@@ -9,7 +9,7 @@
               <hr />
             </h5>
             <div class="row">
-              <div class="col-md-6">
+              <div class="col-md-3">
                 <fieldset>
                   <div class="form-group">
                     <label class="control-label">ประเภท</label>
@@ -21,7 +21,7 @@
                   </div>
                 </fieldset>
               </div>
-              <div class="col-md-6">
+              <div class="col-md-4">
                 <ValidationProvider name="name" rules="required" v-slot="{ passed, failed }">
                   <fg-input
                     placeholder
@@ -32,42 +32,7 @@
                   ></fg-input>
                 </ValidationProvider>
               </div>
-              <div class="col-md-2">
-                <ValidationProvider name="floor" rules="required" v-slot="{ passed, failed }">
-                  <fg-input
-                    placeholder
-                    label="ชั้น"
-                    type="number"
-                    v-model="project.floor"
-                    :error="failed ? 'The field is required': null"
-                    :hasSuccess="passed"
-                  ></fg-input>
-                </ValidationProvider>
-              </div>
-              <div class="col-md-2">
-                <ValidationProvider name="building" rules="required" v-slot="{ passed, failed }">
-                  <fg-input
-                    placeholder
-                    label="ตึก"
-                    v-model="project.building"
-                    :error="failed ? 'The field is required': null"
-                    :hasSuccess="passed"
-                  ></fg-input>
-                </ValidationProvider>
-              </div>
-              <div class="col-md-2">
-                <ValidationProvider name="developer" rules="required" v-slot="{ passed, failed }">
-                  <fg-input
-                    placeholder
-                    label="ปีที่สร้างเสร็จ"
-                    type="number"
-                    v-model="project.developer"
-                    :error="failed ? 'The field is required': null"
-                    :hasSuccess="passed"
-                  ></fg-input>
-                </ValidationProvider>
-              </div>
-              <div class="col-md-6">
+              <div class="col-md-5">
                 <ValidationProvider name="address" rules="required" v-slot="{ passed, failed }">
                   <fg-input
                     placeholder
@@ -134,11 +99,54 @@
                 </el-select>
               </div>
               <div class="col-md-12">
-                <div>
-                  <label>การเดินทาง</label>
+                <div class="row" v-for="(building,k) in buildings" :key="k">
+                  <div class="col-md-2">
+                    <fg-input placeholder label="ชั้น" type="number" v-model="building.floor"></fg-input>
+                  </div>
+                  <div class="col-md-2">
+                    <fg-input placeholder label="ตึก" v-model="building.building"></fg-input>
+                  </div>
+                  <div class="col-md-2">
+                    <fg-input
+                      placeholder
+                      label="ปีที่สร้างเสร็จ"
+                      type="number"
+                      v-model="building.develop"
+                    ></fg-input>
+                  </div>
+                  <div class="col-md-2">
+                    <div>
+                      <label>เพิ่ม / ลบ</label>
+                    </div>
+                    <span>
+                      <p-button
+                        type="danger"
+                        size="sm"
+                        icon
+                        @click="removeBuilding(k)"
+                        v-show="k || ( !k && buildings.length > 1)"
+                      >
+                        <i class="nc-icon nc-simple-remove"></i>
+                      </p-button>
+                      <p-button
+                        type="primary"
+                        size="sm"
+                        icon
+                        v-show="k == buildings.length-1"
+                        @click="addBuilding(k)"
+                      >
+                        <i class="nc-icon nc-simple-add"></i>
+                      </p-button>
+                    </span>
+                  </div>
                 </div>
+              </div>
+              <div class="col-md-12">
                 <div class="row" v-for="(transport,k) in transports" :key="k">
                   <div class="col-md-2">
+                    <div>
+                      <label>การเดินทาง</label>
+                    </div>
                     <el-select
                       class="select-primary"
                       placeholder="Select"
@@ -154,7 +162,11 @@
                       ></el-option>
                     </el-select>
                   </div>
+
                   <div class="col-md-2">
+                    <div>
+                      <label>สถานี</label>
+                    </div>
                     <el-select class="select-primary" v-model="transport.name">
                       <el-option
                         v-for="option in transport.transportOption"
@@ -166,6 +178,9 @@
                     </el-select>
                   </div>
                   <div class="col-md-2">
+                    <div>
+                      <label>ระยะทาง</label>
+                    </div>
                     <div class="input-group">
                       <input
                         type="number"
@@ -178,26 +193,31 @@
                       </div>
                     </div>
                   </div>
-                  <span>
-                    <p-button
-                      type="danger"
-                      size="sm"
-                      icon
-                      @click="remove(k)"
-                      v-show="k || ( !k && transports.length > 1)"
-                    >
-                      <i class="nc-icon nc-simple-remove"></i>
-                    </p-button>
-                    <p-button
-                      type="primary"
-                      size="sm"
-                      icon
-                      v-show="k == transports.length-1"
-                      @click="add(k)"
-                    >
-                      <i class="nc-icon nc-simple-add"></i>
-                    </p-button>
-                  </span>
+                  <div class="col-md-2">
+                    <div>
+                      <label>เพิ่ม / ลบ</label>
+                    </div>
+                    <span>
+                      <p-button
+                        type="danger"
+                        size="sm"
+                        icon
+                        @click="remove(k)"
+                        v-show="k || ( !k && transports.length > 1)"
+                      >
+                        <i class="nc-icon nc-simple-remove"></i>
+                      </p-button>
+                      <p-button
+                        type="primary"
+                        size="sm"
+                        icon
+                        v-show="k == transports.length-1"
+                        @click="add(k)"
+                      >
+                        <i class="nc-icon nc-simple-add"></i>
+                      </p-button>
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -207,7 +227,7 @@
                 <p-button
                   type="info"
                   round
-                  native-type="submit"
+                  @click="handleSubmit(submit)"
                   v-loading.fullscreen.lock="fullscreenLoading"
                 >{{ btnAction }}</p-button>
               </div>
@@ -264,9 +284,7 @@ export default {
         this.btnAction = "Edit";
         this.project.name = resp.data[0].name;
         this.project.type = resp.data[0].type;
-        this.project.floor = resp.data[0].floor;
-        this.project.building = resp.data[0].building;
-        this.project.developer = resp.data[0].developer;
+        this.buildings = resp.data[0].buildings;
         this.project.address = resp.data[0].address;
         this.district = resp.data[0].district;
         this.amphoe = resp.data[0].amphoe;
@@ -305,6 +323,13 @@ export default {
           name: "",
           range: "",
           transportOption: [],
+        },
+      ],
+      buildings: [
+        {
+          floor: "",
+          building: "",
+          develop: "",
         },
       ],
       transportTypeSelect: {
@@ -379,6 +404,16 @@ export default {
     remove(index) {
       this.transports.splice(index, 1);
     },
+    addBuilding(index) {
+      this.buildings.push({
+        floor: "",
+        building: "",
+        develop: "",
+      });
+    },
+    removeBuilding(index) {
+      this.buildings.splice(index, 1);
+    },
     select(address) {
       this.district = address.district;
       this.amphoe = address.amphoe;
@@ -402,9 +437,7 @@ export default {
       let postBody = {
         type: this.project.type,
         name: this.project.name,
-        floor: this.project.floor,
-        building: this.project.building,
-        developer: this.project.developer,
+        buildings: this.buildings,
         address: this.project.address,
         district: this.district,
         amphoe: this.amphoe,
@@ -420,9 +453,7 @@ export default {
           id: this.$route.query.id,
           type: this.project.type,
           name: this.project.name,
-          floor: this.project.floor,
-          building: this.project.building,
-          developer: this.project.developer,
+          buildings: this.buildings,
           address: this.project.address,
           district: this.district,
           amphoe: this.amphoe,
