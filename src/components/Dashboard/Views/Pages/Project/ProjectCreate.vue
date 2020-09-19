@@ -483,7 +483,7 @@ export default {
             verticalAlign: "top",
             type: "success",
           });
-          window.location.href = "/#/admin/project";
+          window.location.href = "/admin/project";
         })
         .catch((err) => {
           this.fullscreenLoading = false;

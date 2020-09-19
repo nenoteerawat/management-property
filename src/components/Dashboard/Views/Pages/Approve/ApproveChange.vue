@@ -140,12 +140,16 @@ export default {
     PPagination,
   },
 
+  created: function () {
+    this.getChangeList();
+  },
+
   data() {
     return {
       pagination: {
         perPage: 5,
         currentPage: 1,
-        perPageOptions: [1, 2, 3, 5, 10, 25, 50],
+        perPageOptions: [5, 10, 25, 50],
         total: 0,
       },
       searchQuery: "",
@@ -313,9 +317,7 @@ export default {
       return this.tableData.length;
     },
   },
-  created: function () {
-    this.getChangeList();
-  },
+  
 };
 </script>
 <style lang="scss">

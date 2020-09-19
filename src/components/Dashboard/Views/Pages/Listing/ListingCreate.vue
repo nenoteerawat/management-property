@@ -1214,7 +1214,7 @@ export default {
             verticalAlign: "top",
             type: "success",
           });
-          window.location.href = "/#/admin/owner";
+          window.location.href = "/admin/owner";
         })
         .catch((err) => {
           this.fullscreenLoading = false;

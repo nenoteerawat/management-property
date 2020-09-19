@@ -69,9 +69,9 @@ export default [
     ]
   },
   {
-    name: 'Owner',
+    name: 'Listing',
     icon: 'nc-icon nc-shop',
-    path: '/admin/owner',
+    path: '/admin/listing',
     roles: ["ROLE_SALE","ROLE_ADMIN"]
   },
   {
