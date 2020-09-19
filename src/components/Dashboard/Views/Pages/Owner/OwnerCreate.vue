@@ -570,7 +570,7 @@ export default {
       const AXIOS = axios.create({
         baseURL: process.env.VUE_APP_BACKEND_URL,
       });
-      AXIOS.post(`api/lead/list`, postBody, {
+      AXIOS.post(`api/listing/list`, postBody, {
         headers: {
           "Content-Type": "application/json",
           Authorization: "Bearer " + localStorage.getItem("token"),
@@ -1178,7 +1178,7 @@ export default {
         exclusive: this.exclusive,
         exclusiveDate: this.room.exclusiveDate,
       };
-      let path = "api/lead/create";
+      let path = "api/listing/create";
       let postBody = {
         ownerRequest: owner,
         roomRequest: room,
@@ -1186,7 +1186,7 @@ export default {
         username: this.getUser.username,
       };
       if (this.$route.query.id) {
-        path = "api/lead/edit";
+        path = "api/listing/edit";
         postBody = {
           id: this.$route.query.id,
           ownerRequest: owner,

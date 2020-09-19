@@ -394,7 +394,7 @@ export default {
   },
 
   created: function () {
-    this.getLead();
+    this.getListing();
     this.getProjectList();
   },
 
@@ -546,7 +546,7 @@ export default {
           reject(err);
         });
     },
-    getLead: function () {
+    getListing: function () {
       let postBody = {
         role: "",
         id: "",
@@ -554,7 +554,7 @@ export default {
       const AXIOS = axios.create({
         baseURL: process.env.VUE_APP_BACKEND_URL,
       });
-      AXIOS.post(`api/lead/list`, postBody, {
+      AXIOS.post(`api/listing/list`, postBody, {
         headers: {
           "Content-Type": "application/json",
           Authorization: "Bearer " + localStorage.getItem("token"),
