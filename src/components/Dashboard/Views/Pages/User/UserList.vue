@@ -5,11 +5,11 @@
         <div class="card-header">
           <div class="row">
             <div class="col-md-6">
-              <h5 class="card-title">Room</h5>
+              <h5 class="card-title">User</h5>
             </div>
             <div class="col-md-6">
               <div class="pull-right">
-                <router-link to="project/create">
+                <router-link to="User/create">
                   <p-button type="success" outline round>
                     <i class="nc-icon nc-simple-add"></i> Add
                   </p-button>
@@ -52,31 +52,6 @@
                   </div>
                 </template>
               </el-table-column>-->
-              <el-table-column min-width="200" label="โครงการ">
-                <template slot-scope="props">
-                  <div class="col-md-12">
-                    <h4>{{ props.row.name}}</h4>
-                  </div>
-                  <div
-                    class="col-md-12 cell"
-                  >ตำบล : {{ props.row.amphoe}} อำเภอ : {{ props.row.district}} จังหวัด : {{ props.row.province}}</div>
-                </template>
-              </el-table-column>
-              <!-- <el-table-column label="floor">
-                <template slot-scope="props">
-                  <div class="cell">ชั้น {{ props.row.floor}}</div>
-                </template>
-              </el-table-column>
-              <el-table-column label="building">
-                <template slot-scope="props">
-                  <div class="cell">ตึก {{ props.row.building}}</div>
-                </template>
-              </el-table-column>
-              <el-table-column label="developer">
-                <template slot-scope="props">
-                  <div class="cell">ปี {{ props.row.developer}}</div>
-                </template>
-              </el-table-column> -->
               <el-table-column
                 v-for="column in tableColumns"
                 :key="column.label"
@@ -172,19 +147,19 @@ export default {
   },
 
   created: function () {
-    this.getProject();
+    this.getUser();
   },
 
   data() {
     return {
       pagination: {
-        perPage: 5,
+        perPage: 10,
         currentPage: 1,
         perPageOptions: [5, 10, 25, 50],
         total: 0,
       },
       searchQuery: "",
-      propsToSearch: ["name"],
+      propsToSearch: ["username","firstName","lastName","nickName"],
       tableColumns: [
         // {
         //   prop: "name",
@@ -192,17 +167,24 @@ export default {
         //   minWidth: 150,
         // },
         {
-          prop: "floor",
-          label: "ชั้น",
+          prop: "username",
+          label: "username",
         },
         {
-          prop: "building",
-          label: "ตึก",
+          prop: "firstName",
+          label: "ชื่อ",
         },
         {
-          prop: "develop",
-          label: "ปีที่สร้างเสร็จ (ปี)",
-          minWidth: 100,
+          prop: "lastName",
+          label: "นามสกุล",
+        },
+        {
+          prop: "nickName",
+          label: "ชื่อเล่น",
+        },
+        {
+          prop: "roles[0].name",
+          label: "role",
         },
       ],
       tableData: [],
@@ -236,24 +218,19 @@ export default {
   },
 
   methods: {
-    getProject: function () {
+    getUser: function () {
       let postBody = {
-        role: "",
-        id: "",
-        groupBuilding: false,
       };
       const AXIOS = axios.create({
         baseURL: process.env.VUE_APP_BACKEND_URL,
       });
-      AXIOS.post(`api/project/list`, postBody, {
+      AXIOS.post(`api/user/list`, postBody, {
         headers: {
           "Content-Type": "application/json",
           Authorization: "Bearer " + localStorage.getItem("token"),
         },
       }).then((resp) => {
         this.tableData = resp.data;
-        console.log("resp : " + JSON.stringify(resp));
-        console.log("tableData : " + JSON.stringify(this.tableData));
       }).catch((err) => {
           console.log("err : " + JSON.stringify(err));
           reject(err);
@@ -263,13 +240,14 @@ export default {
       alert(`Your clicked on Like button ${index}`);
     },
     handleEdit(index, row) {
-      console.log("row : "+row);
-      window.location.href = "/admin/project/create?id=" + row.id;
+          console.log("row : " + JSON.stringify(row));
+      // console.log("row : "+row);
+      window.location.href = "/admin/user/create?id=" + row.username;
       // alert(`Your want to edit ${row.name}`);
     },
     handleDelete(index, row) {
       this.$confirm(
-        "This will permanently delete project. Continue?",
+        "This will permanently delete user. Continue?",
         "Warning",
         {
           confirmButtonText: "OK",
@@ -285,17 +263,18 @@ export default {
           const AXIOS = axios.create({
             baseURL: process.env.VUE_APP_BACKEND_URL,
           });
-          AXIOS.post(`api/project/delete`, postBody, {
+          AXIOS.post(`api/user/delete`, postBody, {
             headers: {
               "Content-Type": "application/json",
               Authorization: "Bearer " + localStorage.getItem("token"),
             },
+            params: postBody
           }).then((resp) => {
             this.$message({
               type: "success",
               message: "Delete completed",
             });
-            this.getProject();
+            this.getUser();
           });
         })
         .catch(() => {

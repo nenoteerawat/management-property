@@ -8,6 +8,8 @@ const ListingList = () => import(/* webpackChunkName: "widgets" */ 'src/componen
 const ListingCreate = () => import(/* webpackChunkName: "widgets" */ 'src/components/Dashboard/Views/Pages/Listing/ListingCreate.vue')
 const ProjectList = () => import(/* webpackChunkName: "widgets" */ 'src/components/Dashboard/Views/Pages/Project/ProjectList.vue')
 const ProjectCreate = () => import(/* webpackChunkName: "widgets" */ 'src/components/Dashboard/Views/Pages/Project/ProjectCreate.vue')
+const UserList = () => import(/* webpackChunkName: "widgets" */ 'src/components/Dashboard/Views/Pages/User/UserList.vue')
+const UserCreate = () => import(/* webpackChunkName: "widgets" */ 'src/components/Dashboard/Views/Pages/User/UserCreate.vue')
 
 // Pages
 import User from 'src/components/Dashboard/Views/Pages/UserProfile.vue'
@@ -277,6 +279,16 @@ const routes = [
         path: 'project/create',
         name: 'Project Create',
         component: ProjectCreate
+      },
+      {
+        path: 'user',
+        name: 'User',
+        component: UserList
+      },
+      {
+        path: 'user/create',
+        name: 'User Create',
+        component: UserCreate
       },
     ]
   },

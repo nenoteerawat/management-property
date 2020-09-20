@@ -175,7 +175,7 @@
           <div class="col-md-12">
             <el-table :data="queriedData" thead-class="hidden_header">
               <el-table-column type="index"></el-table-column>
-              <el-table-column min-width="126" label>
+              <!-- <el-table-column min-width="126" label>
                 <template slot-scope="props">
                   <div class="img-container">
                     <img
@@ -188,7 +188,7 @@
                     />
                   </div>
                 </template>
-              </el-table-column>
+              </el-table-column> -->
               <el-table-column min-width="200" label>
                 <template slot-scope="props">
                   <div class="row">
@@ -202,7 +202,7 @@
                     <div class="col-md-12">
                       <div class="row">
                         <div class="col-md-12">
-                          <span>listing : {{ props.row.listing.name}}</span>
+                          <span>เจ้าของ : {{ props.row.owner.name}}</span>
                         </div>
                         <div class="col-md-3"></div>
                         <div class="col-md-3">
@@ -298,7 +298,7 @@
                   </div>
                 </template>
               </el-table-column>
-              <el-table-column min-width="105" label>
+              <el-table-column min-width="100" label>
                 <template slot-scope="props">
                   <div class="cell">
                     <h6>S {{ Number(props.row.room.price).toLocaleString() }}</h6>
@@ -306,16 +306,22 @@
                   <div class="cell" v-show="props.row.room.type == 2">
                     <h6>R {{ Number(props.row.room.priceRent).toLocaleString() }}</h6>
                   </div>
+                  <div class="cell" >
+                    <span><i class="fa fa-plus" aria-hidden="true"></i> {{ props.row.createdBy  }}</span>
+                  </div>
+                  <div class="cell" >
+                    <span><i class="fa fa-clock-o" aria-hidden="true"></i> {{ props.row.createdDateTime  }}</span>
+                  </div>
                 </template>
               </el-table-column>
+              
               <!-- <el-table-column
                 v-for="column in tableColumns"
                 :key="column.label"
                 :min-width="column.minWidth"
                 :prop="column.prop"
                 :label="column.label"
-                sortable
-              ></el-table-column>-->
+              ></el-table-column> -->
               <el-table-column
                 class-name="action-buttons td-actions"
                 align="right"
@@ -447,19 +453,7 @@ export default {
       price: [0, 0],
       area: [0, 0],
       tableColumns: [
-        {
-          prop: "name",
-          label: "Name",
-          minWidth: 150,
-        },
-        {
-          prop: "job",
-          label: "Job",
-        },
-        {
-          prop: "salary",
-          label: "Salary",
-        },
+        
       ],
       projectSelects: {
         select: "",
@@ -518,6 +512,16 @@ export default {
       transportAIRLINKSelect: [
         { value: "AIRLINK", label: "AIRLINK" },
         { value: "AIRLINK", label: "AIRLINK" },
+      ],
+      tableColumns: [
+        {
+          prop: "createdBy",
+          label: "",
+        },
+        {
+          prop: "createdDateTime",
+          label: "",
+        },
       ],
       tableData: [],
       tasks: [

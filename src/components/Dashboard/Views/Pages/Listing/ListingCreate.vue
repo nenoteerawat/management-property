@@ -105,7 +105,26 @@
                 </div>
                 <autocomplete :search="search" @submit="projectSearch"></autocomplete>
               </div>
-              <div class="col-md-6">
+              <div class="col-md-3">
+                <div>
+                  <label>ตึก</label>
+                </div>
+                <el-select
+                  class="select-primary"
+                  placeholder="select"
+                  v-model="buildingSelects.select"
+                  @change="switchBuilding($event)"
+                >
+                  <el-option
+                    v-for="option in buildingSelects.data"
+                    class="select-primary"
+                    :value="option.value"
+                    :label="option.label"
+                    :key="option.label"
+                  ></el-option>
+                </el-select>
+              </div>
+              <div class="col-md-3">
                 <div>
                   <label>ประเภท</label>
                 </div>
@@ -134,7 +153,7 @@
                     <fg-input :disabled="true" label="ตึก" v-model="project.building"></fg-input>
                   </div>
                   <div class="col-md-4">
-                    <fg-input :disabled="true" label="ปีที่สร้างเสร็จ" v-model="project.developer"></fg-input>
+                    <fg-input :disabled="true" label="ปีที่สร้างเสร็จ" v-model="project.develop"></fg-input>
                   </div>
                 </div>
               </div>
@@ -242,7 +261,23 @@
               <div class="col-md-6">
                 <div class="row">
                   <div class="col-md-6">
-                    <fg-input type="number" label="อยู่ชั้น" v-model="room.floor"></fg-input>
+                    <div>
+                      <label>อยู่ชั้น</label>
+                    </div>
+                    <el-select
+                      class="select-primary"
+                      placeholder="Select"
+                      v-model="floorSelects.select"
+                    >
+                      <el-option
+                        v-for="option in floorSelects.data"
+                        class="select-primary"
+                        :value="option.value"
+                        :label="option.label"
+                        :key="option.label"
+                      ></el-option>
+                    </el-select>
+                    <!-- <fg-input type="number" label="อยู่ชั้น" v-model="room.floor"></fg-input> -->
                   </div>
                 </div>
               </div>
@@ -406,11 +441,13 @@
                 <div class="form-group">
                   <label>Description</label>
                   <textarea
-                    rows="5"
+                    style="min-height:450px;"
+                    rows="40"
                     class="form-control border-input"
                     placeholder="Here can be your description"
                     v-model="room.description"
                   ></textarea>
+                  <p-button size="sm" @click="genDesc">Gen Description</p-button>
                 </div>
               </div>
               <div class="col-md-6">
@@ -494,7 +531,7 @@
                 <p-button
                   type="info"
                   round
-                  native-type="submit"
+                  @click="submit"
                   v-loading.fullscreen.lock="fullscreenLoading"
                 >{{ btnAction }}</p-button>
               </div>
@@ -673,6 +710,11 @@ export default {
           { value: "3", label: "ทาวน์เฮาส์" },
         ],
       },
+      buildingSelects: {
+        select: "",
+        data: [],
+      },
+      buildings: [],
       standardSelects: {
         select: "",
         data: [
@@ -789,10 +831,15 @@ export default {
         name: "",
         floor: "",
         building: "",
-        developer: "",
+        develop: "",
         address: "",
         price: "",
       },
+      floorSelects: {
+        select: "",
+        data: [],
+      },
+
       fileList: [
         // {
         //   path:
@@ -840,6 +887,7 @@ export default {
       else this.exclusiveShow = false;
     },
   },
+
   methods: {
     search(input) {
       if (input.length < 1) {
@@ -865,15 +913,13 @@ export default {
           Authorization: "Bearer " + localStorage.getItem("token"),
         },
       }).then((resp) => {
-        console.log("resp : " + JSON.stringify(resp));
-        console.log("this.autocomplete : " + JSON.stringify(Autocomplete));
+        console.log("resp : " + JSON.stringify(resp.data[0]));
         this.inputProjectSearch = resp.data[0].name;
         this.project.id = resp.data[0].id;
         this.project.name = resp.data[0].name;
         this.project.type = resp.data[0].type;
         this.project.floor = resp.data[0].floor;
-        this.project.building = resp.data[0].building;
-        this.project.developer = resp.data[0].developer;
+        this.project.develop = resp.data[0].develop;
         this.project.address = resp.data[0].address;
         this.district = resp.data[0].district;
         this.amphoe = resp.data[0].amphoe;
@@ -881,6 +927,13 @@ export default {
         this.zipcode = resp.data[0].zipcode;
         this.facilitySelects.selects = resp.data[0].facilities;
         this.propertySelects.select = resp.data[0].type;
+        this.buildingSelects.data = resp.data[0].buildings.map((item) => {
+          return {
+            value: item.building,
+            label: item.building,
+          };
+        });
+        this.buildings = resp.data[0].buildings;
         this.transports = resp.data[0].transports.map((item) => {
           return {
             type: item.type,
@@ -899,6 +952,131 @@ export default {
         this.activeCondo = false;
         this.activeHome = false;
       }
+    },
+    switchBuilding(event) {
+      console.log("switchBuilding");
+      let building = this.buildings.filter(function (item) {
+        if (item.building == event) {
+          return {
+            floor: item.floor,
+            building: item.building,
+            develop: item.develop,
+          };
+        }
+      });
+      console.log("building : ", JSON.stringify(building));
+      this.project.floor = building[0].floor;
+      this.project.building = building[0].building;
+      this.project.develop = building[0].develop;
+      for (let index = 1; index <= this.project.floor; index++) {
+        this.floorSelects.data.push({
+          label: "ชั้น " + index,
+          value: index,
+        });
+      }
+    },
+    genDesc() {
+      let type = this.radiosTypeRole == 1 ? "SALE" : "AVAILABLE";
+      let position = "";
+      for (let index = 0; index < this.positionSelects.data.length; index++) {
+        for (let index2 = 0; index2 < this.positionSelects.select.length; index2++) {
+          if (this.positionSelects.data[index].value === this.positionSelects.select[index2])
+          position += this.positionSelects.data[index].label+",";
+        }
+      }
+      let direction = this.directionSelects.select;
+      this.directionSelects.data.filter(function (item) {
+        if (item.value == direction) {
+          direction = item.label;
+        }
+      });
+       let floor = this.floorSelects.select;
+      this.floorSelects.data.filter(function (item) {
+        if (item.value == floor) {
+          floor = item.label;
+        }
+      });
+      let feature = this.featureSelects.select;
+      this.featureSelects.data.filter(function (item) {
+        if (item.value == feature) {
+          feature = item.label;
+        }
+      });
+      let sellDetail = this.sellDetailSelects.select;
+      this.sellDetailSelects.data.filter(function (item) {
+        if (item.value == sellDetail) {
+          sellDetail = item.label;
+        }
+      });
+      console.log("position : ", JSON.stringify(position));
+
+      this.room.description =
+        this.project.name +
+        "\n" +
+        // "Near Phraram Kao 9 MRT Station\n" +
+        "(FOR " +
+        type +
+        ")\n" +
+        "\n" +
+        "Details :\n" +
+        "- " +
+        this.room.area +
+        " Sqm.\n" +
+        "- " +
+        floor +
+        " Floor\n" +
+        "- " +
+        this.bedSelects.select +
+        " Bedrooms / " +
+        this.toiletSelects.select +
+        " Bathrooms\n" +
+        "- " +
+        position +
+        "\n" +
+        "- Building " +
+        this.project.building +
+        "\n" +
+        "- " +
+        direction +
+        "\n" +
+        "- " +
+        feature +
+        " \n" +
+        "\n" +
+        "*** " +
+        Number(this.room.price).toLocaleString() +
+        ".- (" +
+        sellDetail +
+        ") ****\n" +
+        "_________________________________________\n" +
+        "\n" +
+        "เรานำเสนอบริการด้านอสังหาริมทรัพย์ ให้กับทุกๆท่านที่กำลังหาซื้อ หรือเช่า คอนโด, บ้าน, ทาวน์เฮ้าส์, ที่ดิน และอื่นๆอีกมากมาย หรือท่านอาจเป็นเจ้าของทรัพย์ ที่กำลังต้องการฝากขายหรือให้เช่าทรัพย์ของท่าน กับบริษัทที่มีความเชี่ยวชาญและเชื่อถือได้ เรายินดีให้บริการท่านเสมอ!\n" +
+        "\n" +
+        "ที่ๆคุณมองหา อยู่ที่นี่แล้ว..\n" +
+        "\n" +
+        "We provide real estate service for anyone that are looking to buy or rent a condominium, house, townhouse, land and much more, Or you might be the owner that wish to sell your property by a professional and trustworthy agency company. We are here to be at your service!\n" +
+        "\n" +
+        "The place youre looking for, is here..\n" +
+        "\n" +
+        "__________________________________________\n" +
+        "\n" +
+        "For appointment and more info please contact\n" +
+        "\n" +
+        "หากต้องการนัดชมห้องหรือต้องการข้อมูลเพิ่มเติม ติดต่อได้ที่\n" +
+        "\n" +
+        "Contact Us [Mon - Fri 9.00 - 18.00]\n" +
+        "\n" +
+        "TEL : 062-879-5289 (Ploy)\n" +
+        "\n" +
+        "LINE : @homethailand (with @ symbol)\n" +
+        "\n" +
+        "__________________________________________\n" +
+        "\n" +
+        "Follow Us On\n" +
+        "\n" +
+        "Website : https://www.facebook.com/homerealestate.official/" +
+        "\n" +
+        "IG : homerealestate.official";
     },
     handleClose(tag) {
       this.tags.dynamicTags.splice(this.tags.dynamicTags.indexOf(tag), 1);
@@ -1214,7 +1392,7 @@ export default {
             verticalAlign: "top",
             type: "success",
           });
-          window.location.href = "/admin/owner";
+          window.location.href = "/admin/listing";
         })
         .catch((err) => {
           this.fullscreenLoading = false;

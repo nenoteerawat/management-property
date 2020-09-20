@@ -69,6 +69,12 @@ export default [
     ]
   },
   {
+    name: 'user',
+    icon: 'nc-icon nc-single-02',
+    path: '/admin/user',
+    roles: ["ROLE_ADMIN"]
+  },
+  {
     name: 'Listing',
     icon: 'nc-icon nc-shop',
     path: '/admin/listing',

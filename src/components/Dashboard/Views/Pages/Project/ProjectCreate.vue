@@ -333,7 +333,7 @@ export default {
         },
       ],
       transportTypeSelect: {
-        simple: "",
+        select: "",
         data: [
           { value: "BTS", label: "BTS" },
           { value: "MRT", label: "MRT" },
