@@ -839,7 +839,7 @@ export default {
         select: "",
         data: [],
       },
-
+      comment: "",
       fileList: [
         // {
         //   path:
@@ -979,9 +979,16 @@ export default {
       let type = this.radiosTypeRole == 1 ? "SALE" : "AVAILABLE";
       let position = "";
       for (let index = 0; index < this.positionSelects.data.length; index++) {
-        for (let index2 = 0; index2 < this.positionSelects.select.length; index2++) {
-          if (this.positionSelects.data[index].value === this.positionSelects.select[index2])
-          position += this.positionSelects.data[index].label+",";
+        for (
+          let index2 = 0;
+          index2 < this.positionSelects.select.length;
+          index2++
+        ) {
+          if (
+            this.positionSelects.data[index].value ===
+            this.positionSelects.select[index2]
+          )
+            position += this.positionSelects.data[index].label + ",";
         }
       }
       let direction = this.directionSelects.select;
@@ -990,7 +997,7 @@ export default {
           direction = item.label;
         }
       });
-       let floor = this.floorSelects.select;
+      let floor = this.floorSelects.select;
       this.floorSelects.data.filter(function (item) {
         if (item.value == floor) {
           floor = item.label;
@@ -1324,7 +1331,36 @@ export default {
       this.tags.inputVisible = false;
       this.tags.inputValue = "";
     },
+    validateComment(input) {
+      if (input == null || input.length < 1) {
+        return "Comment Not Found";
+      } else {
+        this.comment = input;
+        return true;
+      }
+    },
+    openBoxComment() {
+      this.$prompt("Please input your comment", "comment", {
+        confirmButtonText: "OK",
+        cancelButtonText: "Cancel",
+        inputValidator: this.validateComment,
+      })
+        .then(({ value }) => {
+          this.createListing();
+        })
+        .catch(() => {
+          return false;
+        });
+    },
     submit() {
+      if (this.getUser.roles[0] === "ROLE_SALE") {
+        this.openBoxComment();
+      } else {
+        this.createListing();
+      }
+    },
+    createListing() {
+      this.fullscreenLoading = true;
       let owner = {
         listingCode: this.owner.listingCode,
         name: this.owner.name,
@@ -1361,7 +1397,7 @@ export default {
         ownerRequest: owner,
         roomRequest: room,
         files: this.fileList,
-        username: this.getUser.username,
+        comment: this.comment,
       };
       if (this.$route.query.id) {
         path = "api/listing/edit";
@@ -1370,7 +1406,7 @@ export default {
           ownerRequest: owner,
           roomRequest: room,
           files: this.fileList,
-          username: this.getUser.username,
+          comment: this.comment,
         };
       }
       console.log("postBody : " + JSON.stringify(postBody));

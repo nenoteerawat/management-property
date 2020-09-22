@@ -61,7 +61,7 @@
                     type="danger"
                     size="sm"
                     icon
-                    @click="handleCancle(props.$index, props.row)"
+                    @click="handleCancel(props.$index, props.row)"
                   >
                     <i class="nc-icon nc-simple-remove"></i>
                   </p-button>
@@ -86,13 +86,17 @@
     <div class="row">
       <div class="col-md-12 text-center">
         <!-- Change log detail modal end -->
-        <modal :show.sync="modals.classic" headerClasses="justify-content-center" modalClasses="modal-lg">
+        <modal
+          :show.sync="modals.classic"
+          headerClasses="justify-content-center"
+          modalClasses="modal-lg"
+        >
           <h4 slot="header" class="title title-up">รายละเอียดการเปลี่ยนแปลงข้อมูล</h4>
           <template>
             <div class="row">
               <div class="col-md-12">
                 <el-table :data="tableDetailData">
-                <el-table-column type="index"></el-table-column>
+                  <el-table-column type="index"></el-table-column>
                   <el-table-column
                     v-for="column in tableDetailColumns"
                     :key="column.label"
@@ -111,7 +115,7 @@
             </div>
             <div class="divider"></div>
             <div class="right-side">
-              <p-button type="danger" link @click="handleCancle(modalsIndex, modalsRow)">ยกเลิก</p-button>
+              <p-button type="danger" link @click="handleCancel(modalsIndex, modalsRow)">ยกเลิก</p-button>
             </div>
           </template>
         </modal>
@@ -126,6 +130,7 @@ import { Table, TableColumn, Select, Option } from "element-ui";
 import PPagination from "src/components/UIComponents/Pagination.vue";
 import DailyBar from "../Daily/DailyBar";
 import { Card, Modal, Button } from "src/components/UIComponents";
+import axios from "axios";
 
 Vue.use(Table);
 Vue.use(TableColumn);
@@ -188,91 +193,146 @@ export default {
           prop: "toValue",
           label: "เป็นข้อมูล",
           minWidth: 170,
-        }
+        },
       ],
       tableDetailData: [],
       modals: {
         classic: false,
       },
-      modalsIndex:{},
-      modalsRow:{}
+      modalsIndex: {},
+      modalsRow: {},
     };
   },
 
   methods: {
     handleInfo(index, row) {
-      this.modalsIndex = index
-      this.modalsRow = row
+      this.modalsIndex = index;
+      this.modalsRow = row;
       console.log(row);
-      this.getDetailChangeList(row.id)
+      this.getDetailChangeList(row.id);
       this.modals.classic = true;
     },
     handleApprove(index, row) {
-      let headers = {"Content-Type": "application/json"}
-      let body = {
-        changeLogId: row.id,
-        isApprove: "true"
-      }
-      Vue.prototype.$http.post(`api/change/approve`, body,{headers})
-      .then((resp) => {
-        this.getChangeList()
-        this.modals.classic = false;
-        console.log("resp : " + JSON.stringify(resp));
-        console.log("tableData : " + JSON.stringify(this.tableData));
-      }).catch((err) => {
-        console.log("err : " + JSON.stringify(err));
-        reject(err);
-      });
+      this.$confirm(
+        "This will permanently approve " + row.type + ". Continue?",
+        "Warning",
+        {
+          confirmButtonText: "OK",
+          cancelButtonText: "Cancel",
+          type: "warning",
+        }
+      )
+        .then(() => {
+          let headers = { "Content-Type": "application/json" };
+          let body = {
+            changeLogId: row.id,
+            isApprove: "true",
+          };
+          Vue.prototype.$http
+            .post(`api/change/approve`, body, { headers })
+            .then((resp) => {
+              this.getChangeList();
+              this.modals.classic = false;
+            })
+            .catch((err) => {
+              console.log("err : " + JSON.stringify(err));
+              reject(err);
+            });
+          this.$message({
+            type: "success",
+            message: "Approve completed",
+          });
+        })
+        .catch(() => {});
     },
-    handleCancle(index, row) {
-      let headers = {"Content-Type": "application/json"}
-      let body = {
-        changeLogId: row.id,
-        isApprove: "false"
-      }
-      Vue.prototype.$http.post(`api/change/approve`, body,{headers})
-      .then((resp) => {
-        this.getChangeList()
-        this.modals.classic = false;
-        console.log("resp : " + JSON.stringify(resp));
-        console.log("tableData : " + JSON.stringify(this.tableData));
-      }).catch((err) => {
-        console.log("err : " + JSON.stringify(err));
-        reject(err);
-      });
+    handleCancel(index, row) {
+      this.$confirm(
+        "This will permanently cancel " + row.type + ". Continue?",
+        "Warning",
+        {
+          confirmButtonText: "OK",
+          cancelButtonText: "Cancel",
+          type: "warning",
+        }
+      )
+        .then(() => {
+          let headers = { "Content-Type": "application/json" };
+          let body = {
+            changeLogId: row.id,
+            isApprove: "false",
+          };
+          Vue.prototype.$http
+            .post(`api/change/approve`, body, { headers })
+            .then((resp) => {
+              this.getChangeList();
+              this.modals.classic = false;
+            })
+            .catch((err) => {
+              console.log("err : " + JSON.stringify(err));
+              reject(err);
+            });
+          this.$message({
+            type: "success",
+            message: "Delete completed",
+          });
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "Delete canceled",
+          });
+        });
     },
     getChangeList: function () {
       const paramsValue = {
-        state: 'WAIT_APPROVE'
+        state: "WAIT_APPROVE",
       };
-      Vue.prototype.$http.get(`api/change/query`,{
+      const AXIOS = axios.create({
+        baseURL: process.env.VUE_APP_BACKEND_URL,
+      });
+      AXIOS.get(`api/change/query`, {
         headers: {
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + localStorage.getItem("token"),
         },
-        params: paramsValue
+        params: paramsValue,
       }).then((resp) => {
         this.tableData = resp.data;
-        console.log("resp : " + JSON.stringify(resp));
-        console.log("tableData : " + JSON.stringify(this.tableData));
-      }).catch((err) => {
-          console.log("err : " + JSON.stringify(err));
-          reject(err);
-        });
+      });
+      // Vue.prototype.$http
+      //   .get(`api/change/query`, {
+      //     headers: {
+      //       "Content-Type": "application/json",
+      //     },
+      //     params: paramsValue,
+      //   })
+      //   .then((resp) => {
+      //     this.tableData = resp.data;
+      //     console.log("resp : " + JSON.stringify(resp));
+      //     console.log("tableData : " + JSON.stringify(this.tableData));
+      //   })
+      //   .catch((err) => {
+      //     console.log("err : " + JSON.stringify(err));
+      //     reject(err);
+      //   });
     },
     getDetailChangeList: function (id) {
       const paramsValue = {
-        id: id
+        id: id,
       };
-      Vue.prototype.$http.get(`api/change/get`,{
-        headers: {
-          "Content-Type": "application/json"
-        },
-        params: paramsValue
-      }).then((resp) => {
-        this.tableDetailData = resp.data;
-        console.log("resp : " + JSON.stringify(resp));
-        console.log("tableData : " + JSON.stringify(this.tableData));
-      }).catch((err) => {
+      Vue.prototype.$http
+        .get(`api/change/get`, {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          params: paramsValue,
+        })
+        .then((resp) => {
+          this.tableDetailData = resp.data;
+          console.log("resp : " + JSON.stringify(resp));
+          console.log("tableData : " + JSON.stringify(this.tableData));
+        })
+        .catch((err) => {
           console.log("err : " + JSON.stringify(err));
           reject(err);
         });
@@ -317,7 +377,6 @@ export default {
       return this.tableData.length;
     },
   },
-  
 };
 </script>
 <style lang="scss">

@@ -145,11 +145,15 @@
             </div>
             <div class="col-md-3 ml-auto">
               <div class="btn-group" style="margin-top: 13px;">
-                <p-button type="info" round outline> <i class="fa fa-search"></i>Search</p-button>
-                <p-button type="warning" round outline> <i class="fa fa-times"></i>Reset</p-button>
+                <p-button type="info" round outline>
+                  <i class="fa fa-search"></i>Search
+                </p-button>
+                <p-button type="warning" round outline>
+                  <i class="fa fa-times"></i>Reset
+                </p-button>
               </div>
             </div>
-            
+
             <!-- <div class="col-md-6">
               <el-select class="select-default" v-model="pagination.perPage" placeholder="Per page">
                 <el-option
@@ -188,7 +192,7 @@
                     />
                   </div>
                 </template>
-              </el-table-column> -->
+              </el-table-column>-->
               <el-table-column min-width="200" label>
                 <template slot-scope="props">
                   <div class="row">
@@ -306,22 +310,28 @@
                   <div class="cell" v-show="props.row.room.type == 2">
                     <h6>R {{ Number(props.row.room.priceRent).toLocaleString() }}</h6>
                   </div>
-                  <div class="cell" >
-                    <span><i class="fa fa-plus" aria-hidden="true"></i> {{ props.row.createdBy  }}</span>
+                  <div class="cell">
+                    <span>
+                      <i class="fa fa-plus" aria-hidden="true"></i>
+                      {{ props.row.createdBy }}
+                    </span>
                   </div>
-                  <div class="cell" >
-                    <span><i class="fa fa-clock-o" aria-hidden="true"></i> {{ props.row.createdDateTime  }}</span>
+                  <div class="cell">
+                    <span>
+                      <i class="fa fa-clock-o" aria-hidden="true"></i>
+                      {{ props.row.createdDateTime }}
+                    </span>
                   </div>
                 </template>
               </el-table-column>
-              
+
               <!-- <el-table-column
                 v-for="column in tableColumns"
                 :key="column.label"
                 :min-width="column.minWidth"
                 :prop="column.prop"
                 :label="column.label"
-              ></el-table-column> -->
+              ></el-table-column>-->
               <el-table-column
                 class-name="action-buttons td-actions"
                 align="right"
@@ -354,6 +364,7 @@
                       size="sm"
                       icon
                       @click="handleDelete(props.$index, props.row)"
+                      v-if="getUser.roles[0]=='ROLE_ADMIN'"
                     >
                       <i class="fa fa-times"></i>
                     </p-button>
@@ -425,6 +436,7 @@ import DailyBar from "../Daily/DailyBar";
 import { Card, Badge } from "src/components/UIComponents";
 import axios from "axios";
 import en from "element-ui/lib/locale/lang/en.js";
+import { mapGetters } from "vuex";
 
 Vue.use(ElementUI, { locale: en });
 export default {
@@ -452,9 +464,7 @@ export default {
       searchQuery: "",
       price: [0, 0],
       area: [0, 0],
-      tableColumns: [
-        
-      ],
+      tableColumns: [],
       projectSelects: {
         select: "",
         data: [],
@@ -555,10 +565,10 @@ export default {
 
   methods: {
     formatTooltipPrice(val) {
-      return val * 100000;
+      return val * 200000;
     },
     formatTooltipArea(val) {
-      return val * 5;
+      return val * 3;
     },
     onChangeTransports(event) {
       if (event == "BTS")
@@ -653,7 +663,45 @@ export default {
       window.location.href = "/admin/listing/create?id=" + row.id;
     },
     handleDelete(index, row) {
-      alert(`Your want to delete ${row.listing.name}`);
+      console.log("getUser : " + JSON.stringify(this.getUser));
+
+      this.$confirm(
+        "This will permanently delete listing. Continue?",
+        "Warning",
+        {
+          confirmButtonText: "OK",
+          cancelButtonText: "Cancel",
+          type: "warning",
+        }
+      )
+        .then(() => {
+          let postBody = {
+            id: row.id,
+          };
+          console.log("postBody : " + JSON.stringify(postBody));
+          const AXIOS = axios.create({
+            baseURL: process.env.VUE_APP_BACKEND_URL,
+          });
+          AXIOS.post(`api/listing/delete`, postBody, {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: "Bearer " + localStorage.getItem("token"),
+            },
+            params: postBody,
+          }).then((resp) => {
+            this.$message({
+              type: "success",
+              message: "Delete completed",
+            });
+            this.getListing();
+          });
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "Delete canceled",
+          });
+        });
     },
     handleTaskEdit(index) {
       alert(`You want to edit task: ${JSON.stringify(this.tasks[index])}`);
@@ -664,6 +712,11 @@ export default {
   },
 
   computed: {
+    ...mapGetters({ getUser: "getUser" }),
+    isLoggedIn: function () {
+      return this.$store.getters.isLoggedIn;
+    },
+
     pagedData() {
       return this.tableData.slice(this.from, this.to);
     },

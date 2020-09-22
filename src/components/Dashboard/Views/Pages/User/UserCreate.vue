@@ -43,12 +43,12 @@
                 </ValidationProvider>
               </div>
               <div class="col-md-6">
-                <ValidationProvider name="email" rules="required" v-slot="{ passed, failed }">
+                <ValidationProvider name="email" rules="required|email" v-slot="{ passed, failed }">
                   <fg-input
                     placeholder
                     label="e-mail"
                     v-model="users.email"
-                    :error="failed ? 'The field is required': null"
+                    :error="failed ? 'The field format email': null"
                     :hasSuccess="passed"
                   ></fg-input>
                 </ValidationProvider>
@@ -133,10 +133,11 @@ import { Select, Option } from "element-ui";
 import axios from "axios";
 import { mapGetters } from "vuex";
 import { extend } from "vee-validate";
-import { required, confirmed } from "vee-validate/dist/rules";
+import { email, required, confirmed } from "vee-validate/dist/rules";
 
 extend("required", required);
 extend("confirmed", confirmed);
+extend("email", email);
 
 export default {
   components: {

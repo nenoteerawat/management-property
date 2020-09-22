@@ -76,7 +76,7 @@
                 <template slot-scope="props">
                   <div class="cell">ปี {{ props.row.developer}}</div>
                 </template>
-              </el-table-column> -->
+              </el-table-column>-->
               <el-table-column
                 v-for="column in tableColumns"
                 :key="column.label"
@@ -103,6 +103,7 @@
                     size="sm"
                     icon
                     @click="handleDelete(props.$index, props.row)"
+                    v-if="getUser.roles[0]=='ROLE_ADMIN'"
                   >
                     <i class="fa fa-times"></i>
                   </p-button>
@@ -161,9 +162,10 @@ import PPagination from "src/components/UIComponents/Pagination.vue";
 import DailyBar from "../Daily/DailyBar";
 import { Card } from "src/components/UIComponents";
 import axios from "axios";
-import en from 'element-ui/lib/locale/lang/en.js'
+import en from "element-ui/lib/locale/lang/en.js";
+import { mapGetters } from "vuex";
 
-Vue.use(ElementUI, { locale: en })
+Vue.use(ElementUI, { locale: en });
 export default {
   components: {
     Card,
@@ -250,11 +252,13 @@ export default {
           "Content-Type": "application/json",
           Authorization: "Bearer " + localStorage.getItem("token"),
         },
-      }).then((resp) => {
-        this.tableData = resp.data;
-        console.log("resp : " + JSON.stringify(resp));
-        console.log("tableData : " + JSON.stringify(this.tableData));
-      }).catch((err) => {
+      })
+        .then((resp) => {
+          this.tableData = resp.data;
+          console.log("resp : " + JSON.stringify(resp));
+          console.log("tableData : " + JSON.stringify(this.tableData));
+        })
+        .catch((err) => {
           console.log("err : " + JSON.stringify(err));
           reject(err);
         });
@@ -263,7 +267,7 @@ export default {
       alert(`Your clicked on Like button ${index}`);
     },
     handleEdit(index, row) {
-      console.log("row : "+row);
+      console.log("row : " + row);
       window.location.href = "/admin/project/create?id=" + row.id;
       // alert(`Your want to edit ${row.name}`);
     },
@@ -314,6 +318,11 @@ export default {
   },
 
   computed: {
+    ...mapGetters({ getUser: "getUser" }),
+    isLoggedIn: function () {
+      return this.$store.getters.isLoggedIn;
+    },
+    
     pagedData() {
       return this.tableData.slice(this.from, this.to);
     },
