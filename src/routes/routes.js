@@ -4,8 +4,12 @@ import NotFound from '../components/GeneralViews/NotFoundPage.vue'
 // Dashboard pages
 const Overview = () => import(/* webpackChunkName: "widgets" */ 'src/components/Dashboard/Views/Dashboard/Overview.vue')
 const Widgets = () => import(/* webpackChunkName: "widgets" */ 'src/components/Dashboard/Views/Dashboard/Widgets.vue')
-const OwnerList = () => import(/* webpackChunkName: "widgets" */ 'src/components/Dashboard/Views/Pages/Owner/OwnerList.vue')
-const OwnerCreate = () => import(/* webpackChunkName: "widgets" */ 'src/components/Dashboard/Views/Pages/Owner/OwnerCreate.vue')
+const ListingList = () => import(/* webpackChunkName: "widgets" */ 'src/components/Dashboard/Views/Pages/Listing/ListingList.vue')
+const ListingCreate = () => import(/* webpackChunkName: "widgets" */ 'src/components/Dashboard/Views/Pages/Listing/ListingCreate.vue')
+const ProjectList = () => import(/* webpackChunkName: "widgets" */ 'src/components/Dashboard/Views/Pages/Project/ProjectList.vue')
+const ProjectCreate = () => import(/* webpackChunkName: "widgets" */ 'src/components/Dashboard/Views/Pages/Project/ProjectCreate.vue')
+const UserList = () => import(/* webpackChunkName: "widgets" */ 'src/components/Dashboard/Views/Pages/User/UserList.vue')
+const UserCreate = () => import(/* webpackChunkName: "widgets" */ 'src/components/Dashboard/Views/Pages/User/UserCreate.vue')
 
 // Pages
 import User from 'src/components/Dashboard/Views/Pages/UserProfile.vue'
@@ -33,6 +37,10 @@ const Wizard = () => import(/* webpackChunkName: "forms" */ 'src/components/Dash
 const RegularTables = () => import(/* webpackChunkName: "tables" */ 'src/components/Dashboard/Views/Tables/RegularTables.vue');
 const ExtendedTables = () => import(/* webpackChunkName: "tables" */ 'src/components/Dashboard/Views/Tables/ExtendedTables.vue');
 const PaginatedTables = () => import(/* webpackChunkName: "tables" */ 'src/components/Dashboard/Views/Tables/PaginatedTables.vue');
+
+// Approve Change page
+const ApproveChange = () => import(/* webpackChunkName: "tables" */ 'src/components/Dashboard/Views/Pages/Approve/ApproveChange.vue');
+
 // Maps pages
 const GoogleMaps = () => import(/* webpackChunkName: "maps" */ 'src/components/Dashboard/Views/Maps/GoogleMaps.vue')
 const FullScreenMap = () => import(/* webpackChunkName: "maps" */ 'src/components/Dashboard/Views/Maps/FullScreenMap.vue')
@@ -137,6 +145,18 @@ let tablesMenu = {
     }]
 }
 
+let approveChangeMenu = {
+  path: '/approve-change',
+  component: DashboardLayout,
+  redirect: '/approve-change/approve',
+  children: [
+    {
+      path: 'approve',
+      name: 'Approve Change Tables',
+      component: ApproveChange
+    }]
+}
+
 let mapsMenu = {
   path: '/maps',
   component: DashboardLayout,
@@ -217,6 +237,7 @@ const routes = [
   componentsMenu,
   formsMenu,
   tablesMenu,
+  approveChangeMenu,
   mapsMenu,
   pagesMenu,
   loginPage,
@@ -240,14 +261,34 @@ const routes = [
         component: Widgets
       },
       {
-        path: 'owner',
-        name: 'Owner',
-        component: OwnerList
+        path: 'listing',
+        name: 'Listing',
+        component: ListingList
       },
       {
-        path: 'owner/create',
-        name: 'Owner Create',
-        component: OwnerCreate
+        path: 'listing/create',
+        name: 'Listing Create',
+        component: ListingCreate
+      },
+      {
+        path: 'project',
+        name: 'Project',
+        component: ProjectList
+      },
+      {
+        path: 'project/create',
+        name: 'Project Create',
+        component: ProjectCreate
+      },
+      {
+        path: 'user',
+        name: 'User',
+        component: UserList
+      },
+      {
+        path: 'user/create',
+        name: 'User Create',
+        component: UserCreate
       },
     ]
   },

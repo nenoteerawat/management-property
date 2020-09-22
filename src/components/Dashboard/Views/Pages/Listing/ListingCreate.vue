@@ -1,0 +1,1494 @@
+<template>
+  <ValidationObserver v-slot="{ handleSubmit }">
+    <form @submit.prevent="handleSubmit(submit)">
+      <div class="row center">
+        <div class="col-md-10">
+          <card>
+            <h5 slot="header" class="card-title">
+              Owner
+              <hr />
+            </h5>
+            <div class="row">
+              <div class="col-md-6">
+                <fieldset>
+                  <div class="form-group">
+                    <label class="control-label">Level</label>
+                    <div class="col-md-12">
+                      <p-radio label="1" v-model="radios.level" value="1" :inline="true">Chill</p-radio>
+                      <p-radio label="2" v-model="radios.level" value="2" :inline="true">Alert</p-radio>
+                      <p-radio label="3" v-model="radios.level" value="3" :inline="true">Critical</p-radio>
+                    </div>
+                  </div>
+                </fieldset>
+              </div>
+              <div class="col-md-6">
+                <fieldset>
+                  <div class="form-group">
+                    <label class="control-label">Type</label>
+                    <div class="col-md-12">
+                      <p-radio label="1" v-model="radiosTypeRole" value="1" :inline="true">sale</p-radio>
+                      <p-radio label="2" v-model="radiosTypeRole" value="2" :inline="true">Available</p-radio>
+                    </div>
+                  </div>
+                </fieldset>
+              </div>
+              <div class="col-md-6">
+                <div class="row">
+                  <div class="col-md-6">
+                    <ValidationProvider
+                      name="listingCode"
+                      rules="required"
+                      v-slot="{ passed, failed }"
+                    >
+                      <fg-input
+                        placeholder="TXXX"
+                        label="Listing Code"
+                        v-model="owner.listingCode"
+                        :error="failed ? fieldRequired: null"
+                        :hasSuccess="passed"
+                      ></fg-input>
+                    </ValidationProvider>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <ValidationProvider name="ownerName" rules="required" v-slot="{ passed, failed }">
+                  <fg-input
+                    placeholder="ชื่อ"
+                    label="Owner Name"
+                    v-model="owner.name"
+                    :error="failed ? fieldRequired: null"
+                    :hasSuccess="passed"
+                  ></fg-input>
+                </ValidationProvider>
+              </div>
+              <div class="col-md-4">
+                <ValidationProvider name="email" rules="required|email" v-slot="{ passed, failed }">
+                  <fg-input
+                    placeholder="Email"
+                    label="Email"
+                    v-model="owner.email"
+                    :error="failed ? 'The Email field is required': null"
+                    :hasSuccess="passed"
+                  ></fg-input>
+                </ValidationProvider>
+              </div>
+              <div class="col-md-4">
+                <ValidationProvider name="line" rules="required" v-slot="{ passed, failed }">
+                  <fg-input
+                    placeholder="Line"
+                    label="Line"
+                    v-model="owner.line"
+                    :error="failed ? fieldRequired: null"
+                    :hasSuccess="passed"
+                  ></fg-input>
+                </ValidationProvider>
+              </div>
+              <div class="col-md-4">
+                <fg-input placeholder="0123456789" label="Phone" v-model="owner.phone"></fg-input>
+              </div>
+            </div>
+          </card>
+          <!-- end card -->
+        </div>
+        <div class="col-md-10">
+          <card>
+            <h5 slot="header" class="card-title">
+              Room
+              <hr />
+            </h5>
+            <div class="row">
+              <div class="col-md-6">
+                <div>
+                  <label>Project</label>
+                  <span style="font-size: 35px;">{{project.name}}</span>
+                </div>
+                <autocomplete :search="search" @submit="projectSearch"></autocomplete>
+              </div>
+              <div class="col-md-3">
+                <div>
+                  <label>ตึก</label>
+                </div>
+                <el-select
+                  class="select-primary"
+                  placeholder="select"
+                  v-model="buildingSelects.select"
+                  @change="switchBuilding($event)"
+                >
+                  <el-option
+                    v-for="option in buildingSelects.data"
+                    class="select-primary"
+                    :value="option.value"
+                    :label="option.label"
+                    :key="option.label"
+                  ></el-option>
+                </el-select>
+              </div>
+              <div class="col-md-3">
+                <div>
+                  <label>ประเภท</label>
+                </div>
+                <el-select
+                  class="select-primary"
+                  placeholder="select"
+                  disabled
+                  v-model="propertySelects.select"
+                  @change="switchProperty($event)"
+                >
+                  <el-option
+                    v-for="option in propertySelects.data"
+                    class="select-primary"
+                    :value="option.value"
+                    :label="option.label"
+                    :key="option.label"
+                  ></el-option>
+                </el-select>
+              </div>
+              <div class="col-md-6">
+                <div class="row">
+                  <div class="col-md-4">
+                    <fg-input :disabled="true" label="ชั้น" v-model="project.floor"></fg-input>
+                  </div>
+                  <div class="col-md-4">
+                    <fg-input :disabled="true" label="ตึก" v-model="project.building"></fg-input>
+                  </div>
+                  <div class="col-md-4">
+                    <fg-input :disabled="true" label="ปีที่สร้างเสร็จ" v-model="project.develop"></fg-input>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <fg-input :disabled="true" label="ที่อยู่" v-model="project.address"></fg-input>
+              </div>
+
+              <div class="col-md-12">
+                <div class="row-">
+                  <div>
+                    <label>การเดินทาง</label>
+                  </div>
+                  <div class="col-md-12">
+                    <el-table :data="transports">
+                      <el-table-column label="ประเภท" property="type"></el-table-column>
+                      <el-table-column label="สถานี" property="name"></el-table-column>
+                      <el-table-column label="ระยาทาง" property="range"></el-table-column>
+                    </el-table>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div>
+                  <label>Standard</label>
+                </div>
+                <el-select
+                  class="select-primary"
+                  placeholder="Select"
+                  v-model="standardSelects.select"
+                >
+                  <el-option
+                    v-for="option in standardSelects.data"
+                    class="select-primary"
+                    :value="option.value"
+                    :label="option.label"
+                    :key="option.label"
+                  ></el-option>
+                </el-select>
+              </div>
+              <div class="col-md-6">
+                <div>
+                  <label>Grade</label>
+                </div>
+                <el-select
+                  class="select-primary"
+                  placeholder="Select"
+                  v-model="gradeSelects.select"
+                >
+                  <el-option
+                    v-for="option in gradeSelects.data"
+                    class="select-primary"
+                    :value="option.value"
+                    :label="option.label"
+                    :key="option.label"
+                  ></el-option>
+                </el-select>
+              </div>
+              <div class="col-md-6">
+                <div>
+                  <label>ห้องนอน</label>
+                </div>
+                <el-select class="select-primary" placeholder="Select" v-model="bedSelects.select">
+                  <el-option
+                    v-for="option in bedSelects.data"
+                    class="select-primary"
+                    :value="option.value"
+                    :label="option.label"
+                    :key="option.label"
+                  ></el-option>
+                </el-select>
+              </div>
+              <div class="col-md-6">
+                <div>
+                  <label>ห้องน้ำ</label>
+                </div>
+                <el-select
+                  class="select-primary"
+                  placeholder="Select"
+                  v-model="toiletSelects.select"
+                >
+                  <el-option
+                    v-for="option in toiletSelects.data"
+                    class="select-primary"
+                    :value="option.value"
+                    :label="option.label"
+                    :key="option.label"
+                  ></el-option>
+                </el-select>
+              </div>
+              <div class="col-md-6">
+                <div>
+                  <label>พื้นที่</label>
+                </div>
+                <div class="row">
+                  <div class="col-md-7">
+                    <div class="input-group">
+                      <input type="number" class="form-control" placeholder="0" v-model="room.area" />
+                      <div class="input-group-append">
+                        <span class="input-group-text bg-grey" id="basic-addon2">ตร.ม.</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="row">
+                  <div class="col-md-6">
+                    <div>
+                      <label>อยู่ชั้น</label>
+                    </div>
+                    <el-select
+                      class="select-primary"
+                      placeholder="Select"
+                      v-model="floorSelects.select"
+                    >
+                      <el-option
+                        v-for="option in floorSelects.data"
+                        class="select-primary"
+                        :value="option.value"
+                        :label="option.label"
+                        :key="option.label"
+                      ></el-option>
+                    </el-select>
+                    <!-- <fg-input type="number" label="อยู่ชั้น" v-model="room.floor"></fg-input> -->
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div>
+                  <label>ทิศ (ประตูหน้าบ้าน)</label>
+                </div>
+                <el-select
+                  class="select-primary"
+                  placeholder="Select"
+                  v-model="directionSelects.select"
+                >
+                  <el-option
+                    v-for="option in directionSelects.data"
+                    class="select-primary"
+                    :value="option.value"
+                    :label="option.label"
+                    :key="option.label"
+                  ></el-option>
+                </el-select>
+              </div>
+              <div class="col-md-6">
+                <div class="row">
+                  <div class="col-md-6">
+                    <fg-input type="number" placeholder label="ราคา" v-model="room.price"></fg-input>
+                  </div>
+                  <div class="col-md-6" v-show="activeRent">
+                    <fg-input type="number" placeholder label="เช่า" v-model="room.priceRent"></fg-input>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div>
+                  <label>ตำแหน่งห้อง</label>
+                </div>
+                <el-select
+                  multiple
+                  class="select-primary"
+                  collapse-tags
+                  v-model="positionSelects.select"
+                  placeholder="Select"
+                >
+                  <el-option
+                    v-for="option in positionSelects.data"
+                    class="select-primary"
+                    :value="option.value"
+                    :label="option.label"
+                    :key="option.label"
+                  ></el-option>
+                </el-select>
+              </div>
+              <div v-show="activeSell" class="col-md-6">
+                <div>
+                  <label>รายละเอียดการซื้อ</label>
+                </div>
+                <el-select
+                  class="select-primary"
+                  placeholder="Select"
+                  v-model="sellDetailSelects.select"
+                >
+                  <el-option
+                    v-for="option in sellDetailSelects.data"
+                    class="select-primary"
+                    :value="option.value"
+                    :label="option.label"
+                    :key="option.label"
+                  ></el-option>
+                </el-select>
+              </div>
+              <div v-show="activeRent" class="col-md-6">
+                <fg-input
+                  placeholder="จำนวนเงินประกันกี่เดือน"
+                  label="รายละเอียดการเช่า"
+                  v-model="room.rentDetail"
+                ></fg-input>
+              </div>
+              <div v-show="activeCondo" class="col-md-6">
+                <div>
+                  <label>ลักษณะห้อง</label>
+                </div>
+                <el-select
+                  class="select-primary"
+                  placeholder="Select"
+                  v-model="featureSelects.select"
+                >
+                  <el-option
+                    v-for="option in featureSelects.data"
+                    class="select-primary"
+                    :value="option.value"
+                    :label="option.label"
+                    :key="option.label"
+                  ></el-option>
+                </el-select>
+              </div>
+              <div class="col-md-6">
+                <div>
+                  <label>วิว</label>
+                </div>
+                <el-select
+                  multiple
+                  class="select-primary"
+                  collapse-tags
+                  v-model="scenerySelects.select"
+                  placeholder="Select"
+                >
+                  <el-option
+                    v-for="option in scenerySelects.data"
+                    class="select-primary"
+                    :value="option.value"
+                    :label="option.label"
+                    :key="option.label"
+                  ></el-option>
+                </el-select>
+              </div>
+              <div class="col-md-12">
+                <div>
+                  <label>ส่วนกลาง</label>
+                </div>
+                <el-select
+                  multiple
+                  class="select-primary select-width-100"
+                  placeholder="Select"
+                  disabled
+                  v-model="facilitySelects.selects"
+                >
+                  <el-option
+                    v-for="option in facilitySelects.data"
+                    class="select-primary"
+                    :value="option.value"
+                    :label="option.label"
+                    :key="option.label"
+                  ></el-option>
+                </el-select>
+              </div>
+              <div class="col-md-12">
+                <div>
+                  <label>คุณสมบัติพิเศษ</label>
+                </div>
+                <el-tag
+                  :key="tag"
+                  v-for="(tag,index) in tags.dynamicTags"
+                  size="small"
+                  type="primary"
+                  :closable="true"
+                  :close-transition="false"
+                  @close="handleClose(index)"
+                >{{tag}}</el-tag>
+
+                <input
+                  type="text"
+                  placeholder="เพิ่ม"
+                  class="form-control input-new-tag"
+                  v-model="tags.inputValue"
+                  ref="saveTagInput"
+                  size="mini"
+                  @keyup.enter="handleInputConfirm"
+                  @blur="handleInputConfirm"
+                />
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label>Description</label>
+                  <textarea
+                    style="min-height:450px;"
+                    rows="40"
+                    class="form-control border-input"
+                    placeholder="Here can be your description"
+                    v-model="room.description"
+                  ></textarea>
+                  <p-button size="sm" @click="genDesc">Gen Description</p-button>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label>Remark</label>
+                  <textarea
+                    rows="5"
+                    class="form-control border-input"
+                    placeholder="Here can be your Remark"
+                    v-model="room.remark"
+                  ></textarea>
+                </div>
+              </div>
+              <div class="col-md-12">
+                <div>
+                  <label>รูป</label>
+                </div>
+                <vue-upload-multiple-image
+                  @upload-success="uploadImageSuccess"
+                  @before-remove="beforeRemove"
+                  @edit-image="editImage"
+                  @mark-is-primary="markIsPrimary"
+                  :data-images="fileList"
+                  idUpload="myIdUpload"
+                  editUpload="myIdEdit"
+                  :maxImage="10"
+                  browseText="Browse Photo"
+                  dragText="click to upload"
+                  primaryText="Primary"
+                  markIsPrimaryText="mark is Primary"
+                  popupText="info"
+                  ref="myImages"
+                ></vue-upload-multiple-image>
+                <!-- <el-upload
+                  class="upload"
+                  drag
+                  action="string"
+                  accept="image/jpeg, image/png"
+                  :on-preview="handlePreview"
+                  :on-remove="handleRemove"
+                  :file-list="fileList"
+                  :before-upload="onBeforeUploadImage"
+                  :http-request="UploadImage"
+                  multiple
+                >
+                  <i class="el-icon-upload"></i>
+                  <div class="el-upload__text">
+                    Drop file here or
+                    <em>click to upload</em>
+                  </div>
+                </el-upload>-->
+              </div>
+              <!-- <vue-preview :slides="slides" @close="handleCloseImage"></vue-preview> -->
+              <div class="col-md-8">
+                <div class="row">
+                  <div class="col-md-4">
+                    <div>
+                      <label>Exclusive</label>
+                    </div>
+                    <p-switch v-model="exclusive"></p-switch>
+                  </div>
+                  <div class="col-md-6" v-show="exclusiveShow">
+                    <div>
+                      <label>วันที่สิ้นสุด</label>
+                    </div>
+                    <fg-input>
+                      <el-date-picker
+                        v-model="room.exclusiveDate"
+                        type="date"
+                        placeholder="Pick a day"
+                      ></el-date-picker>
+                    </fg-input>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <template slot="footer">
+              <hr />
+              <div class="stats">
+                <p-button
+                  type="info"
+                  round
+                  @click="submit"
+                  v-loading.fullscreen.lock="fullscreenLoading"
+                >{{ btnAction }}</p-button>
+              </div>
+            </template>
+          </card>
+          <!-- end card -->
+        </div>
+      </div>
+    </form>
+  </ValidationObserver>
+</template>
+<script>
+import Vue from "vue";
+import { Card } from "src/components/UIComponents";
+import Autocomplete from "@trevoreyre/autocomplete-vue";
+import "@trevoreyre/autocomplete-vue/dist/style.css";
+import PSwitch from "src/components/UIComponents/Switch.vue";
+import axios from "axios";
+import ElementUI from "element-ui";
+import en from "element-ui/lib/locale/lang/en.js";
+import { required, email, confirmed } from "vee-validate/dist/rules";
+import { extend } from "vee-validate";
+import { mapGetters } from "vuex";
+import VuePreview from "vue-preview";
+import VueUploadMultipleImage from "vue-upload-multiple-image";
+// defalut install
+Vue.use(VuePreview);
+
+extend("email", email);
+extend("required", required);
+
+Vue.use(ElementUI, { locale: en });
+export default {
+  components: {
+    Card,
+    Autocomplete,
+    PSwitch,
+    VueUploadMultipleImage,
+  },
+
+  created: function () {
+    // `this` points to the vm instance
+    let postBody = {
+      role: "",
+      id: "",
+    };
+    const AXIOS = axios.create({
+      baseURL: process.env.VUE_APP_BACKEND_URL,
+    });
+    AXIOS.post(`api/project/list`, postBody, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + localStorage.getItem("token"),
+      },
+    }).then((resp) => {
+      console.log("getProject all resp : " + JSON.stringify(resp));
+      this.projects = resp.data.map((item) => {
+        return item.name;
+      });
+      this.bakProjects = resp.data.map((item) => {
+        return { name: item.name, type: item.type };
+      });
+      console.log("projects : " + JSON.stringify(this.projects));
+    });
+
+    //edit
+    if (this.$route.query.id) {
+      let postBody = {
+        role: "",
+        id: this.$route.query.id,
+      };
+      console.log("postBody : " + JSON.stringify(postBody));
+      const AXIOS = axios.create({
+        baseURL: process.env.VUE_APP_BACKEND_URL,
+      });
+      AXIOS.post(`api/listing/list`, postBody, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+      }).then((resp) => {
+        console.log("resp : " + JSON.stringify(resp.data[0]));
+        this.owner.listingCode = resp.data[0].owner.listingCode;
+        this.owner.name = resp.data[0].owner.name;
+        this.owner.line = resp.data[0].owner.line;
+        this.owner.phone = resp.data[0].owner.phone;
+        this.owner.name = resp.data[0].owner.name;
+        this.owner.email = resp.data[0].owner.email;
+        this.project.id = resp.data[0].room.projectId;
+        this.radiosTypeRole = resp.data[0].room.type;
+        this.radios.level = resp.data[0].room.level;
+        this.standardSelects.select = resp.data[0].room.standard;
+        this.gradeSelects.select = resp.data[0].room.grade;
+        this.toiletSelects.select = resp.data[0].room.toilet;
+        this.bedSelects.select = resp.data[0].room.bed;
+        this.room.area = resp.data[0].room.area;
+        this.room.floor = resp.data[0].room.floor;
+        this.room.price = resp.data[0].room.price;
+        this.room.priceRent = resp.data[0].room.priceRent;
+        this.room.rentDetail = resp.data[0].room.rentDetail;
+        this.directionSelects.select = resp.data[0].room.direction;
+        this.positionSelects.select = resp.data[0].room.position;
+        this.scenerySelects.select = resp.data[0].room.scenery;
+        this.featureSelects.select = resp.data[0].room.feature;
+        this.sellDetailSelects.select = resp.data[0].room.sellDetail;
+        this.tags.dynamicTags = resp.data[0].room.tags;
+        this.room.description = resp.data[0].room.description;
+        this.room.remark = resp.data[0].room.remark;
+        this.exclusive = resp.data[0].room.exclusive;
+        this.room.exclusiveDate = resp.data[0].room.exclusiveDate;
+        this.fileList = resp.data[0].files;
+        // for (let value of resp.data[0].files) {
+        //   this.slides.push({
+        //     id: value.id,
+        //     src: value.url,
+        //     msrc: value.url,
+        //     alt: value.id,
+        //     title: value.name,
+        //     w: 1100,
+        //     h: 800,
+        //   });
+        // }
+        this.projectSearch(resp.data[0].projects[0].name);
+        this.btnAction = "Edit";
+      });
+    }
+  },
+
+  data() {
+    return {
+      slides: [
+        // {
+        //   src:
+        //     "https://farm6.staticflickr.com/5591/15008867125_68a8ed88cc_b.jpg",
+        //   msrc:
+        //     "https://farm6.staticflickr.com/5591/15008867125_68a8ed88cc_m.jpg",
+        //   alt: "picture1",
+        //   title: "Image Caption 1",
+        //   w: 600,
+        //   h: 400,
+        // },
+        // {
+        //   src:
+        //     "https://farm4.staticflickr.com/3902/14985871946_86abb8c56f_b.jpg",
+        //   msrc:
+        //     "https://farm4.staticflickr.com/3902/14985871946_86abb8c56f_m.jpg",
+        //   alt: "picture2",
+        //   title: "Image Caption 2",
+        //   w: 1200,
+        //   h: 900,
+        // },
+      ],
+      fieldRequired: "The field is required",
+      btnAction: "Add",
+      activeCondo: false,
+      activeHome: false,
+      activeRent: false,
+      activeSell: true,
+      loading: false,
+      fullscreenLoading: false,
+      projects: [],
+      bakProjects: [],
+      exclusiveShow: false,
+      exclusive: false,
+      maxImage: 10,
+      inputProjectSearch: "",
+      radios: {
+        level: "",
+      },
+      radiosTypeRole: "0",
+      propertySelects: {
+        select: "",
+        data: [
+          { value: "1", label: "คอนโด" },
+          { value: "2", label: "บ้าน" },
+          { value: "3", label: "ทาวน์เฮาส์" },
+        ],
+      },
+      buildingSelects: {
+        select: "",
+        data: [],
+      },
+      buildings: [],
+      standardSelects: {
+        select: "",
+        data: [
+          { value: "broken", label: "Broken" },
+          { value: "old", label: "Old" },
+          { value: "good", label: "Good" },
+          { value: "perfect", label: "Perfect" },
+        ],
+      },
+      gradeSelects: {
+        select: "",
+        data: [
+          { value: "a", label: "A" },
+          { value: "b", label: "B" },
+          { value: "c", label: "C" },
+        ],
+      },
+      bedSelects: {
+        select: "",
+        data: [
+          { value: "0", label: "ห้องสตูดิโอ" },
+          { value: "1", label: "1 ห้องนอน" },
+          { value: "2", label: "2 ห้องนอน" },
+          { value: "3", label: "3 ห้องนอน" },
+          { value: "4", label: "4 ห้องนอน" },
+        ],
+      },
+      toiletSelects: {
+        select: "",
+        data: [
+          { value: "0", label: "ไม่มี" },
+          { value: "1", label: "1 ห้องน้ำ" },
+          { value: "2", label: "2 ห้องน้ำ" },
+          { value: "3", label: "3 ห้องน้ำ" },
+          { value: "4", label: "4 ห้องน้ำ" },
+        ],
+      },
+      directionSelects: {
+        select: "",
+        data: [
+          { value: "1", label: "ตะวันออก" },
+          { value: "2", label: "ตะวันออกเฉียงเหนือ" },
+          { value: "3", label: "ตะวันออกเฉียงใต้" },
+          { value: "4", label: "เหนือ" },
+          { value: "5", label: "ใต้" },
+          { value: "6", label: "ตะวันตกเฉียงเหนือ" },
+          { value: "7", label: "ตะวันตกเฉียงใต้" },
+          { value: "8", label: "ตะวันตก" },
+        ],
+      },
+      sellDetailSelects: {
+        select: "",
+        data: [
+          { value: "1", label: "ค่าโอนฯคนละครึ่ง" },
+          { value: "2", label: "รวมโอนฯ" },
+          { value: "3", label: "ภาษีทั้งหมดคนละครึ่ง" },
+        ],
+      },
+      positionSelects: {
+        select: "",
+        data: [
+          { value: "1", label: "ห้องมุม" },
+          { value: "2", label: "ติดลิฟ" },
+          { value: "3", label: "ใกล้ห้องขยะ" },
+          { value: "4", label: "ใกล้บันไดหนีไฟ" },
+        ],
+      },
+      featureSelects: {
+        select: "",
+        data: [
+          { value: "1", label: "ห้องมีตำหนิ" },
+          { value: "2", label: "ห้องเปล่า" },
+          { value: "3", label: "ตกแต่งไปแล้วบางส่วน" },
+          { value: "4", label: "ตกแต่งครบพร้อม" },
+        ],
+      },
+      facilitySelects: {},
+      scenerySelects: {
+        select: "",
+        data: [
+          { value: "1", label: "สระว่ายน้ำ" },
+          { value: "2", label: "เมือง" },
+          { value: "3", label: "สวน" },
+          { value: "4", label: "วัด" },
+        ],
+      },
+
+      transports: [],
+      tags: {
+        dynamicTags: ["ครัวปิด", "สระน้ำส่วนตัว"],
+        inputVisible: true,
+        inputValue: "",
+      },
+      owner: {
+        listingCode: "",
+        name: "",
+        line: "",
+        phone: "",
+        name: "",
+        email: "",
+      },
+      room: {
+        area: "",
+        floor: "",
+        rentDetail: "",
+        priceRent: "",
+        exclusiveDate: "",
+        description: "",
+        remark: "",
+      },
+      project: {
+        id: "",
+        type: "",
+        name: "",
+        floor: "",
+        building: "",
+        develop: "",
+        address: "",
+        price: "",
+      },
+      floorSelects: {
+        select: "",
+        data: [],
+      },
+      comment: "",
+      fileList: [
+        // {
+        //   path:
+        //     "https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100",
+        //   default: 1,
+        //   highlight: 1,
+        //   caption: "caption to display. receive",
+        // },
+        // {
+        //   id: "",
+        //   name: "food.jpeg",
+        //   url:
+        //     "https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100",
+        // },
+        // {
+        //   id: "",
+        //   name: "food2.jpeg",
+        //   url:
+        //     "https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100",
+        // },
+      ],
+    };
+  },
+
+  computed: {
+    ...mapGetters({ getUser: "getUser" }),
+    isLoggedIn: function () {
+      return this.$store.getters.isLoggedIn;
+    },
+  },
+
+  watch: {
+    radiosTypeRole: function (newRole) {
+      console.log(newRole);
+      if (newRole == 1) {
+        this.activeSell = true;
+        this.activeRent = false;
+      } else if (newRole == 2) {
+        this.activeSell = false;
+        this.activeRent = true;
+      }
+    },
+    exclusive: function (event) {
+      if (event) this.exclusiveShow = true;
+      else this.exclusiveShow = false;
+    },
+  },
+
+  methods: {
+    search(input) {
+      if (input.length < 1) {
+        return this.projects;
+      }
+      return this.projects.filter((project) => {
+        return project.toLowerCase().startsWith(input.toLowerCase());
+      });
+    },
+    projectSearch(result) {
+      let postBody = {
+        role: "",
+        id: "",
+        name: result,
+      };
+      console.log("postBody : " + JSON.stringify(postBody));
+      const AXIOS = axios.create({
+        baseURL: process.env.VUE_APP_BACKEND_URL,
+      });
+      AXIOS.post(`api/project/list`, postBody, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+      }).then((resp) => {
+        console.log("resp : " + JSON.stringify(resp.data[0]));
+        this.inputProjectSearch = resp.data[0].name;
+        this.project.id = resp.data[0].id;
+        this.project.name = resp.data[0].name;
+        this.project.type = resp.data[0].type;
+        this.project.floor = resp.data[0].floor;
+        this.project.develop = resp.data[0].develop;
+        this.project.address = resp.data[0].address;
+        this.district = resp.data[0].district;
+        this.amphoe = resp.data[0].amphoe;
+        this.province = resp.data[0].province;
+        this.zipcode = resp.data[0].zipcode;
+        this.facilitySelects.selects = resp.data[0].facilities;
+        this.propertySelects.select = resp.data[0].type;
+        this.buildingSelects.data = resp.data[0].buildings.map((item) => {
+          return {
+            value: item.building,
+            label: item.building,
+          };
+        });
+        this.buildings = resp.data[0].buildings;
+        this.transports = resp.data[0].transports.map((item) => {
+          return {
+            type: item.type,
+            name: item.name,
+            range: item.range + " ม.",
+          };
+        });
+        this.switchProperty(resp.data[0].type);
+      });
+    },
+    switchProperty(event) {
+      if (event == 1) {
+        this.activeCondo = true;
+        this.activeHome = false;
+      } else {
+        this.activeCondo = false;
+        this.activeHome = false;
+      }
+    },
+    switchBuilding(event) {
+      console.log("switchBuilding");
+      let building = this.buildings.filter(function (item) {
+        if (item.building == event) {
+          return {
+            floor: item.floor,
+            building: item.building,
+            develop: item.develop,
+          };
+        }
+      });
+      console.log("building : ", JSON.stringify(building));
+      this.project.floor = building[0].floor;
+      this.project.building = building[0].building;
+      this.project.develop = building[0].develop;
+      for (let index = 1; index <= this.project.floor; index++) {
+        this.floorSelects.data.push({
+          label: "ชั้น " + index,
+          value: index,
+        });
+      }
+    },
+    genDesc() {
+      let type = this.radiosTypeRole == 1 ? "SALE" : "AVAILABLE";
+      let position = "";
+      for (let index = 0; index < this.positionSelects.data.length; index++) {
+        for (
+          let index2 = 0;
+          index2 < this.positionSelects.select.length;
+          index2++
+        ) {
+          if (
+            this.positionSelects.data[index].value ===
+            this.positionSelects.select[index2]
+          )
+            position += this.positionSelects.data[index].label + ",";
+        }
+      }
+      let direction = this.directionSelects.select;
+      this.directionSelects.data.filter(function (item) {
+        if (item.value == direction) {
+          direction = item.label;
+        }
+      });
+      let floor = this.floorSelects.select;
+      this.floorSelects.data.filter(function (item) {
+        if (item.value == floor) {
+          floor = item.label;
+        }
+      });
+      let feature = this.featureSelects.select;
+      this.featureSelects.data.filter(function (item) {
+        if (item.value == feature) {
+          feature = item.label;
+        }
+      });
+      let sellDetail = this.sellDetailSelects.select;
+      this.sellDetailSelects.data.filter(function (item) {
+        if (item.value == sellDetail) {
+          sellDetail = item.label;
+        }
+      });
+      console.log("position : ", JSON.stringify(position));
+
+      this.room.description =
+        this.project.name +
+        "\n" +
+        // "Near Phraram Kao 9 MRT Station\n" +
+        "(FOR " +
+        type +
+        ")\n" +
+        "\n" +
+        "Details :\n" +
+        "- " +
+        this.room.area +
+        " Sqm.\n" +
+        "- " +
+        floor +
+        " Floor\n" +
+        "- " +
+        this.bedSelects.select +
+        " Bedrooms / " +
+        this.toiletSelects.select +
+        " Bathrooms\n" +
+        "- " +
+        position +
+        "\n" +
+        "- Building " +
+        this.project.building +
+        "\n" +
+        "- " +
+        direction +
+        "\n" +
+        "- " +
+        feature +
+        " \n" +
+        "\n" +
+        "*** " +
+        Number(this.room.price).toLocaleString() +
+        ".- (" +
+        sellDetail +
+        ") ****\n" +
+        "_________________________________________\n" +
+        "\n" +
+        "เรานำเสนอบริการด้านอสังหาริมทรัพย์ ให้กับทุกๆท่านที่กำลังหาซื้อ หรือเช่า คอนโด, บ้าน, ทาวน์เฮ้าส์, ที่ดิน และอื่นๆอีกมากมาย หรือท่านอาจเป็นเจ้าของทรัพย์ ที่กำลังต้องการฝากขายหรือให้เช่าทรัพย์ของท่าน กับบริษัทที่มีความเชี่ยวชาญและเชื่อถือได้ เรายินดีให้บริการท่านเสมอ!\n" +
+        "\n" +
+        "ที่ๆคุณมองหา อยู่ที่นี่แล้ว..\n" +
+        "\n" +
+        "We provide real estate service for anyone that are looking to buy or rent a condominium, house, townhouse, land and much more, Or you might be the owner that wish to sell your property by a professional and trustworthy agency company. We are here to be at your service!\n" +
+        "\n" +
+        "The place youre looking for, is here..\n" +
+        "\n" +
+        "__________________________________________\n" +
+        "\n" +
+        "For appointment and more info please contact\n" +
+        "\n" +
+        "หากต้องการนัดชมห้องหรือต้องการข้อมูลเพิ่มเติม ติดต่อได้ที่\n" +
+        "\n" +
+        "Contact Us [Mon - Fri 9.00 - 18.00]\n" +
+        "\n" +
+        "TEL : 062-879-5289 (Ploy)\n" +
+        "\n" +
+        "LINE : @homethailand (with @ symbol)\n" +
+        "\n" +
+        "__________________________________________\n" +
+        "\n" +
+        "Follow Us On\n" +
+        "\n" +
+        "Website : https://www.facebook.com/homerealestate.official/" +
+        "\n" +
+        "IG : homerealestate.official";
+    },
+    handleClose(tag) {
+      this.tags.dynamicTags.splice(this.tags.dynamicTags.indexOf(tag), 1);
+    },
+    markIsPrimary(index, fileList) {
+      console.log("mark", JSON.stringify(index), JSON.stringify(fileList));
+      this.fileList = fileList;
+      console.log("mark fileList", JSON.stringify(this.fileList));
+    },
+    uploadImageSuccess(formData, index, fileList) {
+      this.fullscreenLoading = true;
+      console.log("formData", JSON.stringify(formData));
+      console.log("index", JSON.stringify(index));
+      // console.log(
+      //   "fileList[index].path : ",
+      //   JSON.stringify(fileList[index].path)
+      // );
+      // Upload image api
+      const AXIOS = axios.create({
+        baseURL: process.env.VUE_APP_BACKEND_URL,
+      });
+      AXIOS.post(`api/v2/file/upload`, fileList[index], {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+      })
+        .then((resp) => {
+          this.fullscreenLoading = false;
+          this.$notify({
+            message: "Upload Success",
+            icon: "fa fa-gift",
+            horizontalAlign: "center",
+            verticalAlign: "top",
+            type: "success",
+          });
+          // console.log("upload resp : " + JSON.stringify(resp.data));
+          let file;
+          if (index == 0) {
+            file = {
+              id: resp.data.id,
+              name: resp.data.name,
+              path: resp.data.path,
+              default: fileList.default,
+              highlight: fileList.highlight,
+            };
+          } else {
+            file = {
+              id: resp.data.id,
+              name: resp.data.name,
+              path: resp.data.path,
+              default: fileList.default,
+              highlight: fileList.highlight,
+            };
+          }
+          this.fileList.push(file);
+          // console.log("fileList : ", JSON.stringify(this.fileList));
+          // this.fileList = fileList;
+          // console.log("fileList : ", fileList);
+        })
+        .catch((err) => {
+          this.fullscreenLoading = false;
+          this.$notify({
+            message: "Error",
+            // icon: 'fa fa-gift',
+            // component: NotificationTemplate,
+            horizontalAlign: "center",
+            verticalAlign: "top",
+            type: "warning",
+          });
+          console.log("err : " + JSON.stringify(err));
+          reject(err);
+        });
+    },
+    beforeRemove(index, done, fileList) {
+      // console.log("fileList beforeRemove", JSON.stringify(fileList));
+      var r = confirm("remove image");
+      if (r == true) {
+        done();
+        this.fullscreenLoading = true;
+
+        const formData = new FormData();
+        formData.append("id", fileList.id);
+
+        const AXIOS = axios.create({
+          baseURL: process.env.VUE_APP_BACKEND_URL,
+        });
+        AXIOS.post(`api/file/delete`, formData, {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + localStorage.getItem("token"),
+          },
+        }).then((resp) => {
+          this.fullscreenLoading = false;
+          this.$notify({
+            message: "Deleted Success",
+            icon: "fa fa-gift",
+            horizontalAlign: "center",
+            verticalAlign: "top",
+            type: "success",
+          });
+          console.log("deleted resp : " + JSON.stringify(resp.data));
+          this.fileList = fileList;
+          // this.fileList = this.fileList.filter(function (item) {
+          //   if (item.id == file.id) {
+          //     return false;
+          //   }
+          //   return true;
+          // });
+        });
+        console.log("fileList afterRemove", JSON.stringify(fileList));
+        console.log("this.fileList ", JSON.stringify(this.fileList));
+      } else {
+      }
+    },
+    editImage(formData, index, fileList) {
+      console.log("edit data", formData, index, fileList);
+    },
+    // onBeforeUploadImage(file) {
+    //   const isIMAGE = file.type === "image/jpeg" || "image/jpg" || "image/png";
+    //   const isLt1M = file.size / 1024 / 1024 < 1;
+    //   if (!isIMAGE) {
+    //     this.$message.error("Upload file can only be in image format!");
+    //   }
+    //   if (!isLt1M) {
+    //     this.$message.error("Upload file size cannot exceed 1MB!");
+    //   }
+    //   return isIMAGE && isLt1M;
+    // },
+    UploadImage(param) {
+      this.fullscreenLoading = true;
+      const formData = new FormData();
+      formData.append("files", param.file);
+
+      console.log("file upload : ", JSON.stringify(param.file.naturalWidth));
+      console.log("file upload : ", JSON.stringify(param));
+
+      const AXIOS = axios.create({
+        baseURL: process.env.VUE_APP_BACKEND_URL,
+      });
+      AXIOS.post(`api/file/upload`, formData, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+      })
+        .then((resp) => {
+          this.fullscreenLoading = false;
+          this.$notify({
+            message: "Upload Success",
+            icon: "fa fa-gift",
+            horizontalAlign: "center",
+            verticalAlign: "top",
+            type: "success",
+          });
+          console.log("upload resp : " + JSON.stringify(resp.data));
+          let file = {
+            id: resp.data.id,
+            name: resp.data.name,
+            url: resp.data.url,
+          };
+          this.fileList.push(file);
+          console.log("fileList : ", JSON.stringify(this.fileList));
+          let slide = {
+            id: resp.data.id,
+            src: resp.data.url,
+            msrc: resp.data.url,
+            alt: resp.data.id,
+            title: resp.data.name,
+            w: 1100,
+            h: 800,
+          };
+          this.slides.push(slide);
+        })
+        .catch((err) => {
+          this.fullscreenLoading = false;
+          this.$notify({
+            message: "Error",
+            // icon: 'fa fa-gift',
+            // component: NotificationTemplate,
+            horizontalAlign: "center",
+            verticalAlign: "top",
+            type: "warning",
+          });
+          console.log("err : " + JSON.stringify(err));
+          reject(err);
+        });
+    },
+    // handleCloseImage() {
+    //   console.log("close event");
+    // },
+    // handlePreview(file) {
+    //   console.log("Preview", JSON.stringify(file));
+    //   // let myWindow = window.open();
+    //   // myWindow.document.write(JSON.stringify(file.url));
+    //   // myWindow.document.close();
+    // },
+    handleRemove(file, fileList) {
+      console.log(
+        "handleRemove ",
+        JSON.stringify(file),
+        JSON.stringify(fileList)
+      );
+      const formData = new FormData();
+      formData.append("id", file.id);
+
+      const AXIOS = axios.create({
+        baseURL: process.env.VUE_APP_BACKEND_URL,
+      });
+      AXIOS.post(`api/file/delete`, formData, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+      }).then((resp) => {
+        this.fullscreenLoading = false;
+        this.$notify({
+          message: "Deleted Success",
+          icon: "fa fa-gift",
+          horizontalAlign: "center",
+          verticalAlign: "top",
+          type: "success",
+        });
+        console.log("deleted resp : " + JSON.stringify(resp.data));
+        this.fileList = fileList;
+        this.slides = this.slides.filter(function (item) {
+          if (item.id == file.id) {
+            return false;
+          }
+          return true;
+        });
+      });
+    },
+    showInput() {
+      this.tags.inputVisible = true;
+      this.$nextTick(() => {
+        this.$refs.saveTagInput.$refs.input.focus();
+      });
+    },
+    handleInputConfirm() {
+      let inputValue = this.tags.inputValue;
+      if (inputValue) {
+        this.tags.dynamicTags.push(inputValue);
+      }
+      this.tags.inputVisible = false;
+      this.tags.inputValue = "";
+    },
+    validateComment(input) {
+      if (input == null || input.length < 1) {
+        return "Comment Not Found";
+      } else {
+        this.comment = input;
+        return true;
+      }
+    },
+    openBoxComment() {
+      this.$prompt("Please input your comment", "comment", {
+        confirmButtonText: "OK",
+        cancelButtonText: "Cancel",
+        inputValidator: this.validateComment,
+      })
+        .then(({ value }) => {
+          this.createListing();
+        })
+        .catch(() => {
+          return false;
+        });
+    },
+    submit() {
+      if (this.getUser.roles[0] === "ROLE_SALE") {
+        this.openBoxComment();
+      } else {
+        this.createListing();
+      }
+    },
+    createListing() {
+      this.fullscreenLoading = true;
+      let owner = {
+        listingCode: this.owner.listingCode,
+        name: this.owner.name,
+        line: this.owner.line,
+        phone: this.owner.phone,
+        email: this.owner.email,
+      };
+      let room = {
+        projectId: this.project.id,
+        type: this.radiosTypeRole,
+        level: this.radios.level,
+        standard: this.standardSelects.select,
+        grade: this.gradeSelects.select,
+        toilet: this.toiletSelects.select,
+        bed: this.bedSelects.select,
+        area: this.room.area,
+        floor: this.room.floor,
+        price: this.room.price,
+        priceRent: this.room.priceRent,
+        rentDetail: this.room.rentDetail,
+        direction: this.directionSelects.select,
+        position: this.positionSelects.select,
+        sellDetail: this.sellDetailSelects.select,
+        scenery: this.scenerySelects.select,
+        feature: this.featureSelects.select,
+        tags: this.tags.dynamicTags,
+        description: this.room.description,
+        remark: this.room.remark,
+        exclusive: this.exclusive,
+        exclusiveDate: this.room.exclusiveDate,
+      };
+      let path = "api/listing/create";
+      let postBody = {
+        ownerRequest: owner,
+        roomRequest: room,
+        files: this.fileList,
+        comment: this.comment,
+      };
+      if (this.$route.query.id) {
+        path = "api/listing/edit";
+        postBody = {
+          id: this.$route.query.id,
+          ownerRequest: owner,
+          roomRequest: room,
+          files: this.fileList,
+          comment: this.comment,
+        };
+      }
+      console.log("postBody : " + JSON.stringify(postBody));
+      const AXIOS = axios.create({
+        baseURL: process.env.VUE_APP_BACKEND_URL,
+      });
+      AXIOS.post(path, postBody, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+      })
+        .then((resp) => {
+          this.fullscreenLoading = false;
+          this.$notify({
+            message: "Success",
+            icon: "fa fa-gift",
+            horizontalAlign: "center",
+            verticalAlign: "top",
+            type: "success",
+          });
+          window.location.href = "/admin/listing";
+        })
+        .catch((err) => {
+          this.fullscreenLoading = false;
+          this.$notify({
+            message: "Error",
+            // icon: 'fa fa-gift',
+            // component: NotificationTemplate,
+            horizontalAlign: "center",
+            verticalAlign: "top",
+            type: "warning",
+          });
+          console.log("err : " + JSON.stringify(err));
+          reject(err);
+        });
+    },
+  },
+};
+</script>
+<style lang="scss">
+.center {
+  justify-content: center;
+}
+
+.bg-grey {
+  background-color: #c1c5caa6 !important;
+}
+
+.select-width-100 {
+  width: 100%;
+}
+
+.el-tag.el-tag--info {
+  color: #ffffff !important;
+}
+
+#my-strictly-unique-vue-upload-multiple-image {
+  font-family: "Avenir", Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-align: center;
+  color: #2c3e50;
+  margin-top: 60px;
+}
+
+h1,
+h2 {
+  font-weight: normal;
+}
+
+// ul {
+//   list-style-type: none;
+//   padding: 0;
+// }
+
+// li {
+//   display: inline-block;
+//   margin: 0 10px;
+// }
+
+a {
+  color: #42b983;
+}
+</style>

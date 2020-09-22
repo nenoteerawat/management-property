@@ -5,11 +5,11 @@
         <div class="card-header">
           <div class="row">
             <div class="col-md-6">
-              <h5 class="card-title">Room</h5>
+              <h5 class="card-title">User</h5>
             </div>
             <div class="col-md-6">
               <div class="pull-right">
-                <router-link to="owner/create">
+                <router-link to="User/create">
                   <p-button type="success" outline round>
                     <i class="nc-icon nc-simple-add"></i> Add
                   </p-button>
@@ -45,13 +45,13 @@
           <div class="col-md-12">
             <el-table :data="queriedData" header-row-class-name="text-primary">
               <el-table-column type="index"></el-table-column>
-              <el-table-column min-width="60">
+              <!-- <el-table-column min-width="60">
                 <template slot-scope="props">
                   <div class="img-container">
                     <img :src="props.row.image" />
                   </div>
                 </template>
-              </el-table-column>
+              </el-table-column>-->
               <el-table-column
                 v-for="column in tableColumns"
                 :key="column.label"
@@ -62,9 +62,9 @@
               ></el-table-column>
               <el-table-column class-name="action-buttons td-actions" align="right" label="Actions">
                 <template slot-scope="props">
-                  <p-button type="info" size="sm" icon @click="handleLike(props.$index, props.row)">
+                  <!-- <p-button type="info" size="sm" icon @click="handleLike(props.$index, props.row)">
                     <i class="fa fa-user"></i>
-                  </p-button>
+                  </p-button>-->
                   <p-button
                     type="success"
                     size="sm"
@@ -131,15 +131,14 @@
 </template>
 <script>
 import Vue from "vue";
-import { Table, TableColumn, Select, Option } from "element-ui";
+import ElementUI from "element-ui";
 import PPagination from "src/components/UIComponents/Pagination.vue";
 import DailyBar from "../Daily/DailyBar";
 import { Card } from "src/components/UIComponents";
+import axios from "axios";
+import en from 'element-ui/lib/locale/lang/en.js'
 
-Vue.use(Table);
-Vue.use(TableColumn);
-Vue.use(Select);
-Vue.use(Option);
+Vue.use(ElementUI, { locale: en })
 export default {
   components: {
     Card,
@@ -147,68 +146,48 @@ export default {
     PPagination,
   },
 
+  created: function () {
+    this.getUser();
+  },
+
   data() {
     return {
       pagination: {
-        perPage: 5,
+        perPage: 10,
         currentPage: 1,
-        perPageOptions: [1, 2, 3, 5, 10, 25, 50],
+        perPageOptions: [5, 10, 25, 50],
         total: 0,
       },
       searchQuery: "",
-      propsToSearch: ["name", "job"],
+      propsToSearch: ["username","firstName","lastName","nickName"],
       tableColumns: [
+        // {
+        //   prop: "name",
+        //   label: "Name",
+        //   minWidth: 150,
+        // },
         {
-          prop: "name",
-          label: "Name",
-          minWidth: 150,
+          prop: "username",
+          label: "username",
         },
         {
-          prop: "job",
-          label: "Job",
+          prop: "firstName",
+          label: "ชื่อ",
         },
         {
-          prop: "salary",
-          label: "Salary",
-        },
-      ],
-      tableData: [
-        {
-          name: "Andrew Mike",
-          image: "/static/img/faces/ayo-ogunseinde-2.jpg",
-          job: "Develop",
-          salary: "€ 99,225",
-          active: true,
+          prop: "lastName",
+          label: "นามสกุล",
         },
         {
-          name: "John Doe",
-          image: "/static/img/tables/agenda.png",
-          job: "Design",
-          salary: "€ 89,241",
-          active: false,
+          prop: "nickName",
+          label: "ชื่อเล่น",
         },
         {
-          name: "Alex Mike",
-          image: "/static/img/tables/agenda.png",
-          job: "Design",
-          salary: "€ 92,144",
-          active: false,
-        },
-        {
-          name: "Mike Monday",
-          image: "/static/img/tables/agenda.png",
-          job: "Marketing",
-          salary: "€ 49,990",
-          active: true,
-        },
-        {
-          name: "Paul dickens",
-          image: "/static/img/tables/agenda.png",
-          job: "Communication",
-          salary: "€ 69,201",
-          active: true,
+          prop: "roles[0].name",
+          label: "role",
         },
       ],
+      tableData: [],
       tasks: [
         {
           done: true,
@@ -239,14 +218,71 @@ export default {
   },
 
   methods: {
+    getUser: function () {
+      let postBody = {
+      };
+      const AXIOS = axios.create({
+        baseURL: process.env.VUE_APP_BACKEND_URL,
+      });
+      AXIOS.post(`api/user/list`, postBody, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+      }).then((resp) => {
+        this.tableData = resp.data;
+      }).catch((err) => {
+          console.log("err : " + JSON.stringify(err));
+          reject(err);
+        });
+    },
     handleLike(index, row) {
       alert(`Your clicked on Like button ${index}`);
     },
     handleEdit(index, row) {
-      alert(`Your want to edit ${row.name}`);
+          console.log("row : " + JSON.stringify(row));
+      // console.log("row : "+row);
+      window.location.href = "/admin/user/create?id=" + row.username;
+      // alert(`Your want to edit ${row.name}`);
     },
     handleDelete(index, row) {
-      alert(`Your want to delete ${row.name}`);
+      this.$confirm(
+        "This will permanently delete user. Continue?",
+        "Warning",
+        {
+          confirmButtonText: "OK",
+          cancelButtonText: "Cancel",
+          type: "warning",
+        }
+      )
+        .then(() => {
+          let postBody = {
+            id: row.id,
+          };
+          console.log("postBody : " + JSON.stringify(postBody));
+          const AXIOS = axios.create({
+            baseURL: process.env.VUE_APP_BACKEND_URL,
+          });
+          AXIOS.post(`api/user/delete`, postBody, {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: "Bearer " + localStorage.getItem("token"),
+            },
+            params: postBody
+          }).then((resp) => {
+            this.$message({
+              type: "success",
+              message: "Delete completed",
+            });
+            this.getUser();
+          });
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "Delete canceled",
+          });
+        });
     },
     handleTaskEdit(index) {
       alert(`You want to edit task: ${JSON.stringify(this.tasks[index])}`);

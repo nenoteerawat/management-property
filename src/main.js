@@ -42,7 +42,12 @@ import "./assets/sass/demo.scss";
 import sidebarLinks from "./sidebarLinks";
 import "./registerServiceWorker";
 import store from './store'
+
+//new 
+import VueLazyload from 'vue-lazyload'
+
 // plugin setup
+Vue.use(VueLazyload)
 Vue.use(VueRouter);
 Vue.use(VueRouterPrefetch);
 Vue.use(GlobalDirectives);
@@ -52,14 +57,15 @@ Vue.use(SideBar, { sidebarLinks: sidebarLinks });
 locale.use(lang);
 Vue.prototype.$http = Axios;
 const token = localStorage.getItem('token')
+Vue.prototype.$http.defaults.baseURL = process.env.VUE_APP_BACKEND_URL
 if (token) {
-  Vue.prototype.$http.defaults.headers.common['Authorization'] = token
+  Vue.prototype.$http.defaults.headers.common['Authorization'] = 'Bearer ' + token
 }
 
 // configure router
 const router = new VueRouter({
   routes, // short for routes: routes
-  // mode: 'history',
+  mode: 'history',
   linkActiveClass: "active",
   scrollBehavior: (to) => {
     if (to.hash) {

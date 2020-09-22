@@ -35,7 +35,7 @@ export default new Vuex.Store({
       return new Promise((resolve, reject) => {
         commit("auth_request");
         const AXIOS = axios.create({
-          baseURL: `http://ec2-3-1-24-172.ap-southeast-1.compute.amazonaws.com:8090/`
+          baseURL: process.env.VUE_APP_BACKEND_URL
         });
         AXIOS.post(`api/auth/signin`, {username: user.username, password: user.password}, {headers : {"Content-Type": "application/json"}})
           .then(resp => {
@@ -44,7 +44,8 @@ export default new Vuex.Store({
               firstName: resp.data.firstName,
               lastName: resp.data.lastName,
               email: resp.data.email,
-              roles: resp.data.roles
+              roles: resp.data.roles,
+              username: resp.data.username
             };
             localStorage.setItem("token", user.token);
             axios.defaults.headers.common["Authorization"] = user.token;
