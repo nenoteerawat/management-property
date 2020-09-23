@@ -29,10 +29,14 @@ module.exports = {
   },
   devServer: {
     proxy: {
-      '^/api' : {
+      '/backend' : {
         target: process.env.VUE_APP_BACKEND_REAL_URL,
+        changeOrigin: true,
+        logLevel: "info",
         ws: true,
-        changeOrigin: true
+        pathRewrite: {
+          '^/backend': ''
+        }
       }
     }
   }
