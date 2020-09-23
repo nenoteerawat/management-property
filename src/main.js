@@ -46,6 +46,8 @@ import store from './store'
 //new 
 import VueLazyload from 'vue-lazyload'
 
+import './plugins/element.js'
+
 // plugin setup
 Vue.use(VueLazyload)
 Vue.use(VueRouter);
