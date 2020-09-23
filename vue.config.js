@@ -30,7 +30,7 @@ module.exports = {
   devServer: {
     proxy: {
       '^/api' : {
-        target: 'http://ec2-13-229-79-9.ap-southeast-1.compute.amazonaws.com:8090/',
+        target: process.env.VUE_APP_BACKEND_REAL_URL,
         ws: true,
         changeOrigin: true
       }
