@@ -30,9 +30,9 @@ module.exports = {
   devServer: {
     proxy: {
       '/backend' : {
-        target: process.env.VUE_APP_BACKEND_REAL_URL,
+        target: 'http://ec2-13-229-79-9.ap-southeast-1.compute.amazonaws.com:8090/',
         changeOrigin: true,
-        logLevel: "info",
+        logLevel: "debug",
         ws: true,
         pathRewrite: {
           '^/backend': ''
