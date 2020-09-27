@@ -4,10 +4,12 @@ import NotFound from '../components/GeneralViews/NotFoundPage.vue'
 // Dashboard pages
 const Overview = () => import(/* webpackChunkName: "widgets" */ 'src/components/Dashboard/Views/Dashboard/Overview.vue')
 const Widgets = () => import(/* webpackChunkName: "widgets" */ 'src/components/Dashboard/Views/Dashboard/Widgets.vue')
-const OwnerList = () => import(/* webpackChunkName: "widgets" */ 'src/components/Dashboard/Views/Pages/Owner/OwnerList.vue')
-const OwnerCreate = () => import(/* webpackChunkName: "widgets" */ 'src/components/Dashboard/Views/Pages/Owner/OwnerCreate.vue')
+const ListingList = () => import(/* webpackChunkName: "widgets" */ 'src/components/Dashboard/Views/Pages/Listing/ListingList.vue')
+const ListingCreate = () => import(/* webpackChunkName: "widgets" */ 'src/components/Dashboard/Views/Pages/Listing/ListingCreate.vue')
 const ProjectList = () => import(/* webpackChunkName: "widgets" */ 'src/components/Dashboard/Views/Pages/Project/ProjectList.vue')
 const ProjectCreate = () => import(/* webpackChunkName: "widgets" */ 'src/components/Dashboard/Views/Pages/Project/ProjectCreate.vue')
+const UserList = () => import(/* webpackChunkName: "widgets" */ 'src/components/Dashboard/Views/Pages/User/UserList.vue')
+const UserCreate = () => import(/* webpackChunkName: "widgets" */ 'src/components/Dashboard/Views/Pages/User/UserCreate.vue')
 
 // Pages
 import User from 'src/components/Dashboard/Views/Pages/UserProfile.vue'
@@ -259,14 +261,14 @@ const routes = [
         component: Widgets
       },
       {
-        path: 'owner',
-        name: 'Owner',
-        component: OwnerList
+        path: 'listing',
+        name: 'Listing',
+        component: ListingList
       },
       {
-        path: 'owner/create',
-        name: 'Owner Create',
-        component: OwnerCreate
+        path: 'listing/create',
+        name: 'Listing Create',
+        component: ListingCreate
       },
       {
         path: 'project',
@@ -277,6 +279,16 @@ const routes = [
         path: 'project/create',
         name: 'Project Create',
         component: ProjectCreate
+      },
+      {
+        path: 'user',
+        name: 'User',
+        component: UserList
+      },
+      {
+        path: 'user/create',
+        name: 'User Create',
+        component: UserCreate
       },
     ]
   },

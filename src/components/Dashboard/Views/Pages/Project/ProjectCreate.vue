@@ -264,7 +264,8 @@ export default {
   },
 
   created: function () {
-    // `this` points to the vm instance
+    console.log("this.getUser : " + JSON.stringify(this.getUser));
+
     if (this.$route.query.id) {
       let postBody = {
         role: "",
@@ -333,7 +334,7 @@ export default {
         },
       ],
       transportTypeSelect: {
-        simple: "",
+        select: "",
         data: [
           { value: "BTS", label: "BTS" },
           { value: "MRT", label: "MRT" },
@@ -382,6 +383,7 @@ export default {
         developer: "",
         address: "",
       },
+      comment: "",
     };
   },
 
@@ -429,7 +431,33 @@ export default {
         this.transports[k].transportOption = this.transportAIRLINKSelect;
     },
     submit() {
-      this.createProject();
+      if (this.getUser.roles[0] === "ROLE_SALE") {
+        this.openBoxComment();
+      } else {
+        this.createProject();
+      }
+    },
+    validateComment(input) {
+      console.log("input : " + input);
+      if (input == null || input.length < 1) {
+        return "Comment Not Found";
+      } else {
+        this.comment = input;
+        return true;
+      }
+    },
+    openBoxComment() {
+      this.$prompt("Please input your comment", "comment", {
+        confirmButtonText: "OK",
+        cancelButtonText: "Cancel",
+        inputValidator: this.validateComment,
+      })
+        .then(({ value }) => {
+          this.createProject();
+        })
+        .catch(() => {
+          return false;
+        });
     },
     createProject() {
       this.fullscreenLoading = true;
@@ -445,7 +473,7 @@ export default {
         zipcode: this.zipcode,
         facilities: this.facilitySelects.selects,
         transports: this.transports,
-        username: this.getUser.username,
+        comment: this.comment,
       };
       if (this.$route.query.id) {
         path = "api/project/edit";
@@ -462,6 +490,7 @@ export default {
           facilities: this.facilitySelects.selects,
           transports: this.transports,
           username: this.getUser.username,
+          comment: this.comment,
         };
       }
       console.log("postBody : " + JSON.stringify(postBody));
@@ -483,7 +512,7 @@ export default {
             verticalAlign: "top",
             type: "success",
           });
-          window.location.href = "/#/admin/project";
+          window.location.href = "/admin/project";
         })
         .catch((err) => {
           this.fullscreenLoading = false;

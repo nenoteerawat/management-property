@@ -9,7 +9,7 @@
             </div>
             <div class="col-md-6">
               <div class="pull-right">
-                <router-link to="owner/create">
+                <router-link to="listing/create">
                   <p-button type="success" outline round>
                     <i class="nc-icon nc-simple-add"></i> Add
                   </p-button>
@@ -37,16 +37,18 @@
                   :key="option.label"
                 ></el-option>
               </el-select>
+
               <div>
-                <label>sale</label>
+                <label>การเดินทาง</label>
               </div>
               <el-select
                 class="select-primary"
-                placeholder="select"
-                v-model="projectSelects.select"
+                placeholder="Select"
+                v-model="transport.type"
+                @change="onChangeTransports($event)"
               >
                 <el-option
-                  v-for="option in projectSelects.data"
+                  v-for="option in transportTypeSelect.data"
                   class="select-primary"
                   :value="option.value"
                   :label="option.label"
@@ -71,7 +73,18 @@
                   :key="option.label"
                 ></el-option>
               </el-select>
-              <fg-input placeholder label="search" v-model="search"></fg-input>
+              <div>
+                <label>สถานี</label>
+              </div>
+              <el-select class="select-primary" v-model="transport.name">
+                <el-option
+                  v-for="option in transport.transportOption"
+                  class="select-primary"
+                  :value="option.value"
+                  :label="option.label"
+                  :key="option.label"
+                ></el-option>
+              </el-select>
             </div>
             <div class="col-md-3">
               <div>
@@ -109,11 +122,38 @@
                 ></el-option>
               </el-select>
             </div>
-            <div class="col-md-3 ml-auto mr-auto">
-              <p-button type="primary">
-                <i class="fa fa-search"></i> Search
-              </p-button>
+            <div class="col-md-3">
+              <div>
+                <label>sale</label>
+              </div>
+              <el-select
+                class="select-primary"
+                placeholder="select"
+                v-model="projectSelects.select"
+              >
+                <el-option
+                  v-for="option in projectSelects.data"
+                  class="select-primary"
+                  :value="option.value"
+                  :label="option.label"
+                  :key="option.label"
+                ></el-option>
+              </el-select>
             </div>
+            <div class="col-md-3">
+              <fg-input placeholder label="search" v-model="search"></fg-input>
+            </div>
+            <div class="col-md-3 ml-auto">
+              <div class="btn-group" style="margin-top: 13px;">
+                <p-button type="info" round outline>
+                  <i class="fa fa-search"></i>Search
+                </p-button>
+                <p-button type="warning" round outline>
+                  <i class="fa fa-times"></i>Reset
+                </p-button>
+              </div>
+            </div>
+
             <!-- <div class="col-md-6">
               <el-select class="select-default" v-model="pagination.perPage" placeholder="Per page">
                 <el-option
@@ -139,7 +179,7 @@
           <div class="col-md-12">
             <el-table :data="queriedData" thead-class="hidden_header">
               <el-table-column type="index"></el-table-column>
-              <el-table-column min-width="126" label>
+              <!-- <el-table-column min-width="126" label>
                 <template slot-scope="props">
                   <div class="img-container">
                     <img
@@ -152,7 +192,7 @@
                     />
                   </div>
                 </template>
-              </el-table-column>
+              </el-table-column>-->
               <el-table-column min-width="200" label>
                 <template slot-scope="props">
                   <div class="row">
@@ -166,7 +206,7 @@
                     <div class="col-md-12">
                       <div class="row">
                         <div class="col-md-12">
-                          <span>Owner : {{ props.row.owner.name}}</span>
+                          <span>เจ้าของ : {{ props.row.owner.name}}</span>
                         </div>
                         <div class="col-md-3"></div>
                         <div class="col-md-3">
@@ -210,7 +250,7 @@
                     <br />
                   </div>
                   <!-- <span>Condominium</span> -->
-                  <!-- <badge v-show="props.row.owner.exclusive" slot="header" type="success">M</badge> -->
+                  <!-- <badge v-show="props.row.listing.exclusive" slot="header" type="success">M</badge> -->
                 </template>
               </el-table-column>
               <el-table-column min-width="200" label>
@@ -258,11 +298,11 @@
                       </div>
                     </div>
                     <!-- <span>Condominium</span> -->
-                    <!-- <badge v-show="props.row.owner.exclusive" slot="header" type="primary">M</badge> -->
+                    <!-- <badge v-show="props.row.listing.exclusive" slot="header" type="primary">M</badge> -->
                   </div>
                 </template>
               </el-table-column>
-              <el-table-column min-width="105" label>
+              <el-table-column min-width="100" label>
                 <template slot-scope="props">
                   <div class="cell">
                     <h6>S {{ Number(props.row.room.price).toLocaleString() }}</h6>
@@ -270,15 +310,27 @@
                   <div class="cell" v-show="props.row.room.type == 2">
                     <h6>R {{ Number(props.row.room.priceRent).toLocaleString() }}</h6>
                   </div>
+                  <div class="cell">
+                    <span>
+                      <i class="fa fa-plus" aria-hidden="true"></i>
+                      {{ props.row.createdBy }}
+                    </span>
+                  </div>
+                  <div class="cell">
+                    <span>
+                      <i class="fa fa-clock-o" aria-hidden="true"></i>
+                      {{ props.row.createdDateTime }}
+                    </span>
+                  </div>
                 </template>
               </el-table-column>
+
               <!-- <el-table-column
                 v-for="column in tableColumns"
                 :key="column.label"
                 :min-width="column.minWidth"
                 :prop="column.prop"
                 :label="column.label"
-                sortable
               ></el-table-column>-->
               <el-table-column
                 class-name="action-buttons td-actions"
@@ -312,6 +364,7 @@
                       size="sm"
                       icon
                       @click="handleDelete(props.$index, props.row)"
+                      v-if="getUser.roles[0]=='ROLE_ADMIN'"
                     >
                       <i class="fa fa-times"></i>
                     </p-button>
@@ -377,14 +430,14 @@
 </template>
 <script>
 import Vue from "vue";
-import ElementUI from "element-ui";
 import PPagination from "src/components/UIComponents/Pagination.vue";
 import DailyBar from "../Daily/DailyBar";
 import { Card, Badge } from "src/components/UIComponents";
 import axios from "axios";
 import en from "element-ui/lib/locale/lang/en.js";
+import { mapGetters } from "vuex";
 
-Vue.use(ElementUI, { locale: en });
+Vue.use({ locale: en });
 export default {
   components: {
     Card,
@@ -410,21 +463,7 @@ export default {
       searchQuery: "",
       price: [0, 0],
       area: [0, 0],
-      tableColumns: [
-        {
-          prop: "name",
-          label: "Name",
-          minWidth: 150,
-        },
-        {
-          prop: "job",
-          label: "Job",
-        },
-        {
-          prop: "salary",
-          label: "Salary",
-        },
-      ],
+      tableColumns: [],
       projectSelects: {
         select: "",
         data: [],
@@ -457,6 +496,42 @@ export default {
           { value: "4", label: "4 ห้องน้ำ" },
         ],
       },
+      transport: {
+        type: "",
+        name: "",
+        range: "",
+        transportOption: [],
+      },
+      transportTypeSelect: {
+        simple: "",
+        data: [
+          { value: "BTS", label: "BTS" },
+          { value: "MRT", label: "MRT" },
+          { value: "AIRLINK", label: "AIRLINK" },
+        ],
+      },
+      transportBTSSelect: [
+        { value: "บางนา", label: "บางนา" },
+        { value: "สยาม", label: "สยาม" },
+      ],
+      transportMRTSelect: [
+        { value: "พระราม 9", label: "พระราม 9" },
+        { value: "ลำโพง", label: "ลำโพง" },
+      ],
+      transportAIRLINKSelect: [
+        { value: "AIRLINK", label: "AIRLINK" },
+        { value: "AIRLINK", label: "AIRLINK" },
+      ],
+      tableColumns: [
+        {
+          prop: "createdBy",
+          label: "",
+        },
+        {
+          prop: "createdDateTime",
+          label: "",
+        },
+      ],
       tableData: [],
       tasks: [
         {
@@ -489,16 +564,24 @@ export default {
 
   methods: {
     formatTooltipPrice(val) {
-      return val * 100000;
+      return val * 200000;
     },
     formatTooltipArea(val) {
-      return val * 5;
+      return val * 3;
     },
-    searchOwner: function () {
+    onChangeTransports(event) {
+      if (event == "BTS")
+        this.transport.transportOption = this.transportBTSSelect;
+      else if (event == "MRT")
+        this.transport.transportOption = this.transportMRTSelect;
+      else if (event == "AIRLINK")
+        this.transport.transportOption = this.transportAIRLINKSelect;
+    },
+    searchlisting: function () {
       const AXIOS = axios.create({
         baseURL: process.env.VUE_APP_BACKEND_URL,
       });
-      AXIOS.post(`api/owner/list`, postBody, {
+      AXIOS.post(`api/listing/list`, postBody, {
         headers: {
           "Content-Type": "application/json",
           Authorization: "Bearer " + localStorage.getItem("token"),
@@ -573,13 +656,51 @@ export default {
       alert(`Your clicked on Like button ${index}`);
     },
     handleAction(index, row) {
-      alert(`Your want to action ${row.owner.name}`);
+      alert(`Your want to action ${row.listing.name}`);
     },
     handleEdit(index, row) {
-      window.location.href = "/#/admin/owner/create?id=" + row.id;
+      window.location.href = "/admin/listing/create?id=" + row.id;
     },
     handleDelete(index, row) {
-      alert(`Your want to delete ${row.owner.name}`);
+      console.log("getUser : " + JSON.stringify(this.getUser));
+
+      this.$confirm(
+        "This will permanently delete listing. Continue?",
+        "Warning",
+        {
+          confirmButtonText: "OK",
+          cancelButtonText: "Cancel",
+          type: "warning",
+        }
+      )
+        .then(() => {
+          let postBody = {
+            id: row.id,
+          };
+          console.log("postBody : " + JSON.stringify(postBody));
+          const AXIOS = axios.create({
+            baseURL: process.env.VUE_APP_BACKEND_URL,
+          });
+          AXIOS.post(`api/listing/delete`, postBody, {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: "Bearer " + localStorage.getItem("token"),
+            },
+            params: postBody,
+          }).then((resp) => {
+            this.$message({
+              type: "success",
+              message: "Delete completed",
+            });
+            this.getListing();
+          });
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "Delete canceled",
+          });
+        });
     },
     handleTaskEdit(index) {
       alert(`You want to edit task: ${JSON.stringify(this.tasks[index])}`);
@@ -590,6 +711,11 @@ export default {
   },
 
   computed: {
+    ...mapGetters({ getUser: "getUser" }),
+    isLoggedIn: function () {
+      return this.$store.getters.isLoggedIn;
+    },
+
     pagedData() {
       return this.tableData.slice(this.from, this.to);
     },
