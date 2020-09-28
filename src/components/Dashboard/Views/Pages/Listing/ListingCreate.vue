@@ -660,7 +660,6 @@ import Autocomplete from "@trevoreyre/autocomplete-vue";
 import "@trevoreyre/autocomplete-vue/dist/style.css";
 import PSwitch from "src/components/UIComponents/Switch.vue";
 import axios from "axios";
-import ElementUI from "element-ui";
 import en from "element-ui/lib/locale/lang/en.js";
 import { required, email, confirmed } from "vee-validate/dist/rules";
 import { extend } from "vee-validate";
@@ -673,7 +672,7 @@ Vue.use(VuePreview);
 extend("email", email);
 extend("required", required);
 
-Vue.use(ElementUI, { locale: en });
+Vue.use({ locale: en });
 export default {
   components: {
     Card,
