@@ -96,15 +96,38 @@
             <div class="row">
               <div class="col-md-12">
                 <el-table :data="tableDetailData">
-                  <el-table-column type="index"></el-table-column>
-                  <el-table-column
+                  <el-table-column min-width="20" type="index"></el-table-column>
+                  <el-table-column min-width="120" label="หัวข้อ">
+                    <template slot-scope="props">
+                      <div class="cell">
+                        <h6>{{ props.row.key }}</h6>
+                      </div>
+                    </template>
+                  </el-table-column>
+                  <el-table-column min-width="170" label="จากข้อมูล">
+                    <template slot-scope="props">
+                      <div class="cell">
+                        <h6 v-if="props.row.fromValue === props.row.toValue" class="text-success">{{ props.row.fromValue }}</h6>
+                        <h6 v-else class="text-danger">{{ props.row.fromValue }}</h6>
+                      </div>
+                    </template>
+                  </el-table-column>
+                  <el-table-column min-width="170" label="เป็นข้อมูล">
+                    <template slot-scope="props">
+                      <div class="cell">
+                        <h6 v-if="props.row.fromValue === props.row.toValue" class="text-success">{{ props.row.toValue }}</h6>
+                        <h6 v-else class="text-danger">{{ props.row.toValue }}</h6>
+                      </div>
+                    </template>
+                  </el-table-column>
+                  <!-- <el-table-column
                     v-for="column in tableDetailColumns"
                     :key="column.label"
                     :min-width="column.minWidth"
                     :prop="column.prop"
                     :label="column.label"
                     sortable
-                  ></el-table-column>
+                  ></el-table-column>-->
                 </el-table>
               </div>
             </div>
@@ -320,17 +343,19 @@ export default {
       const paramsValue = {
         id: id,
       };
-      Vue.prototype.$http
-        .get(`api/change/get`, {
-          headers: {
-            "Content-Type": "application/json",
-          },
-          params: paramsValue,
-        })
+      const AXIOS = axios.create({
+        baseURL: process.env.VUE_APP_BACKEND_URL,
+      });
+      AXIOS.get(`api/change/get`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+        params: paramsValue,
+      })
         .then((resp) => {
+          console.log("tableDetailData : " + JSON.stringify(resp.data));
           this.tableDetailData = resp.data;
-          console.log("resp : " + JSON.stringify(resp));
-          console.log("tableData : " + JSON.stringify(this.tableData));
         })
         .catch((err) => {
           console.log("err : " + JSON.stringify(err));

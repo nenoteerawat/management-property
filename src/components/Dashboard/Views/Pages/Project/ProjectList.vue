@@ -5,7 +5,7 @@
         <div class="card-header">
           <div class="row">
             <div class="col-md-6">
-              <h5 class="card-title">Room</h5>
+              <h5 class="card-title">Project</h5>
             </div>
             <div class="col-md-6">
               <div class="pull-right">

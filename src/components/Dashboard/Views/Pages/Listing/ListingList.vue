@@ -5,7 +5,7 @@
         <div class="card-header">
           <div class="row">
             <div class="col-md-6">
-              <h5 class="card-title">Room</h5>
+              <h5 class="card-title">Listing</h5>
             </div>
             <div class="col-md-6">
               <div class="pull-right">
@@ -657,6 +657,7 @@ export default {
       alert(`Your clicked on Like button ${index}`);
     },
     handleAction(index, row) {
+      
       alert(`Your want to action ${row.listing.name}`);
     },
     handleEdit(index, row) {
