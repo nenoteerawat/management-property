@@ -90,17 +90,29 @@
               <div>
                 <label>ราคา (บาท)</label>
               </div>
-              <el-slider v-model="price" range :format-tooltip="formatTooltipPrice"></el-slider>
+              <el-slider
+                v-model="price"
+                range
+                :format-tooltip="formatTooltipPrice"
+              ></el-slider>
               <div>
                 <label>พื้นที่ (ตร.ม.)</label>
               </div>
-              <el-slider v-model="area" range :format-tooltip="formatTooltipArea"></el-slider>
+              <el-slider
+                v-model="area"
+                range
+                :format-tooltip="formatTooltipArea"
+              ></el-slider>
             </div>
             <div class="col-md-3">
               <div>
                 <label>ห้องนอน</label>
               </div>
-              <el-select class="select-primary" placeholder="select" v-model="bedSelects.select">
+              <el-select
+                class="select-primary"
+                placeholder="select"
+                v-model="bedSelects.select"
+              >
                 <el-option
                   v-for="option in bedSelects.data"
                   class="select-primary"
@@ -112,7 +124,11 @@
               <div>
                 <label>ห้องน้ำ</label>
               </div>
-              <el-select class="select-primary" placeholder="select" v-model="toiletSelects.select">
+              <el-select
+                class="select-primary"
+                placeholder="select"
+                v-model="toiletSelects.select"
+              >
                 <el-option
                   v-for="option in toiletSelects.data"
                   class="select-primary"
@@ -129,10 +145,10 @@
               <el-select
                 class="select-primary"
                 placeholder="select"
-                v-model="projectSelects.select"
+                v-model="saleUserSearchSelects.select"
               >
                 <el-option
-                  v-for="option in projectSelects.data"
+                  v-for="option in saleUserSearchSelects.data"
                   class="select-primary"
                   :value="option.value"
                   :label="option.label"
@@ -144,7 +160,7 @@
               <fg-input placeholder label="search" v-model="search"></fg-input>
             </div>
             <div class="col-md-3 ml-auto">
-              <div class="btn-group" style="margin-top: 13px;">
+              <div class="btn-group" style="margin-top: 13px">
                 <p-button type="info" round outline>
                   <i class="fa fa-search"></i>Search
                 </p-button>
@@ -197,16 +213,29 @@
                 <template slot-scope="props">
                   <div class="row">
                     <div class="col-md-12">
-                      <h5 class="title" style="margin-bottom: 0;">{{ props.row.projects[0].name}}</h5>
+                      <h5 class="title" style="margin-bottom: 0">
+                        {{ props.row.projects[0].name }}
+                      </h5>
                       <span>
                         <small>Condominium</small>
-                        <badge v-show="props.row.room.exclusive" slot="header" type="success">M</badge>
+                        <badge
+                          v-show="props.row.room.exclusive"
+                          slot="header"
+                          type="success"
+                          >M</badge
+                        >
+                        <badge
+                          v-if="props.row.status == 'BOOKING'"
+                          slot="header"
+                          type="warning"
+                          >ติดจอง</badge
+                        >
                       </span>
                     </div>
                     <div class="col-md-12">
                       <div class="row">
                         <div class="col-md-12">
-                          <span>เจ้าของ : {{ props.row.owner.name}}</span>
+                          <span>เจ้าของ : {{ props.row.owner.name }}</span>
                         </div>
                         <div class="col-md-3"></div>
                         <div class="col-md-3">
@@ -215,7 +244,7 @@
                               <div class="col-md-4">
                                 <i class="fa fa-eye"></i>
                               </div>
-                              <div class="col-md-6" style="padding-left: 0;">
+                              <div class="col-md-6" style="padding-left: 0">
                                 <span>14</span>
                               </div>
                             </div>
@@ -227,7 +256,7 @@
                               <div class="col-md-4">
                                 <i class="fa fa-paper-plane"></i>
                               </div>
-                              <div class="col-md-6" style="padding-left: 0;">
+                              <div class="col-md-6" style="padding-left: 0">
                                 <span>14</span>
                               </div>
                             </div>
@@ -239,7 +268,7 @@
                               <div class="col-md-4">
                                 <i class="fa fa-key"></i>
                               </div>
-                              <div class="col-md-6" style="padding-left: 0;">
+                              <div class="col-md-6" style="padding-left: 0">
                                 <span>14</span>
                               </div>
                             </div>
@@ -256,44 +285,44 @@
               <el-table-column min-width="200" label>
                 <template slot-scope="props">
                   <div class="row">
-                    <div class="col-md-6" style="margin: 10px 0;">
+                    <div class="col-md-6" style="margin: 10px 0">
                       <div class="row">
                         <div class="col-md-4">
                           <i class="fa fa-area-chart"></i>
                         </div>
-                        <div class="col-md-6" style="padding-left: 0;">
-                          <span>{{ props.row.room.area}} ตร.ม.</span>
+                        <div class="col-md-6" style="padding-left: 0">
+                          <span>{{ props.row.room.area }} ตร.ม.</span>
                         </div>
                       </div>
                     </div>
-                    <div class="col-md-6" style="margin: 10px 0;">
+                    <div class="col-md-6" style="margin: 10px 0">
                       <div class="row">
                         <div class="col-md-4">
                           <i class="fa fa-arrows-v"></i>
                         </div>
-                        <div class="col-md-6" style="padding-left: 0;">
-                          <span>{{ props.row.room.floor}} Fl.</span>
+                        <div class="col-md-6" style="padding-left: 0">
+                          <span>{{ props.row.room.floor }} Fl.</span>
                         </div>
                       </div>
                     </div>
                     <br />
-                    <div class="col-md-6" style="margin: 10px 0;">
+                    <div class="col-md-6" style="margin: 10px 0">
                       <div class="row">
                         <div class="col-md-4">
                           <i class="fa fa-bed"></i>
                         </div>
-                        <div class="col-md-6" style="padding-left: 0;">
-                          <span>{{ props.row.room.bed}}</span>
+                        <div class="col-md-6" style="padding-left: 0">
+                          <span>{{ props.row.room.bed }}</span>
                         </div>
                       </div>
                     </div>
-                    <div class="col-md-6" style="margin: 10px 0;">
+                    <div class="col-md-6" style="margin: 10px 0">
                       <div class="row">
                         <div class="col-md-4">
                           <i class="fa fa-bath"></i>
                         </div>
-                        <div class="col-md-6" style="padding-left: 0;">
-                          <span>{{ props.row.room.toilet}}</span>
+                        <div class="col-md-6" style="padding-left: 0">
+                          <span>{{ props.row.room.toilet }}</span>
                         </div>
                       </div>
                     </div>
@@ -305,10 +334,14 @@
               <el-table-column min-width="100" label>
                 <template slot-scope="props">
                   <div class="cell">
-                    <h6>S {{ Number(props.row.room.price).toLocaleString() }}</h6>
+                    <h6>
+                      S {{ Number(props.row.room.price).toLocaleString() }}
+                    </h6>
                   </div>
                   <div class="cell" v-show="props.row.room.type == 2">
-                    <h6>R {{ Number(props.row.room.priceRent).toLocaleString() }}</h6>
+                    <h6>
+                      R {{ Number(props.row.room.priceRent).toLocaleString() }}
+                    </h6>
                   </div>
                   <div class="cell">
                     <span>
@@ -344,6 +377,7 @@
                   </p-button>-->
                   <td class="td-actions text-right">
                     <p-button
+                      v-if="props.row.status !== 'BOOKING'"
                       type="info"
                       size="sm"
                       icon
@@ -364,7 +398,7 @@
                       size="sm"
                       icon
                       @click="handleDelete(props.$index, props.row)"
-                      v-if="getUser.roles[0]=='ROLE_ADMIN'"
+                      v-if="getUser.roles[0] == 'ROLE_ADMIN'"
                     >
                       <i class="fa fa-times"></i>
                     </p-button>
@@ -374,7 +408,9 @@
             </el-table>
           </div>
           <div class="col-md-6 pagination-info">
-            <p class="category">Showing {{from + 1}} to {{to}} of {{total}} entries</p>
+            <p class="category">
+              Showing {{ from + 1 }} to {{ to }} of {{ total }} entries
+            </p>
           </div>
           <div class="col-md-6">
             <p-pagination
@@ -385,7 +421,11 @@
             ></p-pagination>
           </div>
           <div class="col-md-6">
-            <el-select class="select-default" v-model="pagination.perPage" placeholder="Per page">
+            <el-select
+              class="select-default"
+              v-model="pagination.perPage"
+              placeholder="Per page"
+            >
               <el-option
                 class="select-default"
                 v-for="item in pagination.perPageOptions"
@@ -426,13 +466,177 @@
         </template>
       </card>
     </div>
+    <div class="row">
+      <div class="col-md-12 text-center">
+        <!-- Change log detail modal end -->
+        <modal :show.sync="modals.classic" modalClasses="modal-lg">
+          <template slot="header">
+            <h4 slot="header" class="title title-up">รายละเอียด</h4>
+          </template>
+          <template>
+            <div class="row">
+              <div class="col-md-12" v-if="getUser.roles[0] == 'ROLE_ADMIN'">
+                <el-select
+                  class="select-primary select-width-100"
+                  placeholder="select"
+                  v-model="saleUserSelects.select"
+                >
+                  <el-option
+                    v-for="option in saleUserSelects.data"
+                    class="select-primary"
+                    :value="option.value"
+                    :label="option.label"
+                    :key="option.label"
+                  ></el-option>
+                </el-select>
+              </div>
+              <div class="col-md-12">
+                <!-- <el-table-column min-width="126" label>
+                <template slot-scope="props">
+                  <div class="img-container">
+                    <img
+                      v-if="props.row.files.length > 1"
+                      style="
+                          height: 125px;
+                          width: 125px;
+                      "
+                      :src="props.row.files[0].path"
+                    />
+                  </div>
+                </template>
+              </el-table-column>-->
+                <el-table :data="tableMatchListing" thead-class="hidden_header">
+                  <el-table-column min-width="200" label>
+                    <template slot-scope="props">
+                      <div class="row">
+                        <div class="col-md-12">
+                          <h5 class="title" style="margin-bottom: 0">
+                            {{ props.row.projects[0].name }}
+                          </h5>
+                          <span>
+                            <small>Condominium</small>
+                            <badge
+                              v-show="props.row.room.exclusive"
+                              slot="header"
+                              type="success"
+                              >M</badge
+                            >
+                          </span>
+                        </div>
+                        <div class="col-md-12">
+                          <div class="row">
+                            <div class="col-md-12">
+                              <span>เจ้าของ : {{ props.row.owner.name }}</span>
+                            </div>
+                          </div>
+                        </div>
+                        <br />
+                      </div>
+                      <!-- <span>Condominium</span> -->
+                      <!-- <badge v-show="props.row.listing.exclusive" slot="header" type="success">M</badge> -->
+                    </template>
+                  </el-table-column>
+                  <el-table-column min-width="200" label>
+                    <template slot-scope="props">
+                      <div class="row">
+                        <div class="col-md-6" style="margin: 10px 0">
+                          <div class="row">
+                            <div class="col-md-4">
+                              <i class="fa fa-area-chart"></i>
+                            </div>
+                            <div class="col-md-6" style="padding-left: 0">
+                              <span>{{ props.row.room.area }} ตร.ม.</span>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-md-6" style="margin: 10px 0">
+                          <div class="row">
+                            <div class="col-md-4">
+                              <i class="fa fa-arrows-v"></i>
+                            </div>
+                            <div class="col-md-6" style="padding-left: 0">
+                              <span>{{ props.row.room.floor }} Fl.</span>
+                            </div>
+                          </div>
+                        </div>
+                        <br />
+                        <div class="col-md-6" style="margin: 10px 0">
+                          <div class="row">
+                            <div class="col-md-4">
+                              <i class="fa fa-bed"></i>
+                            </div>
+                            <div class="col-md-6" style="padding-left: 0">
+                              <span>{{ props.row.room.bed }}</span>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-md-6" style="margin: 10px 0">
+                          <div class="row">
+                            <div class="col-md-4">
+                              <i class="fa fa-bath"></i>
+                            </div>
+                            <div class="col-md-6" style="padding-left: 0">
+                              <span>{{ props.row.room.toilet }}</span>
+                            </div>
+                          </div>
+                        </div>
+                        <!-- <span>Condominium</span> -->
+                        <!-- <badge v-show="props.row.listing.exclusive" slot="header" type="primary">M</badge> -->
+                      </div>
+                    </template>
+                  </el-table-column>
+                  <el-table-column min-width="100" label>
+                    <template slot-scope="props">
+                      <div class="cell">
+                        <h6>
+                          S {{ Number(props.row.room.price).toLocaleString() }}
+                        </h6>
+                      </div>
+                      <div class="cell" v-show="props.row.room.type == 2">
+                        <h6>
+                          R
+                          {{
+                            Number(props.row.room.priceRent).toLocaleString()
+                          }}
+                        </h6>
+                      </div>
+                      <div class="cell">
+                        <span>
+                          <i class="fa fa-plus" aria-hidden="true"></i>
+                          {{ props.row.createdBy }}
+                        </span>
+                      </div>
+                      <div class="cell">
+                        <span>
+                          <i class="fa fa-clock-o" aria-hidden="true"></i>
+                          {{ props.row.createdDateTime }}
+                        </span>
+                      </div>
+                    </template>
+                  </el-table-column>
+                </el-table>
+              </div>
+            </div>
+          </template>
+          <template slot="footer">
+            <p-button type="success" link @click="handleBooking()"
+              >จอง</p-button
+            >
+            <!-- <div class="right-side">
+              <p-button type="danger" link @click="handleCancel(modalsIndex, modalsRow)">ยกเลิก</p-button>
+            </div> -->
+          </template>
+        </modal>
+        <!-- Change log detail modal end -->
+      </div>
+    </div>
   </div>
 </template>
 <script>
 import Vue from "vue";
 import PPagination from "src/components/UIComponents/Pagination.vue";
 import DailyBar from "../Daily/DailyBar";
-import { Card, Badge } from "src/components/UIComponents";
+import { Card, Modal, Badge } from "src/components/UIComponents";
 import axios from "axios";
 import { mapGetters } from "vuex";
 
@@ -441,12 +645,14 @@ export default {
     Card,
     Badge,
     DailyBar,
+    Modal,
     PPagination,
   },
 
   created: function () {
     this.getListing();
     this.getProjectList();
+    if (this.getUser.roles[0] == "ROLE_ADMIN") this.getSaleUser();
   },
 
   data() {
@@ -461,7 +667,21 @@ export default {
       searchQuery: "",
       price: [0, 0],
       area: [0, 0],
+      tableMatchListing: [],
+      modals: {
+        classic: false,
+      },
+      modalsIndex: {},
+      modalsRow: {},
       tableColumns: [],
+      saleUserSelects: {
+        select: "",
+        data: [],
+      },
+      saleUserSearchSelects: {
+        select: "",
+        data: [],
+      },
       projectSelects: {
         select: "",
         data: [],
@@ -599,6 +819,34 @@ export default {
           reject(err);
         });
     },
+    getSaleUser: function () {
+      let postBody = {};
+      const AXIOS = axios.create({
+        baseURL: process.env.VUE_APP_BACKEND_URL,
+      });
+      AXIOS.post(`api/user/list`, postBody, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+      })
+        .then((resp) => {
+          for (let value of resp.data) {
+            this.saleUserSelects.data.push({
+              value: value.username,
+              label: value.firstName + " " + value.lastName,
+            });
+            this.saleUserSearchSelects.data.push({
+              value: value.username,
+              label: value.firstName + " " + value.lastName,
+            });
+          }
+        })
+        .catch((err) => {
+          console.log("err : " + JSON.stringify(err));
+          reject(err);
+        });
+    },
     getProjectList: function () {
       let postBody = {
         role: "",
@@ -643,7 +891,29 @@ export default {
       })
         .then((resp) => {
           this.tableData = resp.data;
-          console.log("resp : " + JSON.stringify(this.tableData));
+          console.log("getListing : " + JSON.stringify(this.tableData));
+        })
+        .catch((err) => {
+          console.log("getListing err : " + JSON.stringify(err));
+          reject(err);
+        });
+    },
+    handleBooking() {
+      let postBody = {
+        listingId: this.modalsRow.id,
+        saleUsername: this.saleUserSelects.select,
+      };
+      const AXIOS = axios.create({
+        baseURL: process.env.VUE_APP_BACKEND_URL,
+      });
+      AXIOS.post(`api/listing/booking`, postBody, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+      })
+        .then((resp) => {
+          this.modals.classic = false;
         })
         .catch((err) => {
           console.log("err : " + JSON.stringify(err));
@@ -654,8 +924,13 @@ export default {
       alert(`Your clicked on Like button ${index}`);
     },
     handleAction(index, row) {
-      
-      alert(`Your want to action ${row.listing.name}`);
+      this.modalsIndex = index;
+      this.modalsRow = row;
+      console.log(row);
+      this.saleUserSelects.select = "";
+      this.tableMatchListing = [];
+      this.tableMatchListing.push(row);
+      this.modals.classic = true;
     },
     handleEdit(index, row) {
       window.location.href = "/admin/listing/create?id=" + row.id;
@@ -759,7 +1034,9 @@ export default {
   button.btn {
     margin-right: 2px;
   }
-
+  .select-width-100 {
+    width: 100%;
+  }
   .title-project {
     font-size: 1.714em;
     line-height: 1.45em;
