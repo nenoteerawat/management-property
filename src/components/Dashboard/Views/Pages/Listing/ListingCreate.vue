@@ -660,7 +660,6 @@ import Autocomplete from "@trevoreyre/autocomplete-vue";
 import "@trevoreyre/autocomplete-vue/dist/style.css";
 import PSwitch from "src/components/UIComponents/Switch.vue";
 import axios from "axios";
-import en from "element-ui/lib/locale/lang/en.js";
 import { required, email, confirmed } from "vee-validate/dist/rules";
 import { extend } from "vee-validate";
 import { mapGetters } from "vuex";
@@ -672,7 +671,6 @@ Vue.use(VuePreview);
 extend("email", email);
 extend("required", required);
 
-Vue.use({ locale: en });
 export default {
   components: {
     Card,
@@ -706,21 +704,22 @@ export default {
       console.log("projects : " + JSON.stringify(this.projects));
     });
 
-    AXIOS.post(`api/user/list`, postBody, {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: "Bearer " + localStorage.getItem("token"),
-      },
-    }).then((resp) => {
-      console.log("getUser all resp : " + JSON.stringify(resp));
-      this.userSelects.data = resp.data.map((item) => {
-        return {
-          value: item.username,
-          label: item.username,
-        };
+    if (this.getUser.roles[0] == "ROLE_ADMIN") {
+      AXIOS.post(`api/user/list`, postBody, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+      }).then((resp) => {
+        console.log("getUser all resp : " + JSON.stringify(resp));
+        this.userSelects.data = resp.data.map((item) => {
+          return {
+            value: item.username,
+            label: item.username,
+          };
+        });
       });
-    });
-
+    }
     //edit
     if (this.$route.query.id) {
       let postBody = {

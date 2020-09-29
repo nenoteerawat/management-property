@@ -122,7 +122,7 @@
                 ></el-option>
               </el-select>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-3" v-if="getUser.roles[0] == 'ROLE_ADMIN'">
               <div>
                 <label>sale</label>
               </div>
@@ -434,10 +434,8 @@ import PPagination from "src/components/UIComponents/Pagination.vue";
 import DailyBar from "../Daily/DailyBar";
 import { Card, Badge } from "src/components/UIComponents";
 import axios from "axios";
-import en from "element-ui/lib/locale/lang/en.js";
 import { mapGetters } from "vuex";
 
-Vue.use({ locale: en });
 export default {
   components: {
     Card,

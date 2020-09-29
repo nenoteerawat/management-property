@@ -161,10 +161,8 @@ import PPagination from "src/components/UIComponents/Pagination.vue";
 import DailyBar from "../Daily/DailyBar";
 import { Card } from "src/components/UIComponents";
 import axios from "axios";
-import en from "element-ui/lib/locale/lang/en.js";
 import { mapGetters } from "vuex";
 
-Vue.use({ locale: en });
 export default {
   components: {
     Card,
