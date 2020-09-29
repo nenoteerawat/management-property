@@ -5,7 +5,7 @@
         <div class="card-header">
           <div class="row">
             <div class="col-md-6">
-              <h5 class="card-title">Room</h5>
+              <h5 class="card-title">Listing</h5>
             </div>
             <div class="col-md-6">
               <div class="pull-right">
@@ -122,7 +122,7 @@
                 ></el-option>
               </el-select>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-3" v-if="getUser.roles[0] == 'ROLE_ADMIN'">
               <div>
                 <label>sale</label>
               </div>
@@ -434,10 +434,8 @@ import PPagination from "src/components/UIComponents/Pagination.vue";
 import DailyBar from "../Daily/DailyBar";
 import { Card, Badge } from "src/components/UIComponents";
 import axios from "axios";
-import en from "element-ui/lib/locale/lang/en.js";
 import { mapGetters } from "vuex";
 
-Vue.use({ locale: en });
 export default {
   components: {
     Card,
@@ -656,6 +654,7 @@ export default {
       alert(`Your clicked on Like button ${index}`);
     },
     handleAction(index, row) {
+      
       alert(`Your want to action ${row.listing.name}`);
     },
     handleEdit(index, row) {

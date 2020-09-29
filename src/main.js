@@ -48,6 +48,7 @@ import VueLazyload from 'vue-lazyload'
 
 import './plugins/element.js'
 
+const ElementUI = require('element-ui');
 // plugin setup
 Vue.use(VueLazyload)
 Vue.use(VueRouter);
@@ -57,6 +58,7 @@ Vue.use(GlobalComponents);
 Vue.use(VueNotify);
 Vue.use(SideBar, { sidebarLinks: sidebarLinks });
 locale.use(lang);
+Vue.use(ElementUI);
 Vue.prototype.$http = Axios;
 const token = localStorage.getItem('token')
 Vue.prototype.$http.defaults.baseURL = process.env.VUE_APP_BACKEND_URL

@@ -14,9 +14,27 @@
                   <div class="form-group">
                     <label class="control-label">Level</label>
                     <div class="col-md-12">
-                      <p-radio label="1" v-model="radios.level" value="1" :inline="true">Chill</p-radio>
-                      <p-radio label="2" v-model="radios.level" value="2" :inline="true">Alert</p-radio>
-                      <p-radio label="3" v-model="radios.level" value="3" :inline="true">Critical</p-radio>
+                      <p-radio
+                        label="1"
+                        v-model="radios.level"
+                        value="1"
+                        :inline="true"
+                        >Chill</p-radio
+                      >
+                      <p-radio
+                        label="2"
+                        v-model="radios.level"
+                        value="2"
+                        :inline="true"
+                        >Alert</p-radio
+                      >
+                      <p-radio
+                        label="3"
+                        v-model="radios.level"
+                        value="3"
+                        :inline="true"
+                        >Critical</p-radio
+                      >
                     </div>
                   </div>
                 </fieldset>
@@ -26,8 +44,20 @@
                   <div class="form-group">
                     <label class="control-label">Type</label>
                     <div class="col-md-12">
-                      <p-radio label="1" v-model="radiosTypeRole" value="1" :inline="true">sale</p-radio>
-                      <p-radio label="2" v-model="radiosTypeRole" value="2" :inline="true">Available</p-radio>
+                      <p-radio
+                        label="1"
+                        v-model="radiosTypeRole"
+                        value="1"
+                        :inline="true"
+                        >sale</p-radio
+                      >
+                      <p-radio
+                        label="2"
+                        v-model="radiosTypeRole"
+                        value="2"
+                        :inline="true"
+                        >Available</p-radio
+                      >
                     </div>
                   </div>
                 </fieldset>
@@ -35,57 +65,84 @@
               <div class="col-md-6">
                 <div class="row">
                   <div class="col-md-6">
-                    <ValidationProvider
-                      name="listingCode"
-                      rules="required"
-                      v-slot="{ passed, failed }"
-                    >
-                      <fg-input
-                        placeholder="TXXX"
-                        label="Listing Code"
-                        v-model="owner.listingCode"
-                        :error="failed ? fieldRequired: null"
-                        :hasSuccess="passed"
-                      ></fg-input>
-                    </ValidationProvider>
+                    <fg-input
+                      disabled
+                      label="Listing Code"
+                      v-model="owner.listingCode"
+                    ></fg-input>
                   </div>
                 </div>
               </div>
               <div class="col-md-6">
-                <ValidationProvider name="ownerName" rules="required" v-slot="{ passed, failed }">
+                <ValidationProvider
+                  name="ownerName"
+                  rules="required"
+                  v-slot="{ passed, failed }"
+                >
                   <fg-input
                     placeholder="ชื่อ"
                     label="Owner Name"
                     v-model="owner.name"
-                    :error="failed ? fieldRequired: null"
+                    :error="failed ? fieldRequired : null"
                     :hasSuccess="passed"
                   ></fg-input>
                 </ValidationProvider>
               </div>
               <div class="col-md-4">
-                <ValidationProvider name="email" rules="required|email" v-slot="{ passed, failed }">
+                <ValidationProvider
+                  name="email"
+                  rules="required|email"
+                  v-slot="{ passed, failed }"
+                >
                   <fg-input
                     placeholder="Email"
                     label="Email"
                     v-model="owner.email"
-                    :error="failed ? 'The Email field is required': null"
+                    :error="failed ? 'The Email field is required' : null"
                     :hasSuccess="passed"
                   ></fg-input>
                 </ValidationProvider>
               </div>
               <div class="col-md-4">
-                <ValidationProvider name="line" rules="required" v-slot="{ passed, failed }">
+                <ValidationProvider
+                  name="line"
+                  rules="required"
+                  v-slot="{ passed, failed }"
+                >
                   <fg-input
                     placeholder="Line"
                     label="Line"
                     v-model="owner.line"
-                    :error="failed ? fieldRequired: null"
+                    :error="failed ? fieldRequired : null"
                     :hasSuccess="passed"
                   ></fg-input>
                 </ValidationProvider>
               </div>
               <div class="col-md-4">
-                <fg-input placeholder="0123456789" label="Phone" v-model="owner.phone"></fg-input>
+                <fg-input
+                  placeholder="0123456789"
+                  label="Phone"
+                  v-model="owner.phone"
+                ></fg-input>
+              </div>
+              <div class="col-md-4" v-if="getUser.roles[0] == 'ROLE_ADMIN'">
+                <div>
+                  <label>Sale</label>
+                </div>
+                <el-select
+                  class="select-primary"
+                  placeholder="select"
+                  v-model="userSelects.select"
+                  @change="getListingCode($event)"
+                >
+                  <el-option
+                    v-for="option in userSelects.data"
+                    class="select-primary"
+                    :value="option.value"
+                    :label="option.label"
+                    :key="option.label"
+                  ></el-option>
+                </el-select>
               </div>
             </div>
           </card>
@@ -101,9 +158,12 @@
               <div class="col-md-6">
                 <div>
                   <label>Project</label>
-                  <span style="font-size: 35px;">{{project.name}}</span>
+                  <span style="font-size: 35px">{{ project.name }}</span>
                 </div>
-                <autocomplete :search="search" @submit="projectSearch"></autocomplete>
+                <autocomplete
+                  :search="search"
+                  @submit="projectSearch"
+                ></autocomplete>
               </div>
               <div class="col-md-3">
                 <div>
@@ -147,18 +207,34 @@
               <div class="col-md-6">
                 <div class="row">
                   <div class="col-md-4">
-                    <fg-input :disabled="true" label="ชั้น" v-model="project.floor"></fg-input>
+                    <fg-input
+                      :disabled="true"
+                      label="ชั้น"
+                      v-model="project.floor"
+                    ></fg-input>
                   </div>
                   <div class="col-md-4">
-                    <fg-input :disabled="true" label="ตึก" v-model="project.building"></fg-input>
+                    <fg-input
+                      :disabled="true"
+                      label="ตึก"
+                      v-model="project.building"
+                    ></fg-input>
                   </div>
                   <div class="col-md-4">
-                    <fg-input :disabled="true" label="ปีที่สร้างเสร็จ" v-model="project.develop"></fg-input>
+                    <fg-input
+                      :disabled="true"
+                      label="ปีที่สร้างเสร็จ"
+                      v-model="project.develop"
+                    ></fg-input>
                   </div>
                 </div>
               </div>
               <div class="col-md-6">
-                <fg-input :disabled="true" label="ที่อยู่" v-model="project.address"></fg-input>
+                <fg-input
+                  :disabled="true"
+                  label="ที่อยู่"
+                  v-model="project.address"
+                ></fg-input>
               </div>
 
               <div class="col-md-12">
@@ -168,9 +244,18 @@
                   </div>
                   <div class="col-md-12">
                     <el-table :data="transports">
-                      <el-table-column label="ประเภท" property="type"></el-table-column>
-                      <el-table-column label="สถานี" property="name"></el-table-column>
-                      <el-table-column label="ระยาทาง" property="range"></el-table-column>
+                      <el-table-column
+                        label="ประเภท"
+                        property="type"
+                      ></el-table-column>
+                      <el-table-column
+                        label="สถานี"
+                        property="name"
+                      ></el-table-column>
+                      <el-table-column
+                        label="ระยาทาง"
+                        property="range"
+                      ></el-table-column>
                     </el-table>
                   </div>
                 </div>
@@ -215,7 +300,11 @@
                 <div>
                   <label>ห้องนอน</label>
                 </div>
-                <el-select class="select-primary" placeholder="Select" v-model="bedSelects.select">
+                <el-select
+                  class="select-primary"
+                  placeholder="Select"
+                  v-model="bedSelects.select"
+                >
                   <el-option
                     v-for="option in bedSelects.data"
                     class="select-primary"
@@ -250,9 +339,16 @@
                 <div class="row">
                   <div class="col-md-7">
                     <div class="input-group">
-                      <input type="number" class="form-control" placeholder="0" v-model="room.area" />
+                      <input
+                        type="number"
+                        class="form-control"
+                        placeholder="0"
+                        v-model="room.area"
+                      />
                       <div class="input-group-append">
-                        <span class="input-group-text bg-grey" id="basic-addon2">ตร.ม.</span>
+                        <span class="input-group-text bg-grey" id="basic-addon2"
+                          >ตร.ม.</span
+                        >
                       </div>
                     </div>
                   </div>
@@ -302,10 +398,20 @@
               <div class="col-md-6">
                 <div class="row">
                   <div class="col-md-6">
-                    <fg-input type="number" placeholder label="ราคา" v-model="room.price"></fg-input>
+                    <fg-input
+                      type="number"
+                      placeholder
+                      label="ราคา"
+                      v-model="room.price"
+                    ></fg-input>
                   </div>
                   <div class="col-md-6" v-show="activeRent">
-                    <fg-input type="number" placeholder label="เช่า" v-model="room.priceRent"></fg-input>
+                    <fg-input
+                      type="number"
+                      placeholder
+                      label="เช่า"
+                      v-model="room.priceRent"
+                    ></fg-input>
                   </div>
                 </div>
               </div>
@@ -418,13 +524,14 @@
                 </div>
                 <el-tag
                   :key="tag"
-                  v-for="(tag,index) in tags.dynamicTags"
+                  v-for="(tag, index) in tags.dynamicTags"
                   size="small"
                   type="primary"
                   :closable="true"
                   :close-transition="false"
                   @close="handleClose(index)"
-                >{{tag}}</el-tag>
+                  >{{ tag }}</el-tag
+                >
 
                 <input
                   type="text"
@@ -441,13 +548,15 @@
                 <div class="form-group">
                   <label>Description</label>
                   <textarea
-                    style="min-height:450px;"
+                    style="min-height: 450px"
                     rows="40"
                     class="form-control border-input"
                     placeholder="Here can be your description"
                     v-model="room.description"
                   ></textarea>
-                  <p-button size="sm" @click="genDesc">Gen Description</p-button>
+                  <p-button size="sm" @click="genDesc"
+                    >Gen Description</p-button
+                  >
                 </div>
               </div>
               <div class="col-md-6">
@@ -533,7 +642,8 @@
                   round
                   @click="submit"
                   v-loading.fullscreen.lock="fullscreenLoading"
-                >{{ btnAction }}</p-button>
+                  >{{ btnAction }}</p-button
+                >
               </div>
             </template>
           </card>
@@ -550,7 +660,6 @@ import Autocomplete from "@trevoreyre/autocomplete-vue";
 import "@trevoreyre/autocomplete-vue/dist/style.css";
 import PSwitch from "src/components/UIComponents/Switch.vue";
 import axios from "axios";
-import en from "element-ui/lib/locale/lang/en.js";
 import { required, email, confirmed } from "vee-validate/dist/rules";
 import { extend } from "vee-validate";
 import { mapGetters } from "vuex";
@@ -562,7 +671,6 @@ Vue.use(VuePreview);
 extend("email", email);
 extend("required", required);
 
-Vue.use({ locale: en });
 export default {
   components: {
     Card,
@@ -596,6 +704,22 @@ export default {
       console.log("projects : " + JSON.stringify(this.projects));
     });
 
+    if (this.getUser.roles[0] == "ROLE_ADMIN") {
+      AXIOS.post(`api/user/list`, postBody, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+      }).then((resp) => {
+        console.log("getUser all resp : " + JSON.stringify(resp));
+        this.userSelects.data = resp.data.map((item) => {
+          return {
+            value: item.username,
+            label: item.username,
+          };
+        });
+      });
+    }
     //edit
     if (this.$route.query.id) {
       let postBody = {
@@ -619,6 +743,7 @@ export default {
         this.owner.phone = resp.data[0].owner.phone;
         this.owner.name = resp.data[0].owner.name;
         this.owner.email = resp.data[0].owner.email;
+        this.userSelects.select = resp.data[0].saleUser;
         this.project.id = resp.data[0].room.projectId;
         this.radiosTypeRole = resp.data[0].room.type;
         this.radios.level = resp.data[0].room.level;
@@ -708,6 +833,10 @@ export default {
           { value: "2", label: "บ้าน" },
           { value: "3", label: "ทาวน์เฮาส์" },
         ],
+      },
+      userSelects: {
+        select: "",
+        data: [],
       },
       buildingSelects: {
         select: "",
@@ -973,6 +1102,24 @@ export default {
           value: index,
         });
       }
+    },
+    getListingCode(value) {
+      let paramsValue = {
+        saleUser: value,
+      };
+      const AXIOS = axios.create({
+        baseURL: process.env.VUE_APP_BACKEND_URL,
+      });
+      AXIOS.get(`api/listing/getLastCode`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+        params: paramsValue,
+      }).then((resp) => {
+        console.log("getListingCode : " + JSON.stringify(resp.data));
+        this.owner.listingCode = resp.data;
+      });
     },
     genDesc() {
       let type = this.radiosTypeRole == 1 ? "SALE" : "AVAILABLE";
@@ -1397,6 +1544,7 @@ export default {
         roomRequest: room,
         files: this.fileList,
         comment: this.comment,
+        saleUser: this.userSelects.select,
       };
       if (this.$route.query.id) {
         path = "api/listing/edit";
@@ -1406,6 +1554,7 @@ export default {
           roomRequest: room,
           files: this.fileList,
           comment: this.comment,
+          saleUser: this.userSelects.select,
         };
       }
       console.log("postBody : " + JSON.stringify(postBody));
