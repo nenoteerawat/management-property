@@ -129,10 +129,10 @@
               <el-select
                 class="select-primary"
                 placeholder="select"
-                v-model="projectSelects.select"
+                v-model="userSelects.select"
               >
                 <el-option
-                  v-for="option in projectSelects.data"
+                  v-for="option in userSelects.data"
                   class="select-primary"
                   :value="option.value"
                   :label="option.label"
@@ -447,6 +447,7 @@ export default {
   created: function () {
     this.getListing();
     this.getProjectList();
+    this.getUserList();
   },
 
   data() {
@@ -463,6 +464,10 @@ export default {
       area: [0, 0],
       tableColumns: [],
       projectSelects: {
+        select: "",
+        data: [],
+      },
+      userSelects: {
         select: "",
         data: [],
       },
@@ -600,6 +605,29 @@ export default {
           console.log("err : " + JSON.stringify(err));
           reject(err);
         });
+    },
+    getUserList: function(){
+      const AXIOS = axios.create({
+        baseURL: process.env.VUE_APP_BACKEND_URL,
+      });
+      let postBody = {
+        role: "",
+        id: "",
+      };
+      AXIOS.post(`api/user/list`, postBody, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+      }).then((resp) => {
+        console.log("getUser all resp : " + JSON.stringify(resp));
+        this.userSelects.data = resp.data.map((item) => {
+          return {
+            value: item.id,
+            label: item.firstName + ' ' + item.lastName,
+          };
+        });
+      });
     },
     getProjectList: function () {
       let postBody = {
