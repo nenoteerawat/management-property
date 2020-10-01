@@ -145,7 +145,7 @@
             </div>
             <div class="col-md-3 ml-auto">
               <div class="btn-group" style="margin-top: 13px;">
-                <p-button type="info" round outline>
+                <p-button type="info" round outline @click="searchlisting($event)">
                   <i class="fa fa-search"></i>Search
                 </p-button>
                 <p-button type="warning" round outline>
@@ -579,6 +579,14 @@ export default {
       const AXIOS = axios.create({
         baseURL: process.env.VUE_APP_BACKEND_URL,
       });
+      console.log(JSON.stringify(this.projectSelects))
+      let postBody = {
+        roomRequest : {
+          projectId : this.projectSelects.select,
+          type : this.propertySelects.select,
+          bed : this.bedSelects.select
+        }
+      };
       AXIOS.post(`api/listing/list`, postBody, {
         headers: {
           "Content-Type": "application/json",
@@ -586,13 +594,7 @@ export default {
         },
       })
         .then((resp) => {
-          for (let value of resp.data) {
-            this.projectSelects.data.push({
-              value: value.id,
-              label: value.name,
-            });
-          }
-          console.log("resp : " + JSON.stringify(this.tableData));
+          this.tableData = resp.data;
         })
         .catch((err) => {
           console.log("err : " + JSON.stringify(err));

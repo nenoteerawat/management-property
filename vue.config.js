@@ -26,15 +26,5 @@ module.exports = {
   },
   css: {
     sourceMap: process.env.NODE_ENV !== 'production'
-  },
-  // devServer: {
-  //   proxy: {
-  //     '/backend' : {
-  //       target: 'http://ec2-13-229-79-9.ap-southeast-1.compute.amazonaws.com:8090/',
-  //       changeOrigin: true,
-  //       logLevel: "debug",
-  //       ws: true
-  //     }
-  //   }
-  // }
+  }
 };
