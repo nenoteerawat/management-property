@@ -148,7 +148,7 @@
                 <p-button type="info" round outline @click="searchlisting($event)">
                   <i class="fa fa-search"></i>Search
                 </p-button>
-                <p-button type="warning" round outline>
+                <p-button type="warning" round outline @click="resetSearch($event)">
                   <i class="fa fa-times"></i>Reset
                 </p-button>
               </div>
@@ -567,7 +567,7 @@ export default {
 
   methods: {
     formatTooltipPrice(val) {
-      return val * 200000;
+      return val * 10000;
     },
     formatTooltipArea(val) {
       return val * 3;
@@ -586,12 +586,17 @@ export default {
       });
       console.log(JSON.stringify(this.projectSelects))
       let postBody = {
-        roomRequest : {
+        roomSearchRequest : {
           projectId : this.projectSelects.select,
           type : this.propertySelects.select,
-          bed : this.bedSelects.select
-        }
+          bed : this.bedSelects.select,
+          toilet: this.toiletSelects.select,
+          price: this.price.toString(),
+          area: this.area.toString()
+        },
+        saleUser: this.userSelects.select
       };
+      console.log("postBody : " + JSON.stringify(postBody));
       AXIOS.post(`api/listing/list`, postBody, {
         headers: {
           "Content-Type": "application/json",
@@ -605,6 +610,16 @@ export default {
           console.log("err : " + JSON.stringify(err));
           reject(err);
         });
+    },
+    resetSearch: function () {
+          this.projectSelects.select = '';
+          this.propertySelects.select = '';
+          this.bedSelects.select = '';
+          this.toiletSelects.select = '';
+          this.price = [0,0];
+          this.area = [0,0];
+          this.userSelects.select = '';
+      this.searchlisting();
     },
     getUserList: function(){
       const AXIOS = axios.create({
@@ -623,7 +638,7 @@ export default {
         console.log("getUser all resp : " + JSON.stringify(resp));
         this.userSelects.data = resp.data.map((item) => {
           return {
-            value: item.id,
+            value: item.username,
             label: item.firstName + ' ' + item.lastName,
           };
         });
