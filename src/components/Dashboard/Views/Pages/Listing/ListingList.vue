@@ -594,7 +594,10 @@ export default {
           price: this.price.toString(),
           area: this.area.toString()
         },
-        saleUser: this.userSelects.select
+        saleUser: this.userSelects.select,
+        search: this.search,
+        transportType: this.transport.type,
+        transportName: this.transport.name
       };
       console.log("postBody : " + JSON.stringify(postBody));
       AXIOS.post(`api/listing/list`, postBody, {
@@ -619,6 +622,9 @@ export default {
           this.price = [0,0];
           this.area = [0,0];
           this.userSelects.select = '';
+          this.search = '';
+          this.transport.type = '';
+          this.transport.name = '';
       this.searchlisting();
     },
     getUserList: function(){
