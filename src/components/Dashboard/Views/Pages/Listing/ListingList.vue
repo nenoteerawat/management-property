@@ -145,10 +145,10 @@
               <el-select
                 class="select-primary"
                 placeholder="select"
-                v-model="saleUserSearchSelects.select"
+                v-model="userSelects.select"
               >
                 <el-option
-                  v-for="option in saleUserSearchSelects.data"
+                  v-for="option in userSelects.data"
                   class="select-primary"
                   :value="option.value"
                   :label="option.label"
@@ -161,10 +161,20 @@
             </div>
             <div class="col-md-3 ml-auto">
               <div class="btn-group" style="margin-top: 13px">
-                <p-button type="info" round outline>
+                <p-button
+                  type="info"
+                  round
+                  outline
+                  @click="searchlisting($event)"
+                >
                   <i class="fa fa-search"></i>Search
                 </p-button>
-                <p-button type="warning" round outline>
+                <p-button
+                  type="warning"
+                  round
+                  outline
+                  @click="resetSearch($event)"
+                >
                   <i class="fa fa-times"></i>Reset
                 </p-button>
               </div>
@@ -222,14 +232,14 @@
                           v-show="props.row.room.exclusive"
                           slot="header"
                           type="success"
-                          >M</badge
-                        >
+                          >M
+                        </badge>
                         <badge
                           v-if="props.row.status == 'BOOKING'"
                           slot="header"
                           type="warning"
-                          >ติดจอง</badge
-                        >
+                          >ติดจอง
+                        </badge>
                       </span>
                     </div>
                     <div class="col-md-12">
@@ -675,6 +685,7 @@ export default {
     this.getProjectList();
     if (this.getUser.roles[0] == "ROLE_ADMIN") this.getSaleUser();
     this.getLead();
+    this.getUserList();
   },
 
   data() {
@@ -689,13 +700,13 @@ export default {
       searchQuery: "",
       price: [0, 0],
       area: [0, 0],
+      tableColumns: [],
       tableMatchListing: [],
       modals: {
         classic: false,
       },
       modalsIndex: {},
       modalsRow: {},
-      tableColumns: [],
       saleUserSelects: {
         select: "",
         data: [],
@@ -709,6 +720,10 @@ export default {
         data: [],
       },
       projectSelects: {
+        select: "",
+        data: [],
+      },
+      userSelects: {
         select: "",
         data: [],
       },
@@ -808,7 +823,7 @@ export default {
 
   methods: {
     formatTooltipPrice(val) {
-      return val * 200000;
+      return val * 10000;
     },
     formatTooltipArea(val) {
       return val * 3;
@@ -825,6 +840,22 @@ export default {
       const AXIOS = axios.create({
         baseURL: process.env.VUE_APP_BACKEND_URL,
       });
+      console.log(JSON.stringify(this.projectSelects));
+      let postBody = {
+        roomSearchRequest: {
+          projectId: this.projectSelects.select,
+          type: this.propertySelects.select,
+          bed: this.bedSelects.select,
+          toilet: this.toiletSelects.select,
+          price: this.price.toString(),
+          area: this.area.toString(),
+        },
+        saleUser: this.userSelects.select,
+        search: this.search,
+        transportType: this.transport.type,
+        transportName: this.transport.name,
+      };
+      console.log("postBody : " + JSON.stringify(postBody));
       AXIOS.post(`api/listing/list`, postBody, {
         headers: {
           "Content-Type": "application/json",
@@ -832,13 +863,7 @@ export default {
         },
       })
         .then((resp) => {
-          for (let value of resp.data) {
-            this.projectSelects.data.push({
-              value: value.id,
-              label: value.name,
-            });
-          }
-          console.log("resp : " + JSON.stringify(this.tableData));
+          this.tableData = resp.data;
         })
         .catch((err) => {
           console.log("err : " + JSON.stringify(err));
@@ -846,11 +871,10 @@ export default {
         });
     },
     getLead: function () {
-      let postBody = {};
       const AXIOS = axios.create({
         baseURL: process.env.VUE_APP_BACKEND_URL,
       });
-      AXIOS.get(`api/lead/selects`, postBody, {
+      AXIOS.get(`api/lead/selects`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: "Bearer " + localStorage.getItem("token"),
@@ -868,6 +892,19 @@ export default {
           console.log("err : " + JSON.stringify(err));
           reject(err);
         });
+    },
+    resetSearch: function () {
+      this.projectSelects.select = "";
+      this.propertySelects.select = "";
+      this.bedSelects.select = "";
+      this.toiletSelects.select = "";
+      this.price = [0, 0];
+      this.area = [0, 0];
+      this.userSelects.select = "";
+      this.search = "";
+      this.transport.type = "";
+      this.transport.name = "";
+      this.searchlisting();
     },
     getSaleUser: function () {
       let postBody = {};
@@ -896,6 +933,29 @@ export default {
           console.log("err : " + JSON.stringify(err));
           reject(err);
         });
+    },
+    getUserList: function () {
+      const AXIOS = axios.create({
+        baseURL: process.env.VUE_APP_BACKEND_URL,
+      });
+      let postBody = {
+        role: "",
+        id: "",
+      };
+      AXIOS.post(`api/user/list`, postBody, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+      }).then((resp) => {
+        console.log("getUser all resp : " + JSON.stringify(resp));
+        this.userSelects.data = resp.data.map((item) => {
+          return {
+            value: item.username,
+            label: item.firstName + " " + item.lastName,
+          };
+        });
+      });
     },
     getProjectList: function () {
       let postBody = {
@@ -1086,9 +1146,7 @@ export default {
   button.btn {
     margin-right: 2px;
   }
-  .select-width-100 {
-    width: 100%;
-  }
+
   .title-project {
     font-size: 1.714em;
     line-height: 1.45em;

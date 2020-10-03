@@ -61,10 +61,6 @@ locale.use(lang);
 Vue.use(ElementUI);
 Vue.prototype.$http = Axios;
 const token = localStorage.getItem('token')
-Vue.prototype.$http.defaults.baseURL = process.env.VUE_APP_BACKEND_URL
-if (token) {
-  Vue.prototype.$http.defaults.headers.common['Authorization'] = 'Bearer ' + token
-}
 
 // configure router
 const router = new VueRouter({

@@ -299,7 +299,7 @@ const routes = [
       },
       {
         path: 'lead/create',
-        name: 'Lead',
+        name: 'Lead Create',
         component: LeadCreate
       },
     ]

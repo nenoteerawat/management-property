@@ -715,7 +715,7 @@ export default {
         this.userSelects.data = resp.data.map((item) => {
           return {
             value: item.username,
-            label: item.username,
+            label: item.firstName + ' ' + item.lastName,
           };
         });
       });
