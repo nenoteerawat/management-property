@@ -476,6 +476,9 @@
           <template>
             <div class="row">
               <div class="col-md-12" v-if="getUser.roles[0] == 'ROLE_ADMIN'">
+                <div>
+                  <label>sale</label>
+                </div>
                 <el-select
                   class="select-primary select-width-100"
                   placeholder="select"
@@ -483,6 +486,24 @@
                 >
                   <el-option
                     v-for="option in saleUserSelects.data"
+                    class="select-primary"
+                    :value="option.value"
+                    :label="option.label"
+                    :key="option.label"
+                  ></el-option>
+                </el-select>
+              </div>
+              <div class="col-md-12">
+                <div>
+                  <label>lead</label>
+                </div>
+                <el-select
+                  class="select-primary select-width-100"
+                  placeholder="select"
+                  v-model="leadSelects.select"
+                >
+                  <el-option
+                    v-for="option in leadSelects.data"
                     class="select-primary"
                     :value="option.value"
                     :label="option.label"
@@ -653,6 +674,7 @@ export default {
     this.getListing();
     this.getProjectList();
     if (this.getUser.roles[0] == "ROLE_ADMIN") this.getSaleUser();
+    this.getLead();
   },
 
   data() {
@@ -675,6 +697,10 @@ export default {
       modalsRow: {},
       tableColumns: [],
       saleUserSelects: {
+        select: "",
+        data: [],
+      },
+      leadSelects: {
         select: "",
         data: [],
       },
@@ -819,6 +845,30 @@ export default {
           reject(err);
         });
     },
+    getLead: function () {
+      let postBody = {};
+      const AXIOS = axios.create({
+        baseURL: process.env.VUE_APP_BACKEND_URL,
+      });
+      AXIOS.get(`api/lead/selects`, postBody, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+      })
+        .then((resp) => {
+          for (let value of resp.data) {
+            this.leadSelects.data.push({
+              value: value.id,
+              label: value.firstName + " " + value.lastName,
+            });
+          }
+        })
+        .catch((err) => {
+          console.log("err : " + JSON.stringify(err));
+          reject(err);
+        });
+    },
     getSaleUser: function () {
       let postBody = {};
       const AXIOS = axios.create({
@@ -901,6 +951,7 @@ export default {
     handleBooking() {
       let postBody = {
         listingId: this.modalsRow.id,
+        leadId: this.leadSelects.select,
         saleUsername: this.saleUserSelects.select,
       };
       const AXIOS = axios.create({
@@ -914,6 +965,7 @@ export default {
       })
         .then((resp) => {
           this.modals.classic = false;
+          this.getListing();
         })
         .catch((err) => {
           console.log("err : " + JSON.stringify(err));

@@ -10,6 +10,8 @@ const ProjectList = () => import(/* webpackChunkName: "widgets" */ 'src/componen
 const ProjectCreate = () => import(/* webpackChunkName: "widgets" */ 'src/components/Dashboard/Views/Pages/Project/ProjectCreate.vue')
 const UserList = () => import(/* webpackChunkName: "widgets" */ 'src/components/Dashboard/Views/Pages/User/UserList.vue')
 const UserCreate = () => import(/* webpackChunkName: "widgets" */ 'src/components/Dashboard/Views/Pages/User/UserCreate.vue')
+const LeadList = () => import(/* webpackChunkName: "widgets" */ 'src/components/Dashboard/Views/Pages/Lead/LeadList.vue')
+const LeadCreate = () => import(/* webpackChunkName: "widgets" */ 'src/components/Dashboard/Views/Pages/Lead/LeadCreate.vue')
 
 // Pages
 import User from 'src/components/Dashboard/Views/Pages/UserProfile.vue'
@@ -289,6 +291,16 @@ const routes = [
         path: 'user/create',
         name: 'User Create',
         component: UserCreate
+      },
+      {
+        path: 'lead',
+        name: 'Lead',
+        component: LeadList
+      },
+      {
+        path: 'lead/create',
+        name: 'Lead',
+        component: LeadCreate
       },
     ]
   },
