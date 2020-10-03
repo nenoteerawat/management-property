@@ -147,17 +147,17 @@ let tablesMenu = {
     }]
 }
 
-let approveChangeMenu = {
-  path: '/approve-change',
-  component: DashboardLayout,
-  redirect: '/approve-change/approve',
-  children: [
-    {
-      path: 'approve',
-      name: 'Approve Change Tables',
-      component: ApproveChange
-    }]
-}
+// let approveChangeMenu = {
+//   path: '/approve-change',
+//   component: DashboardLayout,
+//   redirect: '/approve',
+//   children: [
+//     {
+//       path: 'approve',
+//       name: 'Approve Change Tables',
+//       component: ApproveChange
+//     }]
+// }
 
 let mapsMenu = {
   path: '/maps',
@@ -239,7 +239,6 @@ const routes = [
   componentsMenu,
   formsMenu,
   tablesMenu,
-  approveChangeMenu,
   mapsMenu,
   pagesMenu,
   loginPage,
@@ -302,6 +301,11 @@ const routes = [
         name: 'Lead Create',
         component: LeadCreate
       },
+     {
+      path: 'approve',
+            name: 'Approve Change Tables',
+            component: ApproveChange
+     }
     ]
   },
   {path: '*', component: NotFound}

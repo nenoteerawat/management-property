@@ -96,7 +96,7 @@ export default [
     name: "Approve Change",
     icon: "nc-icon nc-single-copy-04",
     roles: ["ROLE_ADMIN", "ROLE_MANAGER"],
-    path: "/approve-change/approve"
+    path: "/admin/approve"
   },
   {
     name: "Calendar",
