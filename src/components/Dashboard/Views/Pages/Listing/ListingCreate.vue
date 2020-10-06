@@ -1576,7 +1576,7 @@ export default {
             verticalAlign: "top",
             type: "success",
           });
-          window.location.href = "/admin/listing";
+          this.$router.push("/admin/listing");
         })
         .catch((err) => {
           this.fullscreenLoading = false;

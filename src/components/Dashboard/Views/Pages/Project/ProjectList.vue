@@ -265,7 +265,7 @@ export default {
     },
     handleEdit(index, row) {
       console.log("row : " + row);
-      window.location.href = "/admin/project/create?id=" + row.id;
+      this.$router.push("/admin/project/create?id=" + row.id);
       // alert(`Your want to edit ${row.name}`);
     },
     handleDelete(index, row) {

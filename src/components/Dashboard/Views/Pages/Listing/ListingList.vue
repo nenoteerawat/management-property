@@ -1045,7 +1045,7 @@ export default {
       this.modals.classic = true;
     },
     handleEdit(index, row) {
-      window.location.href = "/admin/listing/create?id=" + row.id;
+      this.$router.push("/admin/listing/create?id=" + row.id);
     },
     handleDelete(index, row) {
       console.log("getUser : " + JSON.stringify(this.getUser));

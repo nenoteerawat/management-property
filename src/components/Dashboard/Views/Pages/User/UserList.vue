@@ -241,7 +241,7 @@ export default {
     handleEdit(index, row) {
           console.log("row : " + JSON.stringify(row));
       // console.log("row : "+row);
-      window.location.href = "/admin/user/create?id=" + row.username;
+      this.$router.push("/admin/user/create?id=" + row.username);
       // alert(`Your want to edit ${row.name}`);
     },
     handleDelete(index, row) {
