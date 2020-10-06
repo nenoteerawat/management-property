@@ -12,7 +12,11 @@
         <div class="card-body">
           <div class="row">
             <div class="col-md-6">
-              <el-select class="select-default" v-model="pagination.perPage" placeholder="Per page">
+              <el-select
+                class="select-default"
+                v-model="pagination.perPage"
+                placeholder="Per page"
+              >
                 <el-option
                   class="select-default"
                   v-for="item in pagination.perPageOptions"
@@ -44,9 +48,18 @@
                 :label="column.label"
                 sortable
               ></el-table-column>
-              <el-table-column class-name="action-buttons td-actions" align="right" label="จัดการ">
+              <el-table-column
+                class-name="action-buttons td-actions"
+                align="right"
+                label="จัดการ"
+              >
                 <template slot-scope="props">
-                  <p-button type="info" size="sm" icon @click="handleInfo(props.$index, props.row)">
+                  <p-button
+                    type="info"
+                    size="sm"
+                    icon
+                    @click="handleInfo(props.$index, props.row)"
+                  >
                     <i class="nc-icon nc-paper"></i>
                   </p-button>
                   <p-button
@@ -70,7 +83,9 @@
             </el-table>
           </div>
           <div class="col-sm-6 pagination-info">
-            <p class="category">Showing {{from + 1}} to {{to}} of {{total}} entries</p>
+            <p class="category">
+              Showing {{ from + 1 }} to {{ to }} of {{ total }} entries
+            </p>
           </div>
           <div class="col-sm-6">
             <p-pagination
@@ -91,12 +106,17 @@
           headerClasses="justify-content-center"
           modalClasses="modal-lg"
         >
-          <h4 slot="header" class="title title-up">รายละเอียดการเปลี่ยนแปลงข้อมูล</h4>
+          <h4 slot="header" class="title title-up">
+            รายละเอียดการเปลี่ยนแปลงข้อมูล
+          </h4>
           <template>
             <div class="row">
               <div class="col-md-12">
                 <el-table :data="tableDetailData">
-                  <el-table-column min-width="20" type="index"></el-table-column>
+                  <el-table-column
+                    min-width="20"
+                    type="index"
+                  ></el-table-column>
                   <el-table-column min-width="120" label="หัวข้อ">
                     <template slot-scope="props">
                       <div class="cell">
@@ -107,16 +127,30 @@
                   <el-table-column min-width="170" label="จากข้อมูล">
                     <template slot-scope="props">
                       <div class="cell">
-                        <h6 v-if="props.row.fromValue === props.row.toValue" class="text-success">{{ props.row.fromValue }}</h6>
-                        <h6 v-else class="text-danger">{{ props.row.fromValue }}</h6>
+                        <h6
+                          v-if="props.row.fromValue === props.row.toValue"
+                          class="text-success"
+                        >
+                          {{ props.row.fromValue }}
+                        </h6>
+                        <h6 v-else class="text-danger">
+                          {{ props.row.fromValue }}
+                        </h6>
                       </div>
                     </template>
                   </el-table-column>
                   <el-table-column min-width="170" label="เป็นข้อมูล">
                     <template slot-scope="props">
                       <div class="cell">
-                        <h6 v-if="props.row.fromValue === props.row.toValue" class="text-success">{{ props.row.toValue }}</h6>
-                        <h6 v-else class="text-danger">{{ props.row.toValue }}</h6>
+                        <h6
+                          v-if="props.row.fromValue === props.row.toValue"
+                          class="text-success"
+                        >
+                          {{ props.row.toValue }}
+                        </h6>
+                        <h6 v-else class="text-danger">
+                          {{ props.row.toValue }}
+                        </h6>
                       </div>
                     </template>
                   </el-table-column>
@@ -134,11 +168,21 @@
           </template>
           <template slot="footer">
             <div class="left-side">
-              <p-button type="success" link @click="handleApprove(modalsIndex, modalsRow)">อนุมัติ</p-button>
+              <p-button
+                type="success"
+                link
+                @click="handleApprove(modalsIndex, modalsRow)"
+                >อนุมัติ</p-button
+              >
             </div>
             <div class="divider"></div>
             <div class="right-side">
-              <p-button type="danger" link @click="handleCancel(modalsIndex, modalsRow)">ยกเลิก</p-button>
+              <p-button
+                type="danger"
+                link
+                @click="handleCancel(modalsIndex, modalsRow)"
+                >ยกเลิก</p-button
+              >
             </div>
           </template>
         </modal>
@@ -246,13 +290,17 @@ export default {
         }
       )
         .then(() => {
-          let headers = { "Content-Type": "application/json" };
+          let headers = { "Content-Type": "application/json",
+          Authorization: "Bearer " + localStorage.getItem("token"), 
+          };
           let body = {
             changeLogId: row.id,
             isApprove: "true",
           };
-          Vue.prototype.$http
-            .post(`api/change/approve`, body, { headers })
+          const AXIOS = axios.create({
+            baseURL: process.env.VUE_APP_BACKEND_URL,
+          });
+          AXIOS.post(`api/change/approve`, body, { headers })
             .then((resp) => {
               this.getChangeList();
               this.modals.classic = false;
@@ -284,7 +332,10 @@ export default {
             changeLogId: row.id,
             isApprove: "false",
           };
-          Vue.prototype.$http
+          const AXIOS = axios.create({
+            baseURL: process.env.VUE_APP_BACKEND_URL,
+          });
+          AXIOS
             .post(`api/change/approve`, body, { headers })
             .then((resp) => {
               this.getChangeList();

@@ -87,10 +87,16 @@ export default [
     roles: ["ROLE_SALE", "ROLE_ADMIN"]
   },
   {
+    name: 'lead',
+    icon: 'nc-icon nc-circle-10',
+    path: '/admin/lead',
+    roles: ["ROLE_SALE","ROLE_ADMIN"]
+  },
+  {
     name: "Approve Change",
     icon: "nc-icon nc-single-copy-04",
     roles: ["ROLE_ADMIN", "ROLE_MANAGER"],
-    path: "/approve-change/approve"
+    path: "/admin/approve"
   },
   {
     name: "Calendar",

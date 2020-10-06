@@ -10,6 +10,8 @@ const ProjectList = () => import(/* webpackChunkName: "widgets" */ 'src/componen
 const ProjectCreate = () => import(/* webpackChunkName: "widgets" */ 'src/components/Dashboard/Views/Pages/Project/ProjectCreate.vue')
 const UserList = () => import(/* webpackChunkName: "widgets" */ 'src/components/Dashboard/Views/Pages/User/UserList.vue')
 const UserCreate = () => import(/* webpackChunkName: "widgets" */ 'src/components/Dashboard/Views/Pages/User/UserCreate.vue')
+const LeadList = () => import(/* webpackChunkName: "widgets" */ 'src/components/Dashboard/Views/Pages/Lead/LeadList.vue')
+const LeadCreate = () => import(/* webpackChunkName: "widgets" */ 'src/components/Dashboard/Views/Pages/Lead/LeadCreate.vue')
 
 // Pages
 import User from 'src/components/Dashboard/Views/Pages/UserProfile.vue'
@@ -145,17 +147,17 @@ let tablesMenu = {
     }]
 }
 
-let approveChangeMenu = {
-  path: '/approve-change',
-  component: DashboardLayout,
-  redirect: '/approve-change/approve',
-  children: [
-    {
-      path: 'approve',
-      name: 'Approve Change Tables',
-      component: ApproveChange
-    }]
-}
+// let approveChangeMenu = {
+//   path: '/approve-change',
+//   component: DashboardLayout,
+//   redirect: '/approve',
+//   children: [
+//     {
+//       path: 'approve',
+//       name: 'Approve Change Tables',
+//       component: ApproveChange
+//     }]
+// }
 
 let mapsMenu = {
   path: '/maps',
@@ -237,7 +239,6 @@ const routes = [
   componentsMenu,
   formsMenu,
   tablesMenu,
-  approveChangeMenu,
   mapsMenu,
   pagesMenu,
   loginPage,
@@ -290,6 +291,21 @@ const routes = [
         name: 'User Create',
         component: UserCreate
       },
+      {
+        path: 'lead',
+        name: 'Lead',
+        component: LeadList
+      },
+      {
+        path: 'lead/create',
+        name: 'Lead Create',
+        component: LeadCreate
+      },
+     {
+      path: 'approve',
+            name: 'Approve Change Tables',
+            component: ApproveChange
+     }
     ]
   },
   {path: '*', component: NotFound}
