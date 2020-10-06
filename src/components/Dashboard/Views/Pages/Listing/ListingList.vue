@@ -709,7 +709,7 @@ export default {
       alert(`Your want to action ${row.listing.name}`);
     },
     handleEdit(index, row) {
-      window.location.href = "/admin/listing/create?id=" + row.id;
+      this.$router.push("/admin/listing/create?id=" + row.id);
     },
     handleDelete(index, row) {
       console.log("getUser : " + JSON.stringify(this.getUser));
