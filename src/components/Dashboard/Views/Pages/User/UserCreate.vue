@@ -248,7 +248,7 @@ export default {
             verticalAlign: "top",
             type: "success",
           });
-          window.location.href = "/admin/user";
+          this.$router.push("/admin/user");
         })
         .catch((err) => {
           this.fullscreenLoading = false;

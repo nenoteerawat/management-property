@@ -408,7 +408,6 @@
                       size="sm"
                       icon
                       @click="handleDelete(props.$index, props.row)"
-                      v-if="getUser.roles[0] == 'ROLE_ADMIN'"
                     >
                       <i class="fa fa-times"></i>
                     </p-button>
@@ -818,6 +817,7 @@ export default {
             "But I must explain to you how all this mistaken idea of denouncing pleasure",
         },
       ],
+      comment: "",
     };
   },
 
@@ -1045,41 +1045,69 @@ export default {
       this.modals.classic = true;
     },
     handleEdit(index, row) {
-      window.location.href = "/admin/listing/create?id=" + row.id;
+      this.$router.push("/admin/listing/create?id=" + row.id);
+    },
+    deleteList(row){
+      let postBody = {
+        id: row.id,
+        comment: this.comment
+      };
+      console.log("postBody : " + JSON.stringify(postBody));
+      const AXIOS = axios.create({
+        baseURL: process.env.VUE_APP_BACKEND_URL,
+      });
+      AXIOS.post(`api/listing/delete`, postBody, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+        params: postBody,
+      }).then((resp) => {
+        this.$message({
+          type: "success",
+          message: "Delete completed",
+        });
+        this.getListing();
+      });
+    },
+    validateComment(input) {
+      console.log("input : " + input);
+      if (input == null || input.length < 1) {
+        return "Comment Not Found";
+      } else {
+        this.comment = input;
+        return true;
+      }
+    },
+    openBoxComment(row) {
+      this.$prompt("Please input your comment", "comment", {
+        confirmButtonText: "OK",
+        cancelButtonText: "Cancel",
+        inputValidator: this.validateComment,
+      })
+      .then(({ value }) => {
+        this.deleteList(row);
+      })
+      .catch(() => {
+        return false;
+      });
     },
     handleDelete(index, row) {
       console.log("getUser : " + JSON.stringify(this.getUser));
-
-      this.$confirm(
-        "This will permanently delete listing. Continue?",
-        "Warning",
-        {
-          confirmButtonText: "OK",
-          cancelButtonText: "Cancel",
-          type: "warning",
-        }
-      )
+      if(this.getUser.roles[0] === "ROLE_SALE"){
+        this.openBoxComment(row);
+      } else {
+        this.$confirm(
+          "This will permanently delete listing. Continue?",
+          "Warning",
+          {
+            confirmButtonText: "OK",
+            cancelButtonText: "Cancel",
+            type: "warning",
+          }
+        )
         .then(() => {
-          let postBody = {
-            id: row.id,
-          };
-          console.log("postBody : " + JSON.stringify(postBody));
-          const AXIOS = axios.create({
-            baseURL: process.env.VUE_APP_BACKEND_URL,
-          });
-          AXIOS.post(`api/listing/delete`, postBody, {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: "Bearer " + localStorage.getItem("token"),
-            },
-            params: postBody,
-          }).then((resp) => {
-            this.$message({
-              type: "success",
-              message: "Delete completed",
-            });
-            this.getListing();
-          });
+          this.deleteList(row);
         })
         .catch(() => {
           this.$message({
@@ -1087,6 +1115,7 @@ export default {
             message: "Delete canceled",
           });
         });
+      }
     },
     handleTaskEdit(index) {
       alert(`You want to edit task: ${JSON.stringify(this.tasks[index])}`);
@@ -1095,7 +1124,6 @@ export default {
       alert(`You want to delete task: ${JSON.stringify(this.tasks[index])}`);
     },
   },
-
   computed: {
     ...mapGetters({ getUser: "getUser" }),
     isLoggedIn: function () {

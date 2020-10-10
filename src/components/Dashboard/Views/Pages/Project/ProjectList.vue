@@ -103,7 +103,6 @@
                     size="sm"
                     icon
                     @click="handleDelete(props.$index, props.row)"
-                    v-if="getUser.roles[0]=='ROLE_ADMIN'"
                   >
                     <i class="fa fa-times"></i>
                   </p-button>
@@ -231,6 +230,7 @@ export default {
             "But I must explain to you how all this mistaken idea of denouncing pleasure",
         },
       ],
+      comment: "",
     };
   },
 
@@ -265,39 +265,68 @@ export default {
     },
     handleEdit(index, row) {
       console.log("row : " + row);
-      window.location.href = "/admin/project/create?id=" + row.id;
+      this.$router.push("/admin/project/create?id=" + row.id);
       // alert(`Your want to edit ${row.name}`);
     },
+    deleteProject(row) {
+      let postBody = {
+        id: row.id,
+        comment: this.comment,
+      };
+      console.log("postBody : " + JSON.stringify(postBody));
+      const AXIOS = axios.create({
+        baseURL: process.env.VUE_APP_BACKEND_URL,
+      });
+      AXIOS.post(`api/project/delete`, postBody, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+      }).then((resp) => {
+        this.$message({
+          type: "success",
+          message: "Delete completed",
+        });
+        this.getProject();
+      });
+    },
+    validateComment(input) {
+      console.log("input : " + input);
+      if (input == null || input.length < 1) {
+        return "Comment Not Found";
+      } else {
+        this.comment = input;
+        return true;
+      }
+    },
+    openBoxComment(row) {
+      this.$prompt("Please input your comment", "comment", {
+        confirmButtonText: "OK",
+        cancelButtonText: "Cancel",
+        inputValidator: this.validateComment,
+      })
+      .then(({ value }) => {
+        this.deleteProject(row);
+      })
+      .catch(() => {
+        return false;
+      });
+    },
     handleDelete(index, row) {
-      this.$confirm(
-        "This will permanently delete project. Continue?",
-        "Warning",
-        {
-          confirmButtonText: "OK",
-          cancelButtonText: "Cancel",
-          type: "warning",
-        }
-      )
+      if(this.getUser.roles[0] === "ROLE_SALE"){
+        this.openBoxComment(row);
+      } else {
+        this.$confirm(
+          "This will permanently delete project. Continue?",
+          "Warning",
+          {
+            confirmButtonText: "OK",
+            cancelButtonText: "Cancel",
+            type: "warning",
+          }
+        )
         .then(() => {
-          let postBody = {
-            id: row.id,
-          };
-          console.log("postBody : " + JSON.stringify(postBody));
-          const AXIOS = axios.create({
-            baseURL: process.env.VUE_APP_BACKEND_URL,
-          });
-          AXIOS.post(`api/project/delete`, postBody, {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: "Bearer " + localStorage.getItem("token"),
-            },
-          }).then((resp) => {
-            this.$message({
-              type: "success",
-              message: "Delete completed",
-            });
-            this.getProject();
-          });
+          this.deleteProject(row);
         })
         .catch(() => {
           this.$message({
@@ -305,6 +334,7 @@ export default {
             message: "Delete canceled",
           });
         });
+      }
     },
     handleTaskEdit(index) {
       alert(`You want to edit task: ${JSON.stringify(this.tasks[index])}`);

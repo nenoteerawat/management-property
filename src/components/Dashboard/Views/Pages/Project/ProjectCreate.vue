@@ -512,7 +512,7 @@ export default {
             verticalAlign: "top",
             type: "success",
           });
-          window.location.href = "/admin/project";
+          this.$router.push("/admin/project");
         })
         .catch((err) => {
           this.fullscreenLoading = false;

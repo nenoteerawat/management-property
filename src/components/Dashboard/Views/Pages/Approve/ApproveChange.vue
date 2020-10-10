@@ -232,6 +232,10 @@ export default {
           label: "ประเภท",
         },
         {
+          prop: "submitType",
+          label: "การดำเดินการ",
+        },
+        {
           prop: "comment",
           label: "หมายเหตุ",
           minWidth: 100,
