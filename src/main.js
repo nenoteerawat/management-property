@@ -38,6 +38,7 @@ import Axios from 'axios'
 
 import "./assets/sass/paper-dashboard.scss";
 import "./assets/sass/demo.scss";
+import 'vue-search-select/dist/VueSearchSelect.css'
 
 import sidebarLinks from "./sidebarLinks";
 import "./registerServiceWorker";

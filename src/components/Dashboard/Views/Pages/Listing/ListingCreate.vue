@@ -756,6 +756,7 @@ export default {
         this.room.price = resp.data[0].room.price;
         this.room.priceRent = resp.data[0].room.priceRent;
         this.room.rentDetail = resp.data[0].room.rentDetail;
+        this.propertySelects.select = resp.data[0].room.propertyType;
         this.directionSelects.select = resp.data[0].room.direction;
         this.positionSelects.select = resp.data[0].room.position;
         this.scenerySelects.select = resp.data[0].room.scenery;
@@ -1463,12 +1464,6 @@ export default {
         });
       });
     },
-    showInput() {
-      this.tags.inputVisible = true;
-      this.$nextTick(() => {
-        this.$refs.saveTagInput.$refs.input.focus();
-      });
-    },
     handleInputConfirm() {
       let inputValue = this.tags.inputValue;
       if (inputValue) {
@@ -1517,6 +1512,7 @@ export default {
       let room = {
         projectId: this.project.id,
         type: this.radiosTypeRole,
+        propertyType : this.propertySelects.select,
         level: this.radios.level,
         standard: this.standardSelects.select,
         grade: this.gradeSelects.select,

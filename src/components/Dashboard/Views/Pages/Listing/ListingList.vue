@@ -232,7 +232,7 @@
                           v-show="props.row.room.exclusive"
                           slot="header"
                           type="success"
-                          >M
+                          >E
                         </badge>
                         <badge
                           v-if="props.row.status == 'BOOKING'"
