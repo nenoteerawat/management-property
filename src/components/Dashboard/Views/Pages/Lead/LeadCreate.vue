@@ -320,13 +320,14 @@
                   ></el-option>
                 </el-select>
               </div>
-              <!-- <div class="col-md-6">
+              <div class="col-md-12">
                 <fg-input
                   placeholder
                   label="เงิน"
+                  type="number"
                   v-model="lead.price"
                 ></fg-input>
-              </div> -->
+              </div>
               <div class="col-md-12">
                 <div>
                   <label>Pain Point</label>
@@ -595,6 +596,36 @@
             ></fg-input>
           </div>
         </div>
+        <div class="col-md-6">
+          <div>
+            <div class="row">
+              <div class="col-md-6">
+                <span>Difficulty : {{ difficulty }} %</span>
+              </div>
+              <div class="col-md-6">
+                <div class="pull-right">
+                  <span>ลุกค้าคุยง่ายแค่ไหน</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <el-slider v-model="difficulty"></el-slider>
+        </div>
+        <div class="col-md-6">
+          <div>
+            <div class="row">
+              <div class="col-md-6">
+                <span>Rapport : {{ rapport }} %</span>
+              </div>
+              <div class="col-md-6">
+                <div class="pull-right">
+                  <span>ลุกค้าเชื่อใจคุณแค่ไหน</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <el-slider v-model="rapport"></el-slider>
+        </div>
         <template slot="footer">
           <hr />
           <div class="stats">
@@ -648,31 +679,11 @@ export default {
 
   created: function () {
     this.getListings();
-    // if (this.$route.query.id) {
-    //   let postBody = {
-    //     username: this.$route.query.id,
-    //   };
-    //   console.log("postBody : " + JSON.stringify(postBody));
-    //   const AXIOS = axios.create({
-    //     baseURL: process.env.VUE_APP_BACKEND_URL,
-    //   });
-    //   AXIOS.post(`api/user/list`, postBody, {
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //       Authorization: "Bearer " + localStorage.getItem("token"),
-    //     },
-    //   }).then((resp) => {
-    //     console.log("resp : " + JSON.stringify(resp.data[0]));
-    //     this.btnAction = "Edit";
-    //     this.users.firstName = resp.data[0].firstName;
-    //     this.users.lastName = resp.data[0].lastName;
-    //     this.users.nickName = resp.data[0].nickName;
-    //     this.users.username = resp.data[0].username;
-    //     this.users.email = resp.data[0].email;
-    //     this.users.password = resp.data[0].password;
-    //     this.roleSelects.select = resp.data[0].roles[0].name;
-    //   });
-    // }
+    if (this.$route.query.id) {
+      setTimeout(() => {
+        this.getLead();
+      }, 500);
+    }
   },
 
   data() {
@@ -687,6 +698,10 @@ export default {
       amphoe: "",
       province: "",
       zipcode: "",
+
+      difficulty: 0,
+      rapport: 0,
+      info: 0,
 
       painPoints: {
         dynamicPainPoints: [],
@@ -751,6 +766,7 @@ export default {
         nickName: "",
         email: "",
         line: "",
+        price: "",
         phone: "",
         address: "",
         reason: "",
@@ -815,16 +831,113 @@ export default {
               text: value.projects[0].name + " - " + value.owner.listingCode,
             });
           }
+          // console.log(
+          //   "listingSelects resp : " + JSON.stringify(this.listingSelects)
+          // );
         })
         .catch((err) => {
           console.log("err : " + JSON.stringify(err));
           reject(err);
         });
     },
-    getDetailListing(items, lastSelectItem) {
-      this.items = items;
-      this.lastSelectItem = lastSelectItem;
-      console.log("getDetailListing");
+    getLead: function () {
+      let paramsValue = {
+        id: this.$route.query.id,
+      };
+      const AXIOS = axios.create({
+        baseURL: process.env.VUE_APP_BACKEND_URL,
+      });
+      AXIOS.get(`api/lead/get`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+        params: paramsValue,
+      })
+        .then((resp) => {
+          // console.log("getLead resp : " + JSON.stringify(resp.data));
+          this.lead = resp.data;
+          //listingLead
+          if (resp.data.listingByLead != null) {
+            let selectListing = this.listingSelects.filter((listing) => {
+              if (listing.value == resp.data.listingByLead.id) return listing;
+            });
+            this.listingByLead.value = selectListing[0].value;
+            this.listingByLead.text = selectListing[0].text;
+            this.listingByLead.propertyType = this.dataPropertyType.filter(
+              (data) => {
+                if (data.value == resp.data.listingByLead.room.propertyType)
+                  return true;
+              }
+            )[0].label;
+            this.listingByLead.area = resp.data.listingByLead.room.area;
+            this.listingByLead.floor = resp.data.listingByLead.room.floor;
+            this.listingByLead.direction = this.dataDirection.filter((data) => {
+              if (data.value == resp.data.listingByLead.room.direction)
+                return true;
+            })[0].label;
+            this.listingByLead.notes = resp.data.listingByLeadNotes;
+          }
+
+          //listingAdmin
+          if (resp.data.listingByAdmin != null) {
+            let selectListing = this.listingSelects.filter((listing) => {
+              if (listing.value == resp.data.listingByAdmin.id) return listing;
+            });
+            this.listingByAdmin.value = selectListing[0].value;
+            this.listingByAdmin.text = selectListing[0].text;
+            this.listingByAdmin.propertyType = this.dataPropertyType.filter(
+              (data) => {
+                if (data.value == resp.data.listingByAdmin.room.propertyType)
+                  return true;
+              }
+            )[0].label;
+            this.listingByAdmin.area = resp.data.listingByAdmin.room.area;
+            this.listingByAdmin.floor = resp.data.listingByAdmin.room.floor;
+            this.listingByAdmin.direction = this.dataDirection.filter(
+              (data) => {
+                if (data.value == resp.data.listingByAdmin.room.direction)
+                  return true;
+              }
+            )[0].label;
+            this.listingByAdmin.notes = resp.data.listingByAdminNotes;
+          }
+
+          //listingSale
+          if (resp.data.listingBySale != null) {
+            let selectListing = this.listingSelects.filter((listing) => {
+              if (listing.value == resp.data.listingBySale.id) return listing;
+            });
+            this.listingBySale.value = selectListing[0].value;
+            this.listingBySale.text = selectListing[0].text;
+            this.listingBySale.propertyType = this.dataPropertyType.filter(
+              (data) => {
+                if (data.value == resp.data.listingBySale.room.propertyType)
+                  return true;
+              }
+            )[0].label;
+            this.listingBySale.area = resp.data.listingBySale.room.area;
+            this.listingBySale.floor = resp.data.listingBySale.room.floor;
+            this.listingBySale.direction = this.dataDirection.filter((data) => {
+              if (data.value == resp.data.listingBySale.room.direction)
+                return true;
+            })[0].label;
+            this.listingBySale.notes = resp.data.listingBySaleNotes;
+          }
+
+          this.gradeSelects.select = resp.data.grade;
+          this.painPoints.dynamicPainPoints = resp.data.painPoints;
+          this.checkboxTypeRent = resp.data.typeRent;
+          this.checkboxTypeBuy = resp.data.typeBuy;
+          this.difficulty = resp.data.difficulty;
+          this.rapport = resp.data.rapport;
+          this.info = resp.data.info;
+          this.btnAction = "Edit";
+        })
+        .catch((err) => {
+          console.log("err : " + JSON.stringify(err));
+          reject(err);
+        });
     },
     handleInputConfirm() {
       let inputValue = this.painPoints.inputValue;
@@ -855,6 +968,7 @@ export default {
         listingBySale: this.listingBySale,
         painPoints: this.painPoints.dynamicPainPoints,
         grade: this.gradeSelects.select,
+        price: this.lead.price,
         typeBuy: this.checkboxTypeBuy,
         typeRent: this.checkboxTypeRent,
         firstName: this.lead.firstName,
@@ -875,6 +989,8 @@ export default {
         billingAmount: this.lead.billingAmount,
         preApprove: this.lead.preApprove,
         status: this.lead.status,
+        difficulty: this.difficulty,
+        rapport: this.rapport,
       };
       if (this.$route.query.id) {
         path = "api/lead/edit";
@@ -885,6 +1001,7 @@ export default {
           listingBySale: this.listingBySale,
           painPoints: this.painPoints.dynamicPainPoints,
           grade: this.gradeSelects.select,
+          price: this.lead.price,
           typeBuy: this.checkboxTypeBuy,
           typeRent: this.checkboxTypeRent,
           firstName: this.lead.firstName,
@@ -905,6 +1022,8 @@ export default {
           billingAmount: this.lead.billingAmount,
           preApprove: this.lead.preApprove,
           status: this.lead.status,
+          difficulty: this.difficulty,
+          rapport: this.rapport,
         };
       }
       console.log("postBody : " + JSON.stringify(postBody));
@@ -926,7 +1045,7 @@ export default {
             verticalAlign: "top",
             type: "success",
           });
-          window.location.href = "/admin/lead";
+          this.$router.push("/admin/lead");
         })
         .catch((err) => {
           this.fullscreenLoading = false;

@@ -60,11 +60,41 @@
                 :label="column.label"
                 sortable
               ></el-table-column>
+              <el-table-column min-width="100" label="Type">
+                <template slot-scope="props">
+                  <div class="cell" v-show="props.row.typeBuy">
+                    <span>
+                      Buy
+                    </span>
+                  </div>
+                  <div class="cell" v-show="props.row.typeRent">
+                    <span>
+                      Rent
+                    </span>
+                  </div>
+                </template>
+              </el-table-column>
+              <el-table-column label>
+                <template slot-scope="props">
+                  <div class="cell">
+                    <span>
+                      <i class="fa fa-plus" aria-hidden="true"></i>
+                      {{ props.row.createdBy.username }}
+                    </span>
+                  </div>
+                  <div class="cell">
+                    <span>
+                      <i class="fa fa-clock-o" aria-hidden="true"></i>
+                      {{ props.row.createdDateTime }}
+                    </span>
+                  </div>
+                </template>
+              </el-table-column>
               <el-table-column class-name="action-buttons td-actions" align="right" label="Actions">
                 <template slot-scope="props">
-                  <!-- <p-button type="info" size="sm" icon @click="handleLike(props.$index, props.row)">
+                  <p-button type="info" size="sm" icon @click="handleInfo(props.$index, props.row)">
                     <i class="fa fa-user"></i>
-                  </p-button>-->
+                  </p-button>
                   <p-button
                     type="success"
                     size="sm"
@@ -146,7 +176,7 @@ export default {
   },
 
   created: function () {
-    this.getUser();
+    this.getLead();
   },
 
   data() {
@@ -158,17 +188,13 @@ export default {
         total: 0,
       },
       searchQuery: "",
-      propsToSearch: ["username","firstName","lastName","nickName"],
+      propsToSearch: ["username","firstName",],
       tableColumns: [
         // {
         //   prop: "name",
         //   label: "Name",
         //   minWidth: 150,
         // },
-        {
-          prop: "username",
-          label: "username",
-        },
         {
           prop: "firstName",
           label: "ชื่อ",
@@ -178,12 +204,16 @@ export default {
           label: "นามสกุล",
         },
         {
-          prop: "nickName",
-          label: "ชื่อเล่น",
+          prop: "status",
+          label: "Status",
         },
         {
-          prop: "roles[0].name",
-          label: "role",
+          prop: "grade",
+          label: "grade",
+        },
+        {
+          prop: "painPoints",
+          label: "painPoints",
         },
       ],
       tableData: [],
@@ -217,13 +247,11 @@ export default {
   },
 
   methods: {
-    getUser: function () {
-      let postBody = {
-      };
+    getLead: function () {
       const AXIOS = axios.create({
         baseURL: process.env.VUE_APP_BACKEND_URL,
       });
-      AXIOS.post(`api/user/list`, postBody, {
+      AXIOS.get(`api/lead/list`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: "Bearer " + localStorage.getItem("token"),
@@ -235,13 +263,14 @@ export default {
           reject(err);
         });
     },
-    handleLike(index, row) {
-      alert(`Your clicked on Like button ${index}`);
+    handleInfo(index, row) {
+      // console.log("row : "+row);
+      window.location.href = "/admin/lead/view?id=" + row.id;
+      // alert(`Your want to edit ${row.name}`);
     },
     handleEdit(index, row) {
-          console.log("row : " + JSON.stringify(row));
       // console.log("row : "+row);
-      window.location.href = "/admin/lead/create?id=" + row.username;
+      window.location.href = "/admin/lead/create?id=" + row.id;
       // alert(`Your want to edit ${row.name}`);
     },
     handleDelete(index, row) {

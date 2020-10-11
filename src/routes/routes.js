@@ -12,7 +12,7 @@ const UserList = () => import(/* webpackChunkName: "widgets" */ 'src/components/
 const UserCreate = () => import(/* webpackChunkName: "widgets" */ 'src/components/Dashboard/Views/Pages/User/UserCreate.vue')
 const LeadList = () => import(/* webpackChunkName: "widgets" */ 'src/components/Dashboard/Views/Pages/Lead/LeadList.vue')
 const LeadCreate = () => import(/* webpackChunkName: "widgets" */ 'src/components/Dashboard/Views/Pages/Lead/LeadCreate.vue')
-
+const LeadView = () => import(/* webpackChunkName: "widgets" */ 'src/components/Dashboard/Views/Pages/Lead/LeadView.vue')
 // Pages
 import User from 'src/components/Dashboard/Views/Pages/UserProfile.vue'
 import TimeLine from 'src/components/Dashboard/Views/Pages/TimeLinePage.vue'
@@ -300,6 +300,11 @@ const routes = [
         path: 'lead/create',
         name: 'Lead Create',
         component: LeadCreate
+      },
+      {
+        path: 'lead/view',
+        name: 'Lead view',
+        component: LeadView
       },
      {
       path: 'approve',
