@@ -676,6 +676,30 @@
               :label="column.label"
               sortable
             ></el-table-column>
+            <el-table-column min-width="170" label="สถานะ">
+              <template slot-scope="props">
+                <div class="cell">
+                  <h6
+                    v-if="props.row.done === 'COMPLETED'"
+                    class="text-success"
+                  >
+                    {{ props.row.done }}
+                  </h6>
+                  <h6 v-else class="text-warning">
+                    {{ props.row.done }}
+                    <p-button
+                      v-if="props.row.status !== 'BOOKING'"
+                      type="info"
+                      size="sm"
+                      icon
+                      @click="handleActionCompleted(props.$index, props.row)"
+                    >
+                      <i class="fa fa-check"></i>
+                    </p-button>
+                  </h6>
+                </div>
+              </template>
+            </el-table-column>
           </el-table>
           <!-- <table class="table">
             <tbody>
@@ -836,6 +860,29 @@
           </fg-input>
         </div>
       </div>
+      <div class="col-md-12">
+        <fieldset>
+          <div class="form-group">
+            <label class="control-label">สถานะ</label>
+            <div class="col-md-12">
+              <p-radio
+                label="1"
+                v-model="radios.done"
+                value="1"
+                :inline="true"
+                >Pending</p-radio
+              >
+              <p-radio
+                label="2"
+                v-model="radios.done"
+                value="2"
+                :inline="true"
+                >Completed</p-radio
+              >
+            </div>
+          </div>
+        </fieldset>
+      </div>
       <template slot="footer">
         <p-button @click="createActionLog">Add</p-button>
         <p-button type="danger" @click.native="modals.actionLog = false"
@@ -915,6 +962,9 @@ export default {
         inputVisible: true,
         inputValue: "",
       },
+      radios: {
+        done: "1",
+      },
       actionDateTime: new Date(),
       comment: "",
       actionTypeSelects: {
@@ -965,45 +1015,49 @@ export default {
         {
           prop: "comment",
           label: "Comment",
+          minWidth: 120,
+
         },
         {
           prop: "actionDateTime",
-          label: "DateTime",
+          label: "วันที่",
+          minWidth: 75,
         },
         {
           prop: "status",
           label: "Status",
+          minWidth: 100,
         },
       ],
       tasks: [
-        {
-          done: true,
-          comment:
-            'Sign contract for "What are conference organizers afraid of?"',
-          date: "2020-10-01",
-          status: "following",
-        },
-        {
-          done: false,
-          comment:
-            "Lines From Great Russian Literature? Or E-mails From My Boss?",
-          date: "2020-10-01",
-          status: "following",
-        },
-        {
-          done: true,
-          comment:
-            "Using dummy content or fake information in the Web design process can result in products with unrealistic",
-          date: "2020-10-01",
-          status: "following",
-        },
-        {
-          done: false,
-          comment:
-            "But I must explain to you how all this mistaken idea of denouncing pleasure",
-          date: "2020-10-01",
-          status: "following",
-        },
+        // {
+        //   done: true,
+        //   comment:
+        //     'Sign contract for "What are conference organizers afraid of?"',
+        //   date: "2020-10-01",
+        //   status: "following",
+        // },
+        // {
+        //   done: false,
+        //   comment:
+        //     "Lines From Great Russian Literature? Or E-mails From My Boss?",
+        //   date: "2020-10-01",
+        //   status: "following",
+        // },
+        // {
+        //   done: true,
+        //   comment:
+        //     "Using dummy content or fake information in the Web design process can result in products with unrealistic",
+        //   date: "2020-10-01",
+        //   status: "following",
+        // },
+        // {
+        //   done: false,
+        //   comment:
+        //     "But I must explain to you how all this mistaken idea of denouncing pleasure",
+        //   date: "2020-10-01",
+        //   status: "following",
+        // },
       ],
     };
   },
@@ -1023,12 +1077,17 @@ export default {
         },
       }).then((resp) => {
         // console.log("getActionLog : " + JSON.stringify(resp.data));
+        let actionTypeSelects = this.actionTypeSelects;
         this.tasks = resp.data.map((item) => {
+          let status = actionTypeSelects.data.filter(function (actionType) {
+            if (actionType.value === item.status) return true;
+          });
           return {
             id: item.id,
             comment: item.comment,
             actionDateTime: item.actionDateTime,
-            status: item.status,
+            status: status[0].label,
+            done: item.done,
           };
         });
       });
@@ -1079,6 +1138,47 @@ export default {
           reject(err);
         });
     },
+    handleActionCompleted: function (index, row) {
+      this.fullscreenLoading = true;
+      console.log("handleActionCompleted row : " + JSON.stringify(row));
+      let postBody = {
+        id: row.id,
+      };
+      // console.log("postBody : " + JSON.stringify(postBody));
+      const AXIOS = axios.create({
+        baseURL: process.env.VUE_APP_BACKEND_URL,
+      });
+      AXIOS.post("api/actionLog/updateStatus", postBody, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+      })
+        .then((resp) => {
+          this.fullscreenLoading = false;
+          this.$notify({
+            message: "Success",
+            icon: "fa fa-gift",
+            horizontalAlign: "center",
+            verticalAlign: "top",
+            type: "success",
+          });
+          this.getActionLog();
+        })
+        .catch((err) => {
+          this.fullscreenLoading = false;
+          this.$notify({
+            message: "Error",
+            // icon: 'fa fa-gift',
+            // component: NotificationTemplate,
+            horizontalAlign: "center",
+            verticalAlign: "top",
+            type: "warning",
+          });
+          console.log("err : " + JSON.stringify(err));
+          reject(err);
+        });
+    },
     createActionLog: function () {
       this.fullscreenLoading = true;
 
@@ -1087,6 +1187,7 @@ export default {
         comment: this.comment,
         actionDateTime: this.actionDateTime,
         leadId: this.$route.query.id,
+        done: this.radios.done,
         // listingId: this.listingId,
       };
       console.log("postBody : " + JSON.stringify(postBody));
@@ -1109,6 +1210,17 @@ export default {
             type: "success",
           });
           this.modals.actionLog = false;
+
+          let status = this.actionTypeSelects.data.filter(function (actionType) {
+            if (actionType.value === resp.data.status) return true;
+          });
+          this.tasks.unshift({
+            id: resp.data.id,
+            comment: resp.data.comment,
+            actionDateTime: resp.data.actionDateTime,
+            status: status[0].label,
+            done: resp.data.done,
+          });
         })
         .catch((err) => {
           this.fullscreenLoading = false;
