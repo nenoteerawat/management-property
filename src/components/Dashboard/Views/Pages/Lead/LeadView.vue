@@ -86,7 +86,7 @@
                   {{
                     projects.filter(function (project) {
                       if (project.id === lead.listingByLead.room.projectId)
-                        return project;
+                        return true;
                     })[0].name
                   }}
                 </span>
@@ -159,7 +159,7 @@
                   {{
                     projects.filter(function (project) {
                       if (project.id === lead.listingByAdmin.room.projectId)
-                        return project;
+                        return true;
                     })[0].name
                   }}
                 </span>
@@ -430,7 +430,7 @@
                       {{
                         projects.filter(function (project) {
                           if (project.id === lead.listingBySale.room.projectId)
-                            return project;
+                            return true;
                         })[0].name
                       }}
                     </span>
@@ -514,7 +514,7 @@
                       {{
                         projects.filter(function (project) {
                           if (project.id === lead.listingBySale.room.projectId)
-                            return project;
+                            return true;
                         })[0].name
                       }}
                     </span>
@@ -829,15 +829,15 @@
           <label>Date</label>
           <fg-input>
             <el-date-picker
-              v-model="actionDate"
-              type="date"
+              v-model="actionDateTime"
+              type="datetime"
               placeholder="Pick a day"
             ></el-date-picker>
           </fg-input>
         </div>
       </div>
       <template slot="footer">
-        <p-button>Add</p-button>
+        <p-button @click="createActionLog">Add</p-button>
         <p-button type="danger" @click.native="modals.actionLog = false"
           >Close</p-button
         >
@@ -892,6 +892,7 @@ export default {
   created: function () {
     this.getLead();
     this.getProject();
+    this.getActionLog();
   },
 
   data() {
@@ -914,7 +915,7 @@ export default {
         inputVisible: true,
         inputValue: "",
       },
-      actionDate: new Date(),
+      actionDateTime: new Date(),
       comment: "",
       actionTypeSelects: {
         select: "",
@@ -963,15 +964,15 @@ export default {
       tableColumns: [
         {
           prop: "comment",
-          label: "comment",
+          label: "Comment",
         },
         {
-          prop: "date",
-          label: "date",
+          prop: "actionDateTime",
+          label: "DateTime",
         },
         {
           prop: "status",
-          label: "status",
+          label: "Status",
         },
       ],
       tasks: [
@@ -1011,6 +1012,27 @@ export default {
     goToEdit: function () {
       this.$router.push("/admin/lead/create?id=" + this.lead.id);
     },
+    getActionLog: function () {
+      const AXIOS = axios.create({
+        baseURL: process.env.VUE_APP_BACKEND_URL,
+      });
+      AXIOS.get(`api/actionLog/list`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+      }).then((resp) => {
+        // console.log("getActionLog : " + JSON.stringify(resp.data));
+        this.tasks = resp.data.map((item) => {
+          return {
+            id: item.id,
+            comment: item.comment,
+            actionDateTime: item.actionDateTime,
+            status: item.status,
+          };
+        });
+      });
+    },
     getProject: function () {
       let postBody = {
         role: "",
@@ -1046,13 +1068,58 @@ export default {
         params: paramsValue,
       })
         .then((resp) => {
-          console.log("getLead resp : " + JSON.stringify(resp.data));
+          // console.log("getLead resp : " + JSON.stringify(resp.data));
           this.lead = resp.data;
           // this.listingByLead = resp.data[0].listingByLead;
           // this.listingByAdmin = resp.data[0].listingByAdmin;
           // this.listingBySale = resp.data[0].listingBySale;
         })
         .catch((err) => {
+          console.log("err : " + JSON.stringify(err));
+          reject(err);
+        });
+    },
+    createActionLog: function () {
+      this.fullscreenLoading = true;
+
+      let postBody = {
+        status: this.actionTypeSelects.select,
+        comment: this.comment,
+        actionDateTime: this.actionDateTime,
+        leadId: this.$route.query.id,
+        // listingId: this.listingId,
+      };
+      console.log("postBody : " + JSON.stringify(postBody));
+      const AXIOS = axios.create({
+        baseURL: process.env.VUE_APP_BACKEND_URL,
+      });
+      AXIOS.post("api/actionLog/create", postBody, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+      })
+        .then((resp) => {
+          this.fullscreenLoading = false;
+          this.$notify({
+            message: "Success",
+            icon: "fa fa-gift",
+            horizontalAlign: "center",
+            verticalAlign: "top",
+            type: "success",
+          });
+          this.modals.actionLog = false;
+        })
+        .catch((err) => {
+          this.fullscreenLoading = false;
+          this.$notify({
+            message: "Error",
+            // icon: 'fa fa-gift',
+            // component: NotificationTemplate,
+            horizontalAlign: "center",
+            verticalAlign: "top",
+            type: "warning",
+          });
           console.log("err : " + JSON.stringify(err));
           reject(err);
         });

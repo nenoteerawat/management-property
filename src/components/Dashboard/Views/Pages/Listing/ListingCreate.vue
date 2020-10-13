@@ -680,7 +680,12 @@ export default {
   },
 
   created: function () {
-    // `this` points to the vm instance
+    
+    if(this.getUser.roles[0] === "ROLE_SALE")
+    {
+      this.getListingCode(this.getUser.username);
+    }
+
     let postBody = {
       role: "",
       id: "",
