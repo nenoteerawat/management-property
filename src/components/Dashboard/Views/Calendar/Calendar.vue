@@ -11,19 +11,19 @@
               :events="events"
               :selectable="true"
               @dateClick="dateClick"
+              @eventClick="eventClick"
               :header="header"
               :buttonIcons="buttonIcons"
               :selectHelper="true"
+              :locale="th"
+              :eventTextColor="white"
             />
           </div>
         </div>
       </div>
     </div>
     <div class="row">
-      <modal
-        :show.sync="modals.actionLog"
-        headerClasses="justify-content-center"
-      >
+      <modal :show.sync="modals.actionLog" headerClasses="justify-content-center">
         <h4 slot="header" class="title title-up">Action Log</h4>
 
         <div class="col-md-12">
@@ -67,8 +67,32 @@
             </fg-input>
           </div>
         </div>
+        <div class="col-md-12">
+          <fieldset>
+            <div class="form-group">
+              <label class="control-label">สถานะ</label>
+              <div class="col-md-12">
+                <p-radio
+                  label="1"
+                  v-model="radios.done"
+                  value="1"
+                  :inline="true"
+                  >Pending</p-radio
+                >
+                <p-radio
+                  label="2"
+                  v-model="radios.done"
+                  value="2"
+                  :inline="true"
+                  >Completed</p-radio
+                >
+              </div>
+            </div>
+          </fieldset>
+        </div>
         <template slot="footer">
-          <p-button @click="createActionLog">Add</p-button>
+          <p-button v-if=isAddEvent @click="createActionLog">Add</p-button>
+          <p-button v-if=!isAddEvent @click="editActionLog">Edit</p-button>
           <p-button type="danger" @click.native="modals.actionLog = false"
             >Close</p-button
           >
@@ -78,7 +102,8 @@
   </div>
 </template>
 <script>
-import Swal from "sweetalert2";
+// import Swal from "sweetalert2";
+import axios from "axios";
 import FullCalendar from "@fullcalendar/vue";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
@@ -97,6 +122,9 @@ export default {
     [Select.name]: Select,
     [Option.name]: Option,
   },
+    created: function () {
+    this.listActionLog();
+  },
   data() {
     return {
       calendarPlugins: [dayGridPlugin, interactionPlugin, timeGridPlugin],
@@ -112,67 +140,67 @@ export default {
         nextYear: "fc-icon-chevron-right",
       },
       events: [
-        {
-          title: "All Day Event",
-          start: new Date(y, m, 1),
-          className: "event-default",
-          dataPropE: {aaa: 'nenot', bbb:'sdfefefef', sss:'ssssss'},
-          disableDragging: true,
-        },
-        {
-          id: 999,
-          title: "Repeating Event",
-          start: new Date(y, m, d - 4, 6, 0),
-          allDay: false,
-          className: "event-rose",
-        },
-        {
-          id: 999,
-          title: "Repeating Event",
-          start: new Date(y, m, d + 3, 6, 0),
-          allDay: false,
-          className: "event-rose",
-        },
-        {
-          title: "Meeting",
-          start: new Date(y, m, d - 1, 10, 30),
-          allDay: false,
-          className: "event-green",
-        },
-        {
-          title: "Lunch",
-          start: new Date(y, m, d + 7, 12, 0),
-          end: new Date(y, m, d + 7, 14, 0),
-          allDay: false,
-          className: "event-red",
-        },
-        {
-          title: "Md-pro Launch",
-          start: new Date(y, m, d - 2, 12, 0),
-          allDay: true,
-          className: "event-azure",
-        },
-        {
-          title: "Birthday Party",
-          start: new Date(y, m, d + 1, 19, 0),
-          end: new Date(y, m, d + 1, 22, 30),
-          allDay: false,
-          className: "event-azure",
-        },
-        {
-          title: "Click for Creative Tim",
-          start: new Date(y, m, 21),
-          end: new Date(y, m, 23),
-          url: "http://www.creative-tim.com/",
-          className: "event-orange",
-        },
-        {
-          title: "Click for Google",
-          start: new Date(y, m, 21),
-          end: new Date(y, m, 23),
-          url: "http://www.creative-tim.com/",
-          className: "event-orange",
-        },
+        // {
+        //   title: "All Day Event",
+        //   start: new Date(y, m, 1),
+        //   className: "event-default",
+        //   dataPropE: {aaa: 'nenot', bbb:'sdfefefef', sss:'ssssss'},
+        //   disableDragging: true,
+        // },
+        // {
+        //   id: 999,
+        //   title: "Repeating Event",
+        //   start: new Date(y, m, d - 4, 6, 0),
+        //   allDay: false,
+        //   className: "event-rose",
+        // },
+        // {
+        //   id: 999,
+        //   title: "Repeating Event",
+        //   start: new Date(y, m, d + 3, 6, 0),
+        //   allDay: false,
+        //   className: "event-rose",
+        // },
+        // {
+        //   title: "Meeting",
+        //   start: new Date(y, m, d - 1, 10, 30),
+        //   allDay: false,
+        //   className: "event-green",
+        // },
+        // {
+        //   title: "Lunch",
+        //   start: new Date(y, m, d + 7, 12, 0),
+        //   end: new Date(y, m, d + 7, 14, 0),
+        //   allDay: false,
+        //   className: "event-red",
+        // },
+        // {
+        //   title: "Md-pro Launch",
+        //   start: new Date(y, m, d - 2, 12, 0),
+        //   allDay: true,
+        //   className: "event-azure",
+        // },
+        // {
+        //   title: "Birthday Party",
+        //   start: new Date(y, m, d + 1, 19, 0),
+        //   end: new Date(y, m, d + 1, 22, 30),
+        //   allDay: false,
+        //   className: "event-azure",
+        // },
+        // {
+        //   title: "Click for Creative Tim",
+        //   start: new Date(y, m, 21),
+        //   end: new Date(y, m, 23),
+        //   url: "http://www.creative-tim.com/",
+        //   className: "event-orange",
+        // },
+        // {
+        //   title: "Click for Google",
+        //   start: new Date(y, m, 21),
+        //   end: new Date(y, m, 23),
+        //   url: "http://www.creative-tim.com/",
+        //   className: "event-orange",
+        // },
       ],
       modals: {
         actionLog: false,
@@ -194,6 +222,11 @@ export default {
       comment: "",
       actionDateTime: "",
       fullscreenLoading: false,
+      radios: {
+        done: "1",
+      },
+      isAddEvent: true,
+      eventId: '',
     };
   },
   methods: {
@@ -201,9 +234,44 @@ export default {
       console.log(info);
       let calendarApi = this.$refs.calendar.getApi();
       console.log("events : " + this.$refs.calendar.events);
-      console.log("info : " + info);
+      console.log("info jsEvent : " + info.jsEvent);
+      console.log("info resource : " + info.resource)
+      this.radios.done = "1";
+      this.comment = "";
+      this.actionTypeSelects.select = "";
       this.actionDateTime = info.date;
+      this.eventId = '';
+      this.isAddEvent = true;
       this.modals.actionLog = true;
+    },
+    eventClick: function (info) {
+      console.log("click events id : " + info.event.id);
+      this.fullscreenLoading = true;
+      const AXIOS = axios.create({
+        baseURL: process.env.VUE_APP_BACKEND_URL,
+      });
+      AXIOS.get("api/actionLog/findById/" + info.event.id, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+      })
+        .then((resp) => {
+          this.fullscreenLoading = false;
+          console.log(resp.data);
+          this.radios.done = resp.data.done;
+          this.comment = resp.data.comment;
+          this.actionTypeSelects.select = resp.data.status
+          this.actionDateTime = resp.data.actionDateTime;
+          this.eventId = info.event.id;
+          this.isAddEvent = false;
+          this.modals.actionLog = true;
+        })
+        .catch((err) => {
+          this.fullscreenLoading = false;
+          console.log("err : " + JSON.stringify(err));
+          reject(err);
+        });
     },
     createActionLog: function () {
       this.fullscreenLoading = true;
@@ -213,6 +281,7 @@ export default {
         comment: this.comment,
         actionDateTime: this.actionDateTime,
         leadId: this.$route.query.id,
+        done: this.radios.done,
         // listingId: this.listingId,
       };
       console.log("postBody : " + JSON.stringify(postBody));
@@ -235,6 +304,7 @@ export default {
             type: "success",
           });
           this.modals.actionLog = false;
+          this.listActionLog();
         })
         .catch((err) => {
           this.fullscreenLoading = false;
@@ -250,17 +320,23 @@ export default {
           reject(err);
         });
     },
-    listActionLog: function () {
+    editActionLog: function () {
       this.fullscreenLoading = true;
 
       let postBody = {
-
+        id : this.eventId,
+        status: this.actionTypeSelects.select,
+        comment: this.comment,
+        actionDateTime: this.actionDateTime,
+        leadId: this.$route.query.id,
+        done: this.radios.done,
+        // listingId: this.listingId,
       };
       console.log("postBody : " + JSON.stringify(postBody));
       const AXIOS = axios.create({
         baseURL: process.env.VUE_APP_BACKEND_URL,
       });
-      AXIOS.post("/actionLog/list", postBody, {
+      AXIOS.post("api/actionLog/edit", postBody, {
         headers: {
           "Content-Type": "application/json",
           Authorization: "Bearer " + localStorage.getItem("token"),
@@ -268,7 +344,43 @@ export default {
       })
         .then((resp) => {
           this.fullscreenLoading = false;
-
+          this.$notify({
+            message: "Success",
+            icon: "fa fa-gift",
+            horizontalAlign: "center",
+            verticalAlign: "top",
+            type: "success",
+          });
+          this.modals.actionLog = false;
+          this.listActionLog();
+        })
+        .catch((err) => {
+          this.fullscreenLoading = false;
+          this.$notify({
+            message: "Error",
+            horizontalAlign: "center",
+            verticalAlign: "top",
+            type: "warning",
+          });
+          console.log("err : " + JSON.stringify(err));
+          reject(err);
+        });
+    },
+    listActionLog: function () {
+      this.fullscreenLoading = true;
+      const AXIOS = axios.create({
+        baseURL: process.env.VUE_APP_BACKEND_URL,
+      });
+      AXIOS.get("api/actionLog/show/calendar", {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+      })
+        .then((resp) => {
+          this.fullscreenLoading = false;
+          console.log(resp.data);
+          this.events = resp.data
           this.modals.actionLog = false;
         })
         .catch((err) => {
