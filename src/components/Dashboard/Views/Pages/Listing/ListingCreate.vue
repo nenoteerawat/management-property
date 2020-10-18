@@ -156,14 +156,30 @@
             </h5>
             <div class="row">
               <div class="col-md-6">
-                <div>
-                  <label>Project</label>
-                  <span style="font-size: 35px">{{ project.name }}</span>
+                <div class="row">
+                  <div class="col-md-12">
+                    <label>Project : </label>
+                    <span style="font-size: 25px"> {{ project.name }}</span>
+                    <router-link to="/admin/project/create">
+                      <p-button type="success" class="pull-right" outline round>
+                        <i class="nc-icon nc-simple-add"></i> Add
+                      </p-button>
+                    </router-link>
+                  </div>
+                  <div class="col-md-12">
+                    <model-select
+                      :options="projectSelects"
+                      v-model="projectChoose"
+                      class="select"
+                      placeholder="select project"
+                    >
+                    </model-select>
+                  </div>
                 </div>
-                <autocomplete
+                <!-- <autocomplete
                   :search="search"
                   @submit="projectSearch"
-                ></autocomplete>
+                ></autocomplete> -->
               </div>
               <div class="col-md-3">
                 <div>
@@ -655,9 +671,8 @@
 </template>
 <script>
 import Vue from "vue";
-import { Card } from "src/components/UIComponents";
-import Autocomplete from "@trevoreyre/autocomplete-vue";
 import "@trevoreyre/autocomplete-vue/dist/style.css";
+import { Card } from "src/components/UIComponents";
 import PSwitch from "src/components/UIComponents/Switch.vue";
 import axios from "axios";
 import { required, email, confirmed } from "vee-validate/dist/rules";
@@ -665,6 +680,8 @@ import { extend } from "vee-validate";
 import { mapGetters } from "vuex";
 import VuePreview from "vue-preview";
 import VueUploadMultipleImage from "vue-upload-multiple-image";
+import { ModelSelect } from "vue-search-select";
+
 // defalut install
 Vue.use(VuePreview);
 
@@ -674,53 +691,34 @@ extend("required", required);
 export default {
   components: {
     Card,
-    Autocomplete,
     PSwitch,
     VueUploadMultipleImage,
+    ModelSelect,
   },
 
   created: function () {
-    
-    if(this.getUser.roles[0] === "ROLE_SALE")
-    {
-      this.getListingCode(this.getUser.username);
-    }
-
-    let postBody = {
-      role: "",
-      id: "",
-    };
     const AXIOS = axios.create({
       baseURL: process.env.VUE_APP_BACKEND_URL,
     });
-    AXIOS.post(`api/project/list`, postBody, {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: "Bearer " + localStorage.getItem("token"),
-      },
-    }).then((resp) => {
-      console.log("getProject all resp : " + JSON.stringify(resp));
-      this.projects = resp.data.map((item) => {
-        return item.name;
-      });
-      this.bakProjects = resp.data.map((item) => {
-        return { name: item.name, type: item.type };
-      });
-      console.log("projects : " + JSON.stringify(this.projects));
-    });
+    if (this.getUser.roles[0] === "ROLE_SALE") {
+      this.getListingCode(this.getUser.username);
+    }
+
+    this.getProject();
 
     if (this.getUser.roles[0] == "ROLE_ADMIN") {
+      let postBody = {};
       AXIOS.post(`api/user/list`, postBody, {
         headers: {
           "Content-Type": "application/json",
           Authorization: "Bearer " + localStorage.getItem("token"),
         },
       }).then((resp) => {
-        console.log("getUser all resp : " + JSON.stringify(resp));
+        // console.log("getUser all resp : " + JSON.stringify(resp));
         this.userSelects.data = resp.data.map((item) => {
           return {
             value: item.username,
-            label: item.firstName + ' ' + item.lastName,
+            label: item.firstName + " " + item.lastName,
           };
         });
       });
@@ -731,17 +729,14 @@ export default {
         role: "",
         id: this.$route.query.id,
       };
-      console.log("postBody : " + JSON.stringify(postBody));
-      const AXIOS = axios.create({
-        baseURL: process.env.VUE_APP_BACKEND_URL,
-      });
+      // console.log("edit postBody : " + JSON.stringify(postBody));
       AXIOS.post(`api/listing/list`, postBody, {
         headers: {
           "Content-Type": "application/json",
           Authorization: "Bearer " + localStorage.getItem("token"),
         },
       }).then((resp) => {
-        console.log("resp : " + JSON.stringify(resp.data[0]));
+        // console.log("resp : " + JSON.stringify(resp.data[0]));
         this.owner.listingCode = resp.data[0].owner.listingCode;
         this.owner.name = resp.data[0].owner.name;
         this.owner.line = resp.data[0].owner.line;
@@ -785,6 +780,10 @@ export default {
         //   });
         // }
         this.projectSearch(resp.data[0].projects[0].name);
+        this.buildingSelects.select = resp.data[0].room.building;
+        setTimeout(() => {
+          this.switchBuilding(resp.data[0].room.building);
+        }, 500);
         this.btnAction = "Edit";
       });
     }
@@ -827,11 +826,12 @@ export default {
       exclusiveShow: false,
       exclusive: false,
       maxImage: 10,
-      inputProjectSearch: "",
       radios: {
         level: "",
       },
       radiosTypeRole: "0",
+      projectSelects: [],
+      projectChoose: { value: "", text: "" },
       propertySelects: {
         select: "",
         data: [
@@ -1020,24 +1020,30 @@ export default {
       if (event) this.exclusiveShow = true;
       else this.exclusiveShow = false;
     },
+    projectChoose: function (event) {
+      this.projectSearch(event.text);
+
+      // let listing = this.listings.filter((listing) => {
+      //   if (listing.id == event.value) return true;
+      // });
+      // // console.log("listing : "+ JSON.stringify(listing))
+      // this.listingByLead.propertyType = this.dataPropertyType.filter((data) => {
+      //   if (data.value == listing[0].room.propertyType) return true;
+      // })[0].label;
+      // this.listingByLead.area = listing[0].room.area + " ตร.ม.";
+      // this.listingByLead.floor = listing[0].room.floor;
+      // this.listingByLead.direction = this.dataDirection.filter((data) => {
+      //   if (data.value == listing[0].room.direction) return true;
+      // })[0].label;
+    },
   },
 
   methods: {
-    search(input) {
-      if (input.length < 1) {
-        return this.projects;
-      }
-      return this.projects.filter((project) => {
-        return project.toLowerCase().startsWith(input.toLowerCase());
-      });
-    },
-    projectSearch(result) {
+    getProject: function () {
       let postBody = {
         role: "",
         id: "",
-        name: result,
       };
-      console.log("postBody : " + JSON.stringify(postBody));
       const AXIOS = axios.create({
         baseURL: process.env.VUE_APP_BACKEND_URL,
       });
@@ -1047,8 +1053,58 @@ export default {
           Authorization: "Bearer " + localStorage.getItem("token"),
         },
       }).then((resp) => {
-        console.log("resp : " + JSON.stringify(resp.data[0]));
-        this.inputProjectSearch = resp.data[0].name;
+        // console.log("getProject all resp : " + JSON.stringify(resp));
+        this.projectSelects = resp.data.map((item) => {
+          return {
+            value: item.id,
+            text: item.name,
+          };
+        });
+        // this.projects = resp.data.map((item) => {
+        //   return item.name;
+        // });
+        // this.bakProjects = resp.data.map((item) => {
+        //   return { name: item.name, type: item.type };
+        // });
+        // console.log("projects : " + JSON.stringify(this.projects));
+      });
+    },
+    projectSearch(result) {
+      this.project.id = "";
+      this.project.name = "";
+      this.project.type = "";
+      this.project.floor = "";
+      this.project.develop = "";
+      this.project.address = "";
+      this.district = "";
+      this.amphoe = "";
+      this.province = "";
+      this.zipcode = "";
+      this.project.floor = "";
+      this.project.building = "";
+      this.project.develop = "";
+      this.facilitySelects.selects = "";
+      this.propertySelects.select = "";
+      this.buildingSelects.select = "";
+      this.buildingSelects.data = [];
+      this.buildings = [];
+      this.transports = [];
+      let postBody = {
+        role: "",
+        id: "",
+        name: result,
+      };
+      // console.log("postBody : " + JSON.stringify(postBody));
+      const AXIOS = axios.create({
+        baseURL: process.env.VUE_APP_BACKEND_URL,
+      });
+      AXIOS.post(`api/project/list`, postBody, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+      }).then((resp) => {
+        // console.log("resp : " + JSON.stringify(resp.data[0]));
         this.project.id = resp.data[0].id;
         this.project.name = resp.data[0].name;
         this.project.type = resp.data[0].type;
@@ -1088,7 +1144,7 @@ export default {
       }
     },
     switchBuilding(event) {
-      console.log("switchBuilding");
+      // console.log("switchBuilding event : ", JSON.stringify(event));
       let building = this.buildings.filter(function (item) {
         if (item.building == event) {
           return {
@@ -1098,10 +1154,10 @@ export default {
           };
         }
       });
-      console.log("building : ", JSON.stringify(building));
       this.project.floor = building[0].floor;
       this.project.building = building[0].building;
       this.project.develop = building[0].develop;
+      this.floorSelects.data = [];
       for (let index = 1; index <= this.project.floor; index++) {
         this.floorSelects.data.push({
           label: "ชั้น " + index,
@@ -1167,7 +1223,7 @@ export default {
           sellDetail = item.label;
         }
       });
-      console.log("position : ", JSON.stringify(position));
+      // console.log("position : ", JSON.stringify(position));
 
       this.room.description =
         this.project.name +
@@ -1516,8 +1572,9 @@ export default {
       };
       let room = {
         projectId: this.project.id,
+        building: this.buildingSelects.select,
         type: this.radiosTypeRole,
-        propertyType : this.propertySelects.select,
+        propertyType: this.propertySelects.select,
         level: this.radios.level,
         standard: this.standardSelects.select,
         grade: this.gradeSelects.select,

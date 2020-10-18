@@ -652,7 +652,6 @@ import {
   Badge,
 } from "src/components/UIComponents";
 import "@trevoreyre/autocomplete-vue/dist/style.css";
-import { Select, Option } from "element-ui";
 import axios from "axios";
 import { mapGetters } from "vuex";
 import { extend } from "vee-validate";
@@ -667,8 +666,6 @@ extend("email", email);
 export default {
   components: {
     Card,
-    [Select.name]: Select,
-    [Option.name]: Option,
     TimeLine,
     TimeLineItem,
     Badge,

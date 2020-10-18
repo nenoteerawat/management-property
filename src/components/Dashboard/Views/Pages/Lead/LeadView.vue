@@ -95,12 +95,23 @@
           </div>
           <div class="col-md-12">
             <div class="row">
+              <div class="col-md-4">ตึก :</div>
+              <div class="col-md-5 d-flex align-items-end">
+                <span>
+                  {{ lead.listingByLead.room.building }}
+                </span>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-12">
+            <div class="row">
               <div class="col-md-4">Type :</div>
               <div class="col-md-5 d-flex align-items-end">
                 <span>
                   {{
-                    dataPropertyType[lead.listingByLead.room.propertyType - 1]
-                      .label
+                    dataPropertyType[
+                      Number(lead.listingByLead.room.propertyType) - 1
+                    ].label
                   }}</span
                 >
               </div>
@@ -128,7 +139,8 @@
               <div class="col-md-5 d-flex align-items-end">
                 <span>
                   {{
-                    dataDirection[lead.listingByLead.room.direction - 1].label
+                    dataDirection[Number(lead.listingByLead.room.direction) - 1]
+                      .label
                   }}</span
                 >
               </div>
@@ -168,12 +180,23 @@
           </div>
           <div class="col-md-12">
             <div class="row">
+              <div class="col-md-4">ตึก :</div>
+              <div class="col-md-5 d-flex align-items-end">
+                <span>
+                  {{ lead.listingByAdmin.room.building }}
+                </span>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-12">
+            <div class="row">
               <div class="col-md-4">Type :</div>
               <div class="col-md-5 d-flex align-items-end">
                 <span>
                   {{
-                    dataPropertyType[lead.listingByAdmin.room.propertyType - 1]
-                      .label
+                    dataPropertyType[
+                      Number(lead.listingByAdmin.room.propertyType) - 1
+                    ].label
                   }}</span
                 >
               </div>
@@ -201,7 +224,9 @@
               <div class="col-md-5 d-flex align-items-end">
                 <span>
                   {{
-                    dataDirection[lead.listingByAdmin.room.direction - 1].label
+                    dataDirection[
+                      Number(lead.listingByAdmin.room.direction) - 1
+                    ].label
                   }}</span
                 >
               </div>
@@ -439,6 +464,16 @@
               </div>
               <div class="col-md-12">
                 <div class="row">
+                  <div class="col-md-4">ตึก :</div>
+                  <div class="col-md-5 d-flex align-items-end">
+                    <span>
+                      {{ lead.listingBySale.room.building }}
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-12">
+                <div class="row">
                   <div class="col-md-4">Reason :</div>
                   <div class="col-md-5 d-flex align-items-end">
                     <span> {{ lead.reason }} </span>
@@ -452,7 +487,7 @@
                     <span>
                       {{
                         dataPropertyType[
-                          lead.listingBySale.room.propertyType - 1
+                          Number(lead.listingBySale.room.propertyType) - 1
                         ].label
                       }}</span
                     >
@@ -481,8 +516,9 @@
                   <div class="col-md-5 d-flex align-items-end">
                     <span>
                       {{
-                        dataDirection[lead.listingBySale.room.direction - 1]
-                          .label
+                        dataDirection[
+                          Number(lead.listingBySale.room.direction) - 1
+                        ].label
                       }}</span
                     >
                   </div>
@@ -523,6 +559,16 @@
               </div>
               <div class="col-md-12">
                 <div class="row">
+                  <div class="col-md-4">ตึก :</div>
+                  <div class="col-md-5 d-flex align-items-end">
+                    <span>
+                      {{ lead.listingBySale.room.building }}
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-12">
+                <div class="row">
                   <div class="col-md-4">Reason :</div>
                   <div class="col-md-5 d-flex align-items-end">
                     <span> {{ lead.reason }} </span>
@@ -536,7 +582,7 @@
                     <span>
                       {{
                         dataPropertyType[
-                          lead.listingBySale.room.propertyType - 1
+                          Number(lead.listingBySale.room.propertyType) - 1
                         ].label
                       }}</span
                     >
@@ -565,8 +611,9 @@
                   <div class="col-md-5 d-flex align-items-end">
                     <span>
                       {{
-                        dataDirection[lead.listingBySale.room.direction - 1]
-                          .label
+                        dataDirection[
+                          Number(lead.listingBySale.room.direction) - 1
+                        ].label
                       }}</span
                     >
                   </div>
@@ -667,7 +714,7 @@
       <div class="col-md-6">
         <div class="table-full-width table-tasks">
           <el-table :data="tasks">
-            <el-table-column type="index"></el-table-column>
+            <!-- <el-table-column type="index"></el-table-column> -->
             <el-table-column
               v-for="column in tableColumns"
               :key="column.label"
@@ -865,18 +912,10 @@
           <div class="form-group">
             <label class="control-label">สถานะ</label>
             <div class="col-md-12">
-              <p-radio
-                label="1"
-                v-model="radios.done"
-                value="1"
-                :inline="true"
+              <p-radio label="1" v-model="radios.done" value="1" :inline="true"
                 >Pending</p-radio
               >
-              <p-radio
-                label="2"
-                v-model="radios.done"
-                value="2"
-                :inline="true"
+              <p-radio label="2" v-model="radios.done" value="2" :inline="true"
                 >Completed</p-radio
               >
             </div>
@@ -1016,7 +1055,6 @@ export default {
           prop: "comment",
           label: "Comment",
           minWidth: 120,
-
         },
         {
           prop: "actionDateTime",
@@ -1067,6 +1105,9 @@ export default {
       this.$router.push("/admin/lead/create?id=" + this.lead.id);
     },
     getActionLog: function () {
+      let paramsValue = {
+        leadId: this.$route.query.id,
+      };
       const AXIOS = axios.create({
         baseURL: process.env.VUE_APP_BACKEND_URL,
       });
@@ -1075,6 +1116,7 @@ export default {
           "Content-Type": "application/json",
           Authorization: "Bearer " + localStorage.getItem("token"),
         },
+        params: paramsValue,
       }).then((resp) => {
         // console.log("getActionLog : " + JSON.stringify(resp.data));
         let actionTypeSelects = this.actionTypeSelects;
@@ -1211,7 +1253,9 @@ export default {
           });
           this.modals.actionLog = false;
 
-          let status = this.actionTypeSelects.data.filter(function (actionType) {
+          let status = this.actionTypeSelects.data.filter(function (
+            actionType
+          ) {
             if (actionType.value === resp.data.status) return true;
           });
           this.tasks.unshift({

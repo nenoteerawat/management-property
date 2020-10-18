@@ -458,7 +458,7 @@
             <tbody>
               <DailyBar
                 v-for="(task, index) in tasks"
-                :key="task.title"
+                :key="task.id"
                 :task="task"
                 :index="index"
                 @on-edit="handleTaskEdit"
@@ -685,6 +685,7 @@ export default {
     if (this.getUser.roles[0] == "ROLE_ADMIN") this.getSaleUser();
     this.getLead();
     this.getUserList();
+    this.getActionLog();
   },
 
   data() {
@@ -791,33 +792,22 @@ export default {
         },
       ],
       tableData: [],
-      tasks: [
-        {
-          done: true,
-          img: "/static/img/faces/ayo-ogunseinde-2.jpg",
-          title:
-            'Sign contract for "What are conference organizers afraid of?"',
-        },
-        {
-          done: false,
-          img: "/static/img/faces/erik-lucatero-2.jpg",
-          title:
-            "Lines From Great Russian Literature? Or E-mails From My Boss?",
-        },
-        {
-          done: true,
-          img: "/static/img/faces/kaci-baum-2.jpg",
-          title:
-            "Using dummy content or fake information in the Web design process can result in products with unrealistic",
-        },
-        {
-          done: false,
-          img: "/static/img/faces/joe-gardner-2.jpg",
-          title:
-            "But I must explain to you how all this mistaken idea of denouncing pleasure",
-        },
-      ],
+      tasks: [],
       comment: "",
+      actionTypeSelects: {
+        select: "",
+        data: [
+          { value: "1", label: "Call ได้" },
+          { value: "2", label: "Call ไม่ได้" },
+          { value: "3", label: "Chat ได้" },
+          { value: "4", label: "Chat ไม่ได้" },
+          { value: "5", label: "Following" },
+          { value: "6", label: "Apporintment" },
+          { value: "7", label: "Showing" },
+          { value: "8", label: "Negotiation" },
+          { value: "9", label: "Closing" },
+        ],
+      },
     };
   },
 
@@ -1001,12 +991,42 @@ export default {
       })
         .then((resp) => {
           this.tableData = resp.data;
-          console.log("getListing : " + JSON.stringify(this.tableData));
+          // console.log("getListing : " + JSON.stringify(this.tableData));
         })
         .catch((err) => {
           console.log("getListing err : " + JSON.stringify(err));
           reject(err);
         });
+    },
+    getActionLog: function () {
+      let paramsValue = {
+        type: "daily",
+      };
+      const AXIOS = axios.create({
+        baseURL: process.env.VUE_APP_BACKEND_URL,
+      });
+      AXIOS.get(`api/actionLog/list`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+        params: paramsValue,
+      }).then((resp) => {
+        console.log("getActionLog : " + JSON.stringify(resp.data));
+        let actionTypeSelects = this.actionTypeSelects;
+        this.tasks = resp.data.map((item) => {
+          let status = actionTypeSelects.data.filter(function (actionType) {
+            if (actionType.value === item.status) return true;
+          });
+          return {
+            id: item.id,
+            comment: item.comment,
+            actionDateTime: item.actionDateTime,
+            status: status[0].label,
+            done: item.done,
+          };
+        });
+      });
     },
     handleBooking() {
       let postBody = {
@@ -1047,10 +1067,10 @@ export default {
     handleEdit(index, row) {
       this.$router.push("/admin/listing/create?id=" + row.id);
     },
-    deleteList(row){
+    deleteList(row) {
       let postBody = {
         id: row.id,
-        comment: this.comment
+        comment: this.comment,
       };
       console.log("postBody : " + JSON.stringify(postBody));
       const AXIOS = axios.create({
@@ -1085,16 +1105,16 @@ export default {
         cancelButtonText: "Cancel",
         inputValidator: this.validateComment,
       })
-      .then(({ value }) => {
-        this.deleteList(row);
-      })
-      .catch(() => {
-        return false;
-      });
+        .then(({ value }) => {
+          this.deleteList(row);
+        })
+        .catch(() => {
+          return false;
+        });
     },
     handleDelete(index, row) {
       console.log("getUser : " + JSON.stringify(this.getUser));
-      if(this.getUser.roles[0] === "ROLE_SALE"){
+      if (this.getUser.roles[0] === "ROLE_SALE") {
         this.openBoxComment(row);
       } else {
         this.$confirm(
@@ -1106,15 +1126,15 @@ export default {
             type: "warning",
           }
         )
-        .then(() => {
-          this.deleteList(row);
-        })
-        .catch(() => {
-          this.$message({
-            type: "info",
-            message: "Delete canceled",
+          .then(() => {
+            this.deleteList(row);
+          })
+          .catch(() => {
+            this.$message({
+              type: "info",
+              message: "Delete canceled",
+            });
           });
-        });
       }
     },
     handleTaskEdit(index) {
