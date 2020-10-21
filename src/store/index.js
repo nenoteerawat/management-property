@@ -7,11 +7,19 @@ import VueCookies from 'vue-cookies';
 Vue.use(Vuex);
 Vue.use(VueCookies);
 
+function funIsEmpty(obj){
+  for(var key in obj) {
+      if(obj.hasOwnProperty(key))
+          return false;
+  }
+  return true;
+}
+
 export default new Vuex.Store({
   state: {
-    status: "",
+    status: localStorage.getItem("status") || "",
     token: localStorage.getItem("token") || "",
-    user: {}
+    user: localStorage.getItem("user") || {},
   },
   mutations: {
     auth_request(state) {
@@ -28,6 +36,9 @@ export default new Vuex.Store({
     logout(state) {
       state.status = "";
       state.token = "";
+    },
+    isEmpty(obj) {
+      return funIsEmpty(obj)
     }
   },
   actions: {
@@ -48,6 +59,7 @@ export default new Vuex.Store({
               username: resp.data.username
             };
             localStorage.setItem("token", user.token);
+            localStorage.setItem("user", user);
             axios.defaults.headers.common["Authorization"] = user.token;
             commit("auth_success", user);
             resolve(resp);
@@ -55,6 +67,7 @@ export default new Vuex.Store({
           .catch(err => {
             commit("auth_error");
             localStorage.removeItem("token");
+            localStorage.removeItem("user");
             reject(err);
           });
       });
@@ -63,16 +76,17 @@ export default new Vuex.Store({
       return new Promise((resolve, reject) => {
         commit("logout");
         localStorage.removeItem("token");
+        localStorage.removeItem("user");
         delete axios.defaults.headers.common["Authorization"];
         resolve();
       });
-    }
+    },
   },
   modules: {},
   getters: {
-    isLoggedIn: state => !!state.token,
-    authStatus: state => state.status,
-    getUser: state => state.user
+    isLoggedIn: state => !!(state.token && !funIsEmpty(state.user)),
+    authStatus: state => state.status && !funIsEmpty(state.user),
+    getUser: state => state.user,
   },
   plugins: [
     createPersistedState({

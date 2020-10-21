@@ -43,7 +43,7 @@ import { mapGetters } from "vuex";
 export default {
   computed: {
     ...mapGetters({
-      getUser: "getUser",
+      getUser: "getUser"
     }),
     checkAccessRole() {
       return this.sidebarLinks.filter((link) =>
