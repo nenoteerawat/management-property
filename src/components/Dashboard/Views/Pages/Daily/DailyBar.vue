@@ -11,8 +11,8 @@
     </td> -->
     <td class="text-left">
       {{ task.comment }}
-      <badge v-if="task.done === 'COMPLETED'" slot="header" type="success">{{ task.status }} </badge>
-      <badge v-else slot="header" type="warning">{{ task.status }} </badge>
+      <!-- <badge v-if="task.done === 'COMPLETED'" slot="header" type="success">{{ task.status }} </badge>
+      <badge v-else slot="header" type="warning">{{ task.status }} </badge> -->
     </td>
     <td class="td-actions text-right">
       <!-- <el-tooltip content="Edit" placement="top"> -->
