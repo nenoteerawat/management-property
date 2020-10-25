@@ -76,7 +76,7 @@
       <div class="col-md-3">
         <div class="row">
           <div class="col-md-12">
-            <h6>Problems</h6>
+            <h6>LifeStyle (A)</h6>
           </div>
           <div class="col-md-12">
             <div class="row">
@@ -161,7 +161,7 @@
       <div class="col-md-3">
         <div class="row">
           <div class="col-md-12">
-            <h6>Project by admin</h6>
+            <h6>Detail (B)</h6>
           </div>
           <div class="col-md-12">
             <div class="row">
@@ -249,7 +249,7 @@
       <div class="col-md-11 ml-auto mr-auto">
         <div class="Timeline" style="height: 100px">
           <!-- status Lead Start-->
-          <div class="event1">
+          <div class="event1" v-if="timeline.lead">
             <svg height="20" width="20">
               <circle cx="10" cy="11" r="5" fill="#fbc658" />
             </svg>
@@ -262,115 +262,211 @@
               y1="0"
               x2="150"
               y2="0"
-              style="stroke: #fbc658; stroke-width: 5"
+              class="active-line"
             />
           </svg>
           <!-- status Lead End -->
           <!-- status Action Start-->
-          <div class="event1">
+          <div class="event1" v-if="timeline.action">
+            <svg height="20" width="20">
+              <circle cx="10" cy="11" r="5" fill="#fbc658" />
+            </svg>
+            <div class="time">Action</div>
+          </div>
+          <!-- line -->
+          <svg height="5" width="150" v-if="timeline.action">
+            <line
+              x1="0"
+              y1="0"
+              x2="150"
+              y2="0"
+              class="active-line"
+            />
+          </svg>
+          <div class="event1" v-if="!timeline.action">
             <svg height="20" width="20">
               <circle cx="10" cy="11" r="5" fill="#004165" />
             </svg>
             <div class="time">Action</div>
           </div>
           <!-- line -->
-          <svg height="5" width="150">
+          <svg height="5" width="150" v-if="!timeline.action">
             <line
               x1="0"
               y1="0"
               x2="150"
               y2="0"
-              style="stroke: #004165; stroke-width: 5"
+              class="active-no-line"
             />
           </svg>
           <!-- status Action End -->
           <!-- status Following Start-->
-          <div class="event1">
+          <div class="event1" v-if="timeline.following">
+            <svg height="20" width="20">
+              <circle cx="10" cy="11" r="5" fill="#fbc658" />
+            </svg>
+            <div class="time">Following</div>
+          </div>
+          <!-- line -->
+          <svg height="5" width="150" v-if="timeline.following">
+            <line
+              x1="0"
+              y1="0"
+              x2="150"
+              y2="0"
+              class="active-line"
+            />
+          </svg>
+          <div class="event1" v-if="!timeline.following">
             <svg height="20" width="20">
               <circle cx="10" cy="11" r="5" fill="#004165" />
             </svg>
             <div class="time">Following</div>
           </div>
           <!-- line -->
-          <svg height="5" width="150">
+          <svg height="5" width="150" v-if="!timeline.following">
             <line
               x1="0"
               y1="0"
               x2="150"
               y2="0"
-              style="stroke: #004165; stroke-width: 5"
+              class="active-no-line"
             />
           </svg>
           <!-- status Following End -->
           <!-- status Appointment Start-->
-          <div class="event1">
+          <div class="event1" v-if="timeline.appointment">
+            <svg height="20" width="20">
+              <circle cx="10" cy="11" r="5" fill="#fbc658" />
+            </svg>
+            <div class="time">Appointment</div>
+          </div>
+          <!-- line -->
+          <svg height="5" width="150" v-if="timeline.appointment">
+            <line
+              x1="0"
+              y1="0"
+              x2="150"
+              y2="0"
+              class="active-line"
+            />
+          </svg>
+          <div class="event1" v-if="!timeline.appointment">
             <svg height="20" width="20">
               <circle cx="10" cy="11" r="5" fill="#004165" />
             </svg>
             <div class="time">Appointment</div>
           </div>
           <!-- line -->
-          <svg height="5" width="150">
+          <svg height="5" width="150" v-if="!timeline.appointment">
             <line
               x1="0"
               y1="0"
               x2="150"
               y2="0"
-              style="stroke: #004165; stroke-width: 5"
+              class="active-no-line"
             />
           </svg>
           <!-- status Appointment End -->
           <!-- status Showing Start-->
-          <div class="event1">
+          <div class="event1" v-if="timeline.showing">
+            <svg height="20" width="20">
+              <circle cx="10" cy="11" r="5" fill="#fbc658" />
+            </svg>
+            <div class="time">Showing</div>
+          </div>
+          <!-- line -->
+          <svg height="5" width="150" v-if="timeline.showing">
+            <line
+              x1="0"
+              y1="0"
+              x2="150"
+              y2="0"
+              class="active-line"
+            />
+          </svg>
+          <div class="event1" v-if="!timeline.showing">
             <svg height="20" width="20">
               <circle cx="10" cy="11" r="5" fill="#004165" />
             </svg>
             <div class="time">Showing</div>
           </div>
           <!-- line -->
-          <svg height="5" width="150">
+          <svg height="5" width="150" v-if="!timeline.showing">
             <line
               x1="0"
               y1="0"
               x2="150"
               y2="0"
-              style="stroke: #004165; stroke-width: 5"
+              class="active-no-line"
             />
           </svg>
           <!-- status Showing End -->
           <!-- status Negotiation Start-->
-          <div class="event1">
+          <div class="event1" v-if="timeline.negotiation">
+            <svg height="20" width="20">
+              <circle cx="10" cy="11" r="5" fill="#fbc658" />
+            </svg>
+            <div class="time">Negotiation</div>
+          </div>
+          <!-- line -->
+          <svg height="5" width="150" v-if="timeline.negotiation">
+            <line
+              x1="0"
+              y1="0"
+              x2="150"
+              y2="0"
+              class="active-line"
+            />
+          </svg>
+          <div class="event1" v-if="!timeline.negotiation">
             <svg height="20" width="20">
               <circle cx="10" cy="11" r="5" fill="#004165" />
             </svg>
             <div class="time">Negotiation</div>
           </div>
           <!-- line -->
-          <svg height="5" width="150">
+          <svg height="5" width="150" v-if="!timeline.negotiation">
             <line
               x1="0"
               y1="0"
               x2="150"
               y2="0"
-              style="stroke: #004165; stroke-width: 5"
+              class="active-no-line"
             />
           </svg>
           <!-- status Negotiation End -->
           <!-- status Closing Start-->
-          <div class="event1">
+          <div class="event1" v-if="timeline.closing">
+            <svg height="20" width="20">
+              <circle cx="10" cy="11" r="5" fill="#fbc658" />
+            </svg>
+            <div class="time">Closing</div>
+          </div>
+          <!-- line -->
+          <svg height="5" width="150" v-if="timeline.closing">
+            <line
+              x1="0"
+              y1="0"
+              x2="150"
+              y2="0"
+              class="active-line"
+            />
+          </svg>
+          <div class="event1" v-if="!timeline.closing">
             <svg height="20" width="20">
               <circle cx="10" cy="11" r="5" fill="#004165" />
             </svg>
             <div class="time">Closing</div>
           </div>
           <!-- line -->
-          <svg height="5" width="150">
+          <svg height="5" width="150" v-if="!timeline.closing">
             <line
               x1="0"
               y1="0"
               x2="150"
               y2="0"
-              style="stroke: #004165; stroke-width: 5"
+              class="active-no-line"
             />
           </svg>
           <!-- status Closing End -->
@@ -411,6 +507,30 @@
           </div>
           <div class="col-md-12">
             <div class="row">
+              <div class="col-md-4"><h6>Type :</h6></div>
+              <div class="col-md-5 d-flex align-items-start">
+                <span> {{ lead.typePay == 1 ? "Cash" : "Loan" }}</span>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-12">
+            <div class="row">
+              <div class="col-md-4"><h6>สัญญา :</h6></div>
+              <div class="col-md-5 d-flex align-items-start">
+                <span> {{ lead.contract }} เดือน</span>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-12">
+            <div class="row">
+              <div class="col-md-4"><h6>เงื่อนไข :</h6></div>
+              <div class="col-md-5 d-flex align-items-start">
+                <span> {{ lead.condition }}</span>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-12">
+            <div class="row">
               <div class="col-md-3"><h6>pain point :</h6></div>
               <div class="col-md-5 d-flex align-items-end">
                 <el-tag
@@ -428,7 +548,15 @@
           <div class="col-md-12">
             <p-button
               type="success"
-              @click.native="modals.actionLog = true"
+              @click.native="
+                (modals.actionLog = true),
+                  (modalBtn = 'Add'),
+                  (actionDateTime = new Date()),
+                  (comment = ''),
+                  (actionTypeSelects.select = ''),
+                  (radios.done = '1'),
+                  (view = false)
+              "
               outline
               round
             >
@@ -445,7 +573,7 @@
           <div class="col-md-4">
             <div class="row">
               <div class="col-md-12">
-                <h6>Sale</h6>
+                <h6>LifeStyle (A)</h6>
               </div>
               <div class="col-md-12">
                 <div class="row">
@@ -454,7 +582,10 @@
                     <span>
                       {{
                         projects.filter(function (project) {
-                          if (project.id === lead.listingBySale.room.projectId)
+                          if (
+                            project.id ===
+                            lead.listingLifeStyleBySale.room.projectId
+                          )
                             return true;
                         })[0].name
                       }}
@@ -467,16 +598,16 @@
                   <div class="col-md-4">ตึก :</div>
                   <div class="col-md-5 d-flex align-items-end">
                     <span>
-                      {{ lead.listingBySale.room.building }}
+                      {{ lead.listingLifeStyleBySale.room.building }}
                     </span>
                   </div>
                 </div>
               </div>
               <div class="col-md-12">
                 <div class="row">
-                  <div class="col-md-4">Reason :</div>
+                  <div class="col-md-4">Pain :</div>
                   <div class="col-md-5 d-flex align-items-end">
-                    <span> {{ lead.reason }} </span>
+                    <span> {{ lead.painSales }} </span>
                   </div>
                 </div>
               </div>
@@ -487,7 +618,9 @@
                     <span>
                       {{
                         dataPropertyType[
-                          Number(lead.listingBySale.room.propertyType) - 1
+                          Number(
+                            lead.listingLifeStyleBySale.room.propertyType
+                          ) - 1
                         ].label
                       }}</span
                     >
@@ -498,7 +631,9 @@
                 <div class="row">
                   <div class="col-md-4">พื้นที่ :</div>
                   <div class="col-md-5 d-flex align-items-end">
-                    <span> {{ lead.listingBySale.room.area }} ตร.ม.</span>
+                    <span>
+                      {{ lead.listingLifeStyleBySale.room.area }} ตร.ม.</span
+                    >
                   </div>
                 </div>
               </div>
@@ -506,7 +641,9 @@
                 <div class="row">
                   <div class="col-md-4">ชั้น :</div>
                   <div class="col-md-5 d-flex align-items-end">
-                    <span> {{ lead.listingBySale.room.floor }} ชั้น</span>
+                    <span>
+                      {{ lead.listingLifeStyleBySale.room.floor }} ชั้น</span
+                    >
                   </div>
                 </div>
               </div>
@@ -517,7 +654,7 @@
                     <span>
                       {{
                         dataDirection[
-                          Number(lead.listingBySale.room.direction) - 1
+                          Number(lead.listingLifeStyleBySale.room.direction) - 1
                         ].label
                       }}</span
                     >
@@ -528,7 +665,7 @@
                 <div class="row">
                   <div class="col-md-4">Notes :</div>
                   <div class="col-md-5 d-flex align-items-end">
-                    <span> {{ lead.listingBySaleNotes }}</span>
+                    <span> {{ lead.listingLifeStyleBySaleNotes }}</span>
                   </div>
                 </div>
               </div>
@@ -540,7 +677,7 @@
             <div class="row">
               <!-- <div class="col-md-12 d-flex justify-content-center"> -->
               <div class="col-md-12 d-flex">
-                <h6>Sale</h6>
+                <h6>Detail (B)</h6>
               </div>
               <div class="col-md-12">
                 <div class="row">
@@ -634,7 +771,7 @@
           <div class="col-md-4">
             <div class="row">
               <div class="col-md-12">
-                <h6>Financial</h6>
+                <h6>Financial (D)</h6>
               </div>
               <div class="col-md-12">
                 <div class="row">
@@ -723,28 +860,53 @@
               :label="column.label"
               sortable
             ></el-table-column>
-            <el-table-column min-width="170" label="สถานะ">
+            <el-table-column
+              class-name="action-buttons td-actions"
+              align="right"
+              label="action"
+              min-width="120"
+            >
               <template slot-scope="props">
-                <div class="cell">
-                  <h6
-                    v-if="props.row.done === 'COMPLETED'"
-                    class="text-success"
-                  >
-                    {{ props.row.done }}
-                  </h6>
-                  <h6 v-else class="text-warning">
-                    {{ props.row.done }}
-                    <p-button
-                      v-if="props.row.status !== 'BOOKING'"
-                      type="info"
-                      size="sm"
-                      icon
-                      @click="handleActionCompleted(props.$index, props.row)"
-                    >
-                      <i class="fa fa-check"></i>
-                    </p-button>
-                  </h6>
-                </div>
+                <p-button
+                  v-if="props.row.done === 'COMPLETED'"
+                  type="info"
+                  round
+                  icon
+                  @click="getActionLogDetail(props.row, 'VIEW')"
+                >
+                  <i class="fa fa-list"></i>
+                </p-button>
+                <p-button
+                  v-if="props.row.done === 'PENDING'"
+                  type="success"
+                  round
+                  icon
+                  @click="handleActionCompleted(props.row)"
+                >
+                  <i class="fa fa-check"></i>
+                </p-button>
+                <p-button
+                  v-if="props.row.done === 'PENDING'"
+                  type="info"
+                  aria-label="edit button"
+                  round
+                  icon
+                  class="btn-icon-mini btn-neutral"
+                  @click="getActionLogDetail(props.row, 'EDIT')"
+                >
+                  <i class="nc-icon nc-ruler-pencil"></i>
+                </p-button>
+                <p-button
+                  v-if="props.row.done === 'PENDING'"
+                  type="danger"
+                  aria-label="remove button"
+                  round
+                  icon
+                  class="btn-icon-mini btn-neutral"
+                  @click="handleDeleteClick(props.$index, props.row)"
+                >
+                  <i class="nc-icon nc-simple-remove"></i>
+                </p-button>
               </template>
             </el-table-column>
           </el-table>
@@ -871,6 +1033,7 @@
           <label>Type</label>
         </div>
         <el-select
+          :disabled="view"
           class="select-primary select-width-100"
           placeholder="select"
           v-model="actionTypeSelects.select"
@@ -888,6 +1051,7 @@
         <div class="form-group">
           <label>Comment</label>
           <textarea
+            :readonly="view"
             rows="5"
             class="form-control border-input"
             placeholder=""
@@ -900,9 +1064,11 @@
           <label>Date</label>
           <fg-input>
             <el-date-picker
+              :readonly="view"
               v-model="actionDateTime"
               type="datetime"
               placeholder="Pick a day"
+              format="dd-MM-yyyy HH:mm:ss"
             ></el-date-picker>
           </fg-input>
         </div>
@@ -911,7 +1077,10 @@
         <fieldset>
           <div class="form-group">
             <label class="control-label">สถานะ</label>
-            <div class="col-md-12">
+            <div class="col-md-12" v-if="view">
+              <span class="text-success"> {{ selectActionLog.done }} </span>
+            </div>
+            <div class="col-md-12" v-if="!view">
               <p-radio label="1" v-model="radios.done" value="1" :inline="true"
                 >Pending</p-radio
               >
@@ -923,10 +1092,12 @@
         </fieldset>
       </div>
       <template slot="footer">
-        <p-button @click="createActionLog">Add</p-button>
-        <p-button type="danger" @click.native="modals.actionLog = false"
+        <p-button v-show="!view" @click="createActionLog">{{
+          modalBtn
+        }}</p-button>
+        <!-- <p-button type="danger" @click.native="modals.actionLog = false"
           >Close</p-button
-        >
+        > -->
       </template>
     </modal>
     <template slot="footer">
@@ -1004,6 +1175,8 @@ export default {
       radios: {
         done: "1",
       },
+      view: true,
+      modalBtn: "Add",
       actionDateTime: new Date(),
       comment: "",
       actionTypeSelects: {
@@ -1054,12 +1227,12 @@ export default {
         {
           prop: "comment",
           label: "Comment",
-          minWidth: 120,
+          minWidth: 150,
         },
         {
           prop: "actionDateTime",
           label: "วันที่",
-          minWidth: 75,
+          minWidth: 100,
         },
         {
           prop: "status",
@@ -1067,36 +1240,18 @@ export default {
           minWidth: 100,
         },
       ],
-      tasks: [
-        // {
-        //   done: true,
-        //   comment:
-        //     'Sign contract for "What are conference organizers afraid of?"',
-        //   date: "2020-10-01",
-        //   status: "following",
-        // },
-        // {
-        //   done: false,
-        //   comment:
-        //     "Lines From Great Russian Literature? Or E-mails From My Boss?",
-        //   date: "2020-10-01",
-        //   status: "following",
-        // },
-        // {
-        //   done: true,
-        //   comment:
-        //     "Using dummy content or fake information in the Web design process can result in products with unrealistic",
-        //   date: "2020-10-01",
-        //   status: "following",
-        // },
-        // {
-        //   done: false,
-        //   comment:
-        //     "But I must explain to you how all this mistaken idea of denouncing pleasure",
-        //   date: "2020-10-01",
-        //   status: "following",
-        // },
-      ],
+      selectActionLog: {},
+      tasks: [],
+      timeline : {
+        lead : true,
+        action : false,
+        following: false,
+        appointment: false,
+        showing: false,
+        negotiation: false,
+        closing: false,
+        done: false
+      }
     };
   },
 
@@ -1132,6 +1287,7 @@ export default {
             done: item.done,
           };
         });
+        this.getTimeline();
       });
     },
     getProject: function () {
@@ -1180,7 +1336,7 @@ export default {
           reject(err);
         });
     },
-    handleActionCompleted: function (index, row) {
+    handleActionCompleted: function (row) {
       this.fullscreenLoading = true;
       console.log("handleActionCompleted row : " + JSON.stringify(row));
       let postBody = {
@@ -1258,13 +1414,14 @@ export default {
           ) {
             if (actionType.value === resp.data.status) return true;
           });
-          this.tasks.unshift({
-            id: resp.data.id,
-            comment: resp.data.comment,
-            actionDateTime: resp.data.actionDateTime,
-            status: status[0].label,
-            done: resp.data.done,
-          });
+          this.getActionLog();
+          // this.tasks.unshift({
+          //   id: resp.data.id,
+          //   comment: resp.data.comment,
+          //   actionDateTime: resp.data.actionDateTime,
+          //   status: status[0].label,
+          //   done: resp.data.done,
+          // });
         })
         .catch((err) => {
           this.fullscreenLoading = false;
@@ -1276,6 +1433,93 @@ export default {
             verticalAlign: "top",
             type: "warning",
           });
+          console.log("err : " + JSON.stringify(err));
+          reject(err);
+        });
+    },
+    getActionLogDetail: function (row, type) {
+      // console.log("getActionLogDetail row : " + JSON.stringify(row));
+      let done = row.done === "COMPLETED" ? "2" : "1";
+
+      let status = this.actionTypeSelects.data.filter(function (actionType) {
+        if (actionType.label === row.status) return true;
+      });
+
+      this.modals.actionLog = true;
+      this.actionTypeSelects.select = status[0].value;
+      this.comment = row.comment;
+      this.actionDateTime = new Date(row.actionDateTime);
+      this.leadId = row.leadId;
+      this.radios.done = done;
+      this.selectActionLog = row;
+      if (type === "EDIT") {
+        this.modalBtn = "Edit";
+        this.view = false;
+      } else {
+        this.view = true;
+      }
+    },
+    handleDeleteClick(index, row) {
+      this.$confirm(
+        "This will permanently delete ActionLog. Continue?",
+        "Warning",
+        {
+          confirmButtonText: "OK",
+          cancelButtonText: "Cancel",
+          type: "warning",
+        }
+      )
+        .then(() => {
+          this.deleteActionLog(row);
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "Delete canceled",
+          });
+        });
+    },
+    deleteActionLog(row) {
+      let postBody = {
+        id: row.id,
+      };
+      // console.log("postBody : " + JSON.stringify(postBody));
+      const AXIOS = axios.create({
+        baseURL: process.env.VUE_APP_BACKEND_URL,
+      });
+      AXIOS.post(`api/actionLog/delete`, postBody, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+        params: postBody,
+      }).then((resp) => {
+        this.$message({
+          type: "success",
+          message: "Delete completed",
+        });
+        this.getActionLog();
+      });
+    },
+    getTimeline: function () {
+      const AXIOS = axios.create({
+        baseURL: process.env.VUE_APP_BACKEND_URL,
+      });
+      AXIOS.get("api/actionLog/getLast/" + this.$route.query.id, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+      })
+        .then((resp) => {
+          console.log("resp.data : " + JSON.stringify(resp.data));
+          if (resp.data.length > 0) {
+            let status = this.actionTypeSelects.data.filter(function (actionType) {
+              if (actionType.value === resp.data.status) return true;
+            });
+          }
+        })
+        .catch((err) => {
           console.log("err : " + JSON.stringify(err));
           reject(err);
         });
@@ -1299,5 +1543,15 @@ export default {
 
 .progress {
   margin-top: 20px;
+}
+
+.active-line {
+  stroke: #fbc658; 
+  stroke-width: 5;
+}
+
+.active-no-line {
+  stroke: #004165; 
+  stroke-width: 5;
 }
 </style>

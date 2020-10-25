@@ -21,7 +21,11 @@
         <div class="card-body">
           <div class="row">
             <div class="col-md-6">
-              <el-select class="select-default" v-model="pagination.perPage" placeholder="Per page">
+              <el-select
+                class="select-default"
+                v-model="pagination.perPage"
+                placeholder="Per page"
+              >
                 <el-option
                   class="select-default"
                   v-for="item in pagination.perPageOptions"
@@ -60,7 +64,11 @@
                 :label="column.label"
                 sortable
               ></el-table-column>
-              <el-table-column class-name="action-buttons td-actions" align="right" label="Actions">
+              <el-table-column
+                class-name="action-buttons td-actions"
+                align="right"
+                label="Actions"
+              >
                 <template slot-scope="props">
                   <!-- <p-button type="info" size="sm" icon @click="handleLike(props.$index, props.row)">
                     <i class="fa fa-user"></i>
@@ -86,7 +94,9 @@
             </el-table>
           </div>
           <div class="col-sm-6 pagination-info">
-            <p class="category">Showing {{from + 1}} to {{to}} of {{total}} entries</p>
+            <p class="category">
+              Showing {{ from + 1 }} to {{ to }} of {{ total }} entries
+            </p>
           </div>
           <div class="col-sm-6">
             <p-pagination
@@ -100,32 +110,7 @@
       </card>
     </div>
     <div class="col-md-3">
-      <card>
-        <template slot="header">
-          <h4 class="card-title" background-color="primary">Task</h4>
-          <p class="category" color="primary">Today</p>
-        </template>
-        <div class="table-full-width table-tasks">
-          <table class="table">
-            <tbody>
-              <DailyBar
-                v-for="(task, index) in tasks"
-                :key="task.title"
-                :task="task"
-                :index="index"
-                @on-edit="handleTaskEdit"
-                @on-delete="handleTaskDelete"
-              ></DailyBar>
-            </tbody>
-          </table>
-        </div>
-        <template slot="footer">
-          <!-- <hr />
-          <div class="stats">
-            <i class="fa fa-history"></i> Updated 3 minutes ago
-          </div>-->
-        </template>
-      </card>
+      <DailyBar />
     </div>
   </div>
 </template>
@@ -135,9 +120,9 @@ import PPagination from "src/components/UIComponents/Pagination.vue";
 import DailyBar from "../Daily/DailyBar";
 import { Card } from "src/components/UIComponents";
 import axios from "axios";
-import en from 'element-ui/lib/locale/lang/en.js'
+import en from "element-ui/lib/locale/lang/en.js";
 
-Vue.use({ locale: en })
+Vue.use({ locale: en });
 export default {
   components: {
     Card,
@@ -158,7 +143,7 @@ export default {
         total: 0,
       },
       searchQuery: "",
-      propsToSearch: ["username","firstName","lastName","nickName"],
+      propsToSearch: ["username", "firstName", "lastName", "nickName"],
       tableColumns: [
         // {
         //   prop: "name",
@@ -218,8 +203,7 @@ export default {
 
   methods: {
     getUser: function () {
-      let postBody = {
-      };
+      let postBody = {};
       const AXIOS = axios.create({
         baseURL: process.env.VUE_APP_BACKEND_URL,
       });
@@ -228,9 +212,11 @@ export default {
           "Content-Type": "application/json",
           Authorization: "Bearer " + localStorage.getItem("token"),
         },
-      }).then((resp) => {
-        this.tableData = resp.data;
-      }).catch((err) => {
+      })
+        .then((resp) => {
+          this.tableData = resp.data;
+        })
+        .catch((err) => {
           console.log("err : " + JSON.stringify(err));
           reject(err);
         });
@@ -239,21 +225,17 @@ export default {
       alert(`Your clicked on Like button ${index}`);
     },
     handleEdit(index, row) {
-          console.log("row : " + JSON.stringify(row));
+      console.log("row : " + JSON.stringify(row));
       // console.log("row : "+row);
       this.$router.push("/admin/user/create?id=" + row.username);
       // alert(`Your want to edit ${row.name}`);
     },
     handleDelete(index, row) {
-      this.$confirm(
-        "This will permanently delete user. Continue?",
-        "Warning",
-        {
-          confirmButtonText: "OK",
-          cancelButtonText: "Cancel",
-          type: "warning",
-        }
-      )
+      this.$confirm("This will permanently delete user. Continue?", "Warning", {
+        confirmButtonText: "OK",
+        cancelButtonText: "Cancel",
+        type: "warning",
+      })
         .then(() => {
           let postBody = {
             id: row.id,
@@ -267,7 +249,7 @@ export default {
               "Content-Type": "application/json",
               Authorization: "Bearer " + localStorage.getItem("token"),
             },
-            params: postBody
+            params: postBody,
           }).then((resp) => {
             this.$message({
               type: "success",

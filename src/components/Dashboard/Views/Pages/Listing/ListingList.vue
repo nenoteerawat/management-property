@@ -205,7 +205,7 @@
           <div class="col-md-12">
             <el-table :data="queriedData" thead-class="hidden_header">
               <el-table-column type="index"></el-table-column>
-              <!-- <el-table-column min-width="126" label>
+              <el-table-column min-width="126" label>
                 <template slot-scope="props">
                   <div class="img-container">
                     <img
@@ -218,7 +218,7 @@
                     />
                   </div>
                 </template>
-              </el-table-column>-->
+              </el-table-column>
               <el-table-column min-width="200" label>
                 <template slot-scope="props">
                   <div class="row">
@@ -448,32 +448,7 @@
       </card>
     </div>
     <div class="col-md-3">
-      <card>
-        <template slot="header">
-          <h4 class="card-title" background-color="primary">Task</h4>
-          <p class="category" color="primary">Today</p>
-        </template>
-        <div class="table-full-width table-tasks">
-          <table class="table">
-            <tbody>
-              <DailyBar
-                v-for="(task, index) in tasks"
-                :key="task.id"
-                :task="task"
-                :index="index"
-                @on-edit="handleTaskEdit"
-                @on-delete="handleTaskDelete"
-              ></DailyBar>
-            </tbody>
-          </table>
-        </div>
-        <template slot="footer">
-          <!-- <hr />
-          <div class="stats">
-            <i class="fa fa-history"></i> Updated 3 minutes ago
-          </div>-->
-        </template>
-      </card>
+      <DailyBar />
     </div>
     <div class="row">
       <div class="col-md-12 text-center">
@@ -685,7 +660,7 @@ export default {
     if (this.getUser.roles[0] == "ROLE_ADMIN") this.getSaleUser();
     this.getLead();
     this.getUserList();
-    this.getActionLog();
+    // this.getActionLog();
   },
 
   data() {
@@ -792,22 +767,8 @@ export default {
         },
       ],
       tableData: [],
-      tasks: [],
+      // tasks: [],
       comment: "",
-      actionTypeSelects: {
-        select: "",
-        data: [
-          { value: "1", label: "Call ได้" },
-          { value: "2", label: "Call ไม่ได้" },
-          { value: "3", label: "Chat ได้" },
-          { value: "4", label: "Chat ไม่ได้" },
-          { value: "5", label: "Following" },
-          { value: "6", label: "Apporintment" },
-          { value: "7", label: "Showing" },
-          { value: "8", label: "Negotiation" },
-          { value: "9", label: "Closing" },
-        ],
-      },
     };
   },
 
@@ -938,7 +899,7 @@ export default {
           Authorization: "Bearer " + localStorage.getItem("token"),
         },
       }).then((resp) => {
-        console.log("getUser all resp : " + JSON.stringify(resp));
+        // console.log("getUser all resp : " + JSON.stringify(resp));
         this.userSelects.data = resp.data.map((item) => {
           return {
             value: item.username,
@@ -968,7 +929,7 @@ export default {
               label: value.name,
             });
           }
-          console.log("resp : " + JSON.stringify(this.tableData));
+          // console.log("resp : " + JSON.stringify(this.tableData));
         })
         .catch((err) => {
           console.log("err : " + JSON.stringify(err));
@@ -997,36 +958,6 @@ export default {
           console.log("getListing err : " + JSON.stringify(err));
           reject(err);
         });
-    },
-    getActionLog: function () {
-      let paramsValue = {
-        type: "daily",
-      };
-      const AXIOS = axios.create({
-        baseURL: process.env.VUE_APP_BACKEND_URL,
-      });
-      AXIOS.get(`api/actionLog/list`, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + localStorage.getItem("token"),
-        },
-        params: paramsValue,
-      }).then((resp) => {
-        console.log("getActionLog : " + JSON.stringify(resp.data));
-        let actionTypeSelects = this.actionTypeSelects;
-        this.tasks = resp.data.map((item) => {
-          let status = actionTypeSelects.data.filter(function (actionType) {
-            if (actionType.value === item.status) return true;
-          });
-          return {
-            id: item.id,
-            comment: item.comment,
-            actionDateTime: item.actionDateTime,
-            status: status[0].label,
-            done: item.done,
-          };
-        });
-      });
     },
     handleBooking() {
       let postBody = {
@@ -1137,12 +1068,12 @@ export default {
           });
       }
     },
-    handleTaskEdit(index) {
-      alert(`You want to edit task: ${JSON.stringify(this.tasks[index])}`);
-    },
-    handleTaskDelete(index) {
-      alert(`You want to delete task: ${JSON.stringify(this.tasks[index])}`);
-    },
+    // handleTaskEdit(index) {
+    //   alert(`You want to edit task: ${JSON.stringify(this.tasks[index])}`);
+    // },
+    // handleTaskDelete(index) {
+    //   alert(`You want to delete task: ${JSON.stringify(this.tasks[index])}`);
+    // },
   },
   computed: {
     ...mapGetters({ getUser: "getUser" }),

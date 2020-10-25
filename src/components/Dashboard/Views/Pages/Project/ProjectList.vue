@@ -21,7 +21,11 @@
         <div class="card-body">
           <div class="row">
             <div class="col-md-6">
-              <el-select class="select-default" v-model="pagination.perPage" placeholder="Per page">
+              <el-select
+                class="select-default"
+                v-model="pagination.perPage"
+                placeholder="Per page"
+              >
                 <el-option
                   class="select-default"
                   v-for="item in pagination.perPageOptions"
@@ -55,11 +59,12 @@
               <el-table-column min-width="200" label="โครงการ">
                 <template slot-scope="props">
                   <div class="col-md-12">
-                    <h4>{{ props.row.name}}</h4>
+                    <h4>{{ props.row.name }}</h4>
                   </div>
-                  <div
-                    class="col-md-12 cell"
-                  >ตำบล : {{ props.row.amphoe}} อำเภอ : {{ props.row.district}} จังหวัด : {{ props.row.province}}</div>
+                  <div class="col-md-12 cell">
+                    ตำบล : {{ props.row.amphoe }} อำเภอ :
+                    {{ props.row.district }} จังหวัด : {{ props.row.province }}
+                  </div>
                 </template>
               </el-table-column>
               <!-- <el-table-column label="floor">
@@ -85,7 +90,11 @@
                 :label="column.label"
                 sortable
               ></el-table-column>
-              <el-table-column class-name="action-buttons td-actions" align="right" label="Actions">
+              <el-table-column
+                class-name="action-buttons td-actions"
+                align="right"
+                label="Actions"
+              >
                 <template slot-scope="props">
                   <!-- <p-button type="info" size="sm" icon @click="handleLike(props.$index, props.row)">
                     <i class="fa fa-user"></i>
@@ -111,7 +120,9 @@
             </el-table>
           </div>
           <div class="col-sm-6 pagination-info">
-            <p class="category">Showing {{from + 1}} to {{to}} of {{total}} entries</p>
+            <p class="category">
+              Showing {{ from + 1 }} to {{ to }} of {{ total }} entries
+            </p>
           </div>
           <div class="col-sm-6">
             <p-pagination
@@ -125,32 +136,7 @@
       </card>
     </div>
     <div class="col-md-3">
-      <card>
-        <template slot="header">
-          <h4 class="card-title" background-color="primary">Task</h4>
-          <p class="category" color="primary">Today</p>
-        </template>
-        <div class="table-full-width table-tasks">
-          <table class="table">
-            <tbody>
-              <DailyBar
-                v-for="(task, index) in tasks"
-                :key="task.title"
-                :task="task"
-                :index="index"
-                @on-edit="handleTaskEdit"
-                @on-delete="handleTaskDelete"
-              ></DailyBar>
-            </tbody>
-          </table>
-        </div>
-        <template slot="footer">
-          <!-- <hr />
-          <div class="stats">
-            <i class="fa fa-history"></i> Updated 3 minutes ago
-          </div>-->
-        </template>
-      </card>
+      <DailyBar />
     </div>
   </div>
 </template>
@@ -204,32 +190,6 @@ export default {
         },
       ],
       tableData: [],
-      tasks: [
-        {
-          done: true,
-          img: "/static/img/faces/ayo-ogunseinde-2.jpg",
-          title:
-            'Sign contract for "What are conference organizers afraid of?"',
-        },
-        {
-          done: false,
-          img: "/static/img/faces/erik-lucatero-2.jpg",
-          title:
-            "Lines From Great Russian Literature? Or E-mails From My Boss?",
-        },
-        {
-          done: true,
-          img: "/static/img/faces/kaci-baum-2.jpg",
-          title:
-            "Using dummy content or fake information in the Web design process can result in products with unrealistic",
-        },
-        {
-          done: false,
-          img: "/static/img/faces/joe-gardner-2.jpg",
-          title:
-            "But I must explain to you how all this mistaken idea of denouncing pleasure",
-        },
-      ],
       comment: "",
     };
   },
@@ -305,15 +265,15 @@ export default {
         cancelButtonText: "Cancel",
         inputValidator: this.validateComment,
       })
-      .then(({ value }) => {
-        this.deleteProject(row);
-      })
-      .catch(() => {
-        return false;
-      });
+        .then(({ value }) => {
+          this.deleteProject(row);
+        })
+        .catch(() => {
+          return false;
+        });
     },
     handleDelete(index, row) {
-      if(this.getUser.roles[0] === "ROLE_SALE"){
+      if (this.getUser.roles[0] === "ROLE_SALE") {
         this.openBoxComment(row);
       } else {
         this.$confirm(
@@ -325,15 +285,15 @@ export default {
             type: "warning",
           }
         )
-        .then(() => {
-          this.deleteProject(row);
-        })
-        .catch(() => {
-          this.$message({
-            type: "info",
-            message: "Delete canceled",
+          .then(() => {
+            this.deleteProject(row);
+          })
+          .catch(() => {
+            this.$message({
+              type: "info",
+              message: "Delete canceled",
+            });
           });
-        });
       }
     },
     handleTaskEdit(index) {
@@ -349,7 +309,7 @@ export default {
     isLoggedIn: function () {
       return this.$store.getters.isLoggedIn;
     },
-    
+
     pagedData() {
       return this.tableData.slice(this.from, this.to);
     },

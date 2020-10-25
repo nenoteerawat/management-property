@@ -153,6 +153,130 @@
               </div>
             </div>
           </div>
+          <div class="col-md-6">
+            <div class="row">
+              <div class="col-md-12">
+                <h5>LifeStyle (A)</h5>
+              </div>
+              <div class="col-md-4">
+                <div>
+                  <label>Project</label>
+                </div>
+                <model-select
+                  :options="listingSelects1"
+                  v-model="listingByLead"
+                  class="select"
+                  placeholder="select item"
+                >
+                </model-select>
+              </div>
+              <div class="col-md-4">
+                <fg-input
+                  placeholder
+                  disabled
+                  label="ประเภท"
+                  v-model="listingByLead.propertyType"
+                ></fg-input>
+              </div>
+              <div class="col-md-4">
+                <fg-input
+                  placeholder
+                  disabled
+                  label="พื้นที่"
+                  v-model="listingByLead.area"
+                ></fg-input>
+              </div>
+              <div class="col-md-4">
+                <fg-input
+                  placeholder
+                  disabled
+                  label="ชั้น"
+                  v-model="listingByLead.floor"
+                ></fg-input>
+              </div>
+              <div class="col-md-4">
+                <fg-input
+                  placeholder
+                  disabled
+                  label="วิว"
+                  v-model="listingByLead.direction"
+                ></fg-input>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Notes</label>
+                  <textarea
+                    rows="5"
+                    class="form-control border-input"
+                    placeholder="Here can be your notes"
+                    v-model="listingByLead.notes"
+                  ></textarea>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="row">
+              <div class="col-md-12">
+                <h5>Detail (B)</h5>
+              </div>
+              <div class="col-md-4">
+                <div>
+                  <label>Project</label>
+                </div>
+                <model-select
+                  :options="listingSelects2"
+                  v-model="listingByAdmin"
+                  class="select"
+                  placeholder="select item"
+                >
+                </model-select>
+              </div>
+              <div class="col-md-4">
+                <fg-input
+                  placeholder
+                  disabled
+                  label="ประเภท"
+                  v-model="listingByAdmin.propertyType"
+                ></fg-input>
+              </div>
+              <div class="col-md-4">
+                <fg-input
+                  placeholder
+                  disabled
+                  label="พื้นที่"
+                  v-model="listingByAdmin.area"
+                ></fg-input>
+              </div>
+              <div class="col-md-4">
+                <fg-input
+                  placeholder
+                  disabled
+                  label="ชั้น"
+                  v-model="listingByAdmin.floor"
+                ></fg-input>
+              </div>
+              <div class="col-md-4">
+                <fg-input
+                  placeholder
+                  disabled
+                  label="วิว"
+                  v-model="listingByAdmin.direction"
+                ></fg-input>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Notes</label>
+                  <textarea
+                    rows="5"
+                    class="form-control border-input"
+                    placeholder="Here can be your notes"
+                    v-model="listingByAdmin.notes"
+                  ></textarea>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
         <!-- Timeline start -->
         <div class="row">
@@ -329,6 +453,43 @@
                 ></fg-input>
               </div>
               <div class="col-md-12">
+                <fieldset>
+                  <div class="form-group">
+                    <label class="control-label">type</label>
+                    <div class="col-md-12">
+                      <p-radio
+                        label="1"
+                        v-model="radios.typePay"
+                        value="1"
+                        :inline="true"
+                        >Cash</p-radio
+                      >
+                      <p-radio
+                        label="2"
+                        v-model="radios.typePay"
+                        value="2"
+                        :inline="true"
+                        >Loan</p-radio
+                      >
+                    </div>
+                  </div>
+                </fieldset>
+              </div>
+              <div class="col-md-12">
+                <fg-input
+                  placeholder
+                  label="เงื่อนไข"
+                  v-model="lead.condition"
+                ></fg-input>
+              </div>
+              <div class="col-md-12">
+                <fg-input
+                  placeholder
+                  label="สัญญา"
+                  v-model="lead.contract"
+                ></fg-input>
+              </div>
+              <div class="col-md-12">
                 <div>
                   <label>Pain Point</label>
                 </div>
@@ -361,15 +522,15 @@
           <div class="col-md-8">
             <div class="row">
               <div class="col-md-12">
-                <h5>ความต้องการของลูกค้า</h5>
+                <h5>LifeStyle (A)</h5>
               </div>
               <div class="col-md-4">
                 <div>
                   <label>Project</label>
                 </div>
                 <model-select
-                  :options="listingSelects"
-                  v-model="listingByLead"
+                  :options="listingSelects3"
+                  v-model="listingLifeStyleBySale"
                   class="select"
                   placeholder="select item"
                 >
@@ -380,7 +541,7 @@
                   placeholder
                   disabled
                   label="ประเภท"
-                  v-model="listingByLead.propertyType"
+                  v-model="listingLifeStyleBySale.propertyType"
                 ></fg-input>
               </div>
               <div class="col-md-4">
@@ -388,7 +549,7 @@
                   placeholder
                   disabled
                   label="พื้นที่"
-                  v-model="listingByLead.area"
+                  v-model="listingLifeStyleBySale.area"
                 ></fg-input>
               </div>
               <div class="col-md-4">
@@ -396,7 +557,7 @@
                   placeholder
                   disabled
                   label="ชั้น"
-                  v-model="listingByLead.floor"
+                  v-model="listingLifeStyleBySale.floor"
                 ></fg-input>
               </div>
               <div class="col-md-4">
@@ -404,7 +565,7 @@
                   placeholder
                   disabled
                   label="วิว"
-                  v-model="listingByLead.direction"
+                  v-model="listingLifeStyleBySale.direction"
                 ></fg-input>
               </div>
               <div class="col-md-4">
@@ -414,77 +575,41 @@
                     rows="5"
                     class="form-control border-input"
                     placeholder="Here can be your notes"
-                    v-model="listingByLead.notes"
+                    v-model="listingLifeStyleBySale.notes"
                   ></textarea>
                 </div>
               </div>
-              <div class="col-md-12">
-                <h5>ความต้องการที่แนะนำ by Admin</h5>
-              </div>
-              <div class="col-md-4">
+              <div class="col-md-6">
                 <div>
-                  <label>Project</label>
+                  <label>Pain</label>
                 </div>
-                <model-select
-                  :options="listingSelects"
-                  v-model="listingByAdmin"
-                  class="select"
-                  placeholder="select item"
+                <el-tag
+                  :key="tag"
+                  v-for="(tag, index) in painSales.dynamicPainSales"
+                  type="primary"
+                  :closable="true"
+                  :close-transition="false"
+                  @close="handleClosePainSale(index)"
+                  >{{ tag }}</el-tag
                 >
-                </model-select>
-              </div>
-              <div class="col-md-4">
                 <fg-input
-                  placeholder
-                  disabled
-                  label="ประเภท"
-                  v-model="listingByAdmin.propertyType"
-                ></fg-input>
-              </div>
-              <div class="col-md-4">
-                <fg-input
-                  placeholder
-                  disabled
-                  label="พื้นที่"
-                  v-model="listingByAdmin.area"
-                ></fg-input>
-              </div>
-              <div class="col-md-4">
-                <fg-input
-                  placeholder
-                  disabled
-                  label="ชั้น"
-                  v-model="listingByAdmin.floor"
-                ></fg-input>
-              </div>
-              <div class="col-md-4">
-                <fg-input
-                  placeholder
-                  disabled
-                  label="วิว"
-                  v-model="listingByAdmin.direction"
-                ></fg-input>
-              </div>
-              <div class="col-md-4">
-                <div class="form-group">
-                  <label>Notes</label>
-                  <textarea
-                    rows="5"
-                    class="form-control border-input"
-                    placeholder="Here can be your notes"
-                    v-model="listingByAdmin.notes"
-                  ></textarea>
-                </div>
+                  type="text"
+                  placeholder="เพิ่ม"
+                  v-model="painSales.inputValue"
+                  ref="saveTagInput"
+                  size="mini"
+                  @keyup.enter="handleInputPainSale"
+                />
               </div>
               <div class="col-md-12">
-                <h5>ความต้องการที่แนะนำ by Sale</h5>
+                <h5>Detail (B)</h5>
               </div>
               <div class="col-md-4">
                 <div>
                   <label>Project</label>
                 </div>
                 <model-select
-                  :options="listingSelects"
+                  :options="listingSelects4"
                   v-model="listingBySale"
                   class="select"
                   placeholder="select item"
@@ -696,10 +821,18 @@ export default {
       province: "",
       zipcode: "",
 
+      radios: {
+        typePay: "1",
+      },
       difficulty: 0,
       rapport: 0,
       info: 0,
 
+      painSales: {
+        dynamicPainSales: [],
+        inputVisible: true,
+        inputValue: "",
+      },
       painPoints: {
         dynamicPainPoints: [],
         inputVisible: true,
@@ -729,7 +862,10 @@ export default {
         { value: "8", label: "ตะวันตก" },
       ],
       listings: [],
-      listingSelects: [],
+      listingSelects1: [],
+      listingSelects2: [],
+      listingSelects3: [],
+      listingSelects4: [],
       listingByLead: {
         value: "",
         text: "",
@@ -740,6 +876,15 @@ export default {
         notes: "",
       },
       listingByAdmin: {
+        value: "",
+        text: "",
+        propertyType: "",
+        area: "",
+        floor: "",
+        direction: "",
+        notes: "",
+      },
+      listingLifeStyleBySale: {
         value: "",
         text: "",
         propertyType: "",
@@ -777,6 +922,8 @@ export default {
         billingAmount: "",
         preApprove: "",
         status: "",
+        contract: "",
+        condition: "",
       },
     };
   },
@@ -793,6 +940,55 @@ export default {
       this.listingByLead.area = listing[0].room.area + " ตร.ม.";
       this.listingByLead.floor = listing[0].room.floor;
       this.listingByLead.direction = this.dataDirection.filter((data) => {
+        if (data.value == listing[0].room.direction) return true;
+      })[0].label;
+    },
+    listingByAdmin: function (event) {
+      let listing = this.listings.filter((listing) => {
+        if (listing.id == event.value) return true;
+      });
+      // console.log("listing : "+ JSON.stringify(listing))
+      this.listingByAdmin.propertyType = this.dataPropertyType.filter(
+        (data) => {
+          if (data.value == listing[0].room.propertyType) return true;
+        }
+      )[0].label;
+      this.listingByAdmin.area = listing[0].room.area + " ตร.ม.";
+      this.listingByAdmin.floor = listing[0].room.floor;
+      this.listingByAdmin.direction = this.dataDirection.filter((data) => {
+        if (data.value == listing[0].room.direction) return true;
+      })[0].label;
+
+    },
+    listingLifeStyleBySale: function (event) {
+      let listing = this.listings.filter((listing) => {
+        if (listing.id == event.value) return true;
+      });
+      // console.log("listing : "+ JSON.stringify(listing))
+      this.listingLifeStyleBySale.propertyType = this.dataPropertyType.filter(
+        (data) => {
+          if (data.value == listing[0].room.propertyType) return true;
+        }
+      )[0].label;
+      this.listingLifeStyleBySale.area = listing[0].room.area + " ตร.ม.";
+      this.listingLifeStyleBySale.floor = listing[0].room.floor;
+      this.listingLifeStyleBySale.direction = this.dataDirection.filter(
+        (data) => {
+          if (data.value == listing[0].room.direction) return true;
+        }
+      )[0].label;
+    },
+    listingBySale: function (event) {
+      let listing = this.listings.filter((listing) => {
+        if (listing.id == event.value) return true;
+      });
+      // console.log("listing : "+ JSON.stringify(listing))
+      this.listingBySale.propertyType = this.dataPropertyType.filter((data) => {
+        if (data.value == listing[0].room.propertyType) return true;
+      })[0].label;
+      this.listingBySale.area = listing[0].room.area + " ตร.ม.";
+      this.listingBySale.floor = listing[0].room.floor;
+      this.listingBySale.direction = this.dataDirection.filter((data) => {
         if (data.value == listing[0].room.direction) return true;
       })[0].label;
     },
@@ -823,7 +1019,19 @@ export default {
           // console.log("getListings resp : " + JSON.stringify(resp.data));
           this.listings = resp.data;
           for (let value of resp.data) {
-            this.listingSelects.push({
+            this.listingSelects1.push({
+              value: value.id,
+              text: value.projects[0].name + " - " + value.owner.listingCode,
+            });
+            this.listingSelects2.push({
+              value: value.id,
+              text: value.projects[0].name + " - " + value.owner.listingCode,
+            });
+            this.listingSelects3.push({
+              value: value.id,
+              text: value.projects[0].name + " - " + value.owner.listingCode,
+            });
+            this.listingSelects4.push({
               value: value.id,
               text: value.projects[0].name + " - " + value.owner.listingCode,
             });
@@ -856,7 +1064,7 @@ export default {
           this.lead = resp.data;
           //listingLead
           if (resp.data.listingByLead != null) {
-            let selectListing = this.listingSelects.filter((listing) => {
+            let selectListing = this.listingSelects1.filter((listing) => {
               if (listing.value == resp.data.listingByLead.id) return listing;
             });
             this.listingByLead.value = selectListing[0].value;
@@ -878,7 +1086,7 @@ export default {
 
           //listingAdmin
           if (resp.data.listingByAdmin != null) {
-            let selectListing = this.listingSelects.filter((listing) => {
+            let selectListing = this.listingSelects2.filter((listing) => {
               if (listing.value == resp.data.listingByAdmin.id) return listing;
             });
             this.listingByAdmin.value = selectListing[0].value;
@@ -902,7 +1110,7 @@ export default {
 
           //listingSale
           if (resp.data.listingBySale != null) {
-            let selectListing = this.listingSelects.filter((listing) => {
+            let selectListing = this.listingSelects3.filter((listing) => {
               if (listing.value == resp.data.listingBySale.id) return listing;
             });
             this.listingBySale.value = selectListing[0].value;
@@ -922,13 +1130,48 @@ export default {
             this.listingBySale.notes = resp.data.listingBySaleNotes;
           }
 
+          //listingLifeStyleBySale
+          if (resp.data.listingLifeStyleBySale != null) {
+            let selectListing = this.listingSelects4.filter((listing) => {
+              if (listing.value == resp.data.listingLifeStyleBySale.id)
+                return listing;
+            });
+            this.listingLifeStyleBySale.value = selectListing[0].value;
+            this.listingLifeStyleBySale.text = selectListing[0].text;
+            this.listingLifeStyleBySale.propertyType = this.dataPropertyType.filter(
+              (data) => {
+                if (
+                  data.value ==
+                  resp.data.listingLifeStyleBySale.room.propertyType
+                )
+                  return true;
+              }
+            )[0].label;
+            this.listingLifeStyleBySale.area =
+              resp.data.listingLifeStyleBySale.room.area;
+            this.listingLifeStyleBySale.floor =
+              resp.data.listingLifeStyleBySale.room.floor;
+            this.listingLifeStyleBySale.direction = this.dataDirection.filter(
+              (data) => {
+                if (
+                  data.value == resp.data.listingLifeStyleBySale.room.direction
+                )
+                  return true;
+              }
+            )[0].label;
+            this.listingLifeStyleBySale.notes =
+              resp.data.listingLifeStyleBySaleNotes;
+          }
+
           this.gradeSelects.select = resp.data.grade;
           this.painPoints.dynamicPainPoints = resp.data.painPoints;
+          this.painSales.dynamicPainSales = resp.data.painSales;
           this.checkboxTypeRent = resp.data.typeRent;
           this.checkboxTypeBuy = resp.data.typeBuy;
           this.difficulty = resp.data.difficulty;
           this.rapport = resp.data.rapport;
           this.info = resp.data.info;
+          this.radios.typePay = resp.data.typePay;
           this.btnAction = "Edit";
         })
         .catch((err) => {
@@ -950,6 +1193,20 @@ export default {
         1
       );
     },
+    handleInputPainSale() {
+      let inputValue = this.painSales.inputValue;
+      if (inputValue) {
+        this.painSales.dynamicPainSales.push(inputValue);
+      }
+      this.painSales.inputVisible = false;
+      this.painSales.inputValue = "";
+    },
+    handleClosePainSale(tag) {
+      this.painSales.dynamicPainSales.splice(
+        this.painSales.dynamicPainSales.indexOf(tag),
+        1
+      );
+    },
     handlePreview(file) {
       this.imageUrl.imageUrl = URL.createObjectURL(file.raw);
     },
@@ -963,7 +1220,9 @@ export default {
         listingByLead: this.listingByLead,
         listingByAdmin: this.listingByAdmin,
         listingBySale: this.listingBySale,
+        listingLifeStyleBySale: this.listingLifeStyleBySale,
         painPoints: this.painPoints.dynamicPainPoints,
+        painSales: this.painPoints.dynamicPainSales,
         grade: this.gradeSelects.select,
         price: this.lead.price,
         typeBuy: this.checkboxTypeBuy,
@@ -986,8 +1245,11 @@ export default {
         billingAmount: this.lead.billingAmount,
         preApprove: this.lead.preApprove,
         status: this.lead.status,
+        condition: this.lead.condition,
+        contract: this.lead.contract,
         difficulty: this.difficulty,
         rapport: this.rapport,
+        typePay: this.radios.typePay,
       };
       if (this.$route.query.id) {
         path = "api/lead/edit";
@@ -996,7 +1258,9 @@ export default {
           listingByLead: this.listingByLead,
           listingByAdmin: this.listingByAdmin,
           listingBySale: this.listingBySale,
+          listingLifeStyleBySale: this.listingLifeStyleBySale,
           painPoints: this.painPoints.dynamicPainPoints,
+          painSales: this.painPoints.dynamicPainSales,
           grade: this.gradeSelects.select,
           price: this.lead.price,
           typeBuy: this.checkboxTypeBuy,
@@ -1021,6 +1285,9 @@ export default {
           status: this.lead.status,
           difficulty: this.difficulty,
           rapport: this.rapport,
+          condition: this.lead.condition,
+          contract: this.lead.contract,
+          typePay: this.radios.typePay,
         };
       }
       console.log("postBody : " + JSON.stringify(postBody));
