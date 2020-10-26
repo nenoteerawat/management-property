@@ -164,6 +164,7 @@
                 </div>
                 <model-select
                   :options="listingSelects1"
+                  :isDisabled="getUser.roles[0] !== 'ROLE_ADMIN'"
                   v-model="listingByLead"
                   class="select"
                   placeholder="select item"
@@ -173,7 +174,7 @@
               <div class="col-md-4">
                 <fg-input
                   placeholder
-                  disabled
+                  :disabled="listingByLead.value != 0 || getUser.roles[0] !== 'ROLE_ADMIN'"
                   label="ประเภท"
                   v-model="listingByLead.propertyType"
                 ></fg-input>
@@ -181,25 +182,45 @@
               <div class="col-md-4">
                 <fg-input
                   placeholder
-                  disabled
-                  label="พื้นที่"
+                  :disabled="listingByLead.value != 0 || getUser.roles[0] !== 'ROLE_ADMIN'"
+                  label="พื้นที่ (ตร.ม.)"
+                  type="number"
                   v-model="listingByLead.area"
                 ></fg-input>
               </div>
               <div class="col-md-4">
                 <fg-input
                   placeholder
-                  disabled
+                  :disabled="listingByLead.value != 0 || getUser.roles[0] !== 'ROLE_ADMIN'"
                   label="ชั้น"
+                  type="number"
                   v-model="listingByLead.floor"
                 ></fg-input>
               </div>
               <div class="col-md-4">
                 <fg-input
                   placeholder
-                  disabled
+                  :disabled="listingByLead.value != 0 || getUser.roles[0] !== 'ROLE_ADMIN'"
                   label="วิว"
                   v-model="listingByLead.direction"
+                ></fg-input>
+              </div>
+              <div class="col-md-4">
+                <fg-input
+                  placeholder
+                  :disabled="listingByLead.value != 0 || getUser.roles[0] !== 'ROLE_ADMIN'"
+                  label="ห้องนอน"
+                  type="number"
+                  v-model="listingByLead.bed"
+                ></fg-input>
+              </div>
+              <div class="col-md-4">
+                <fg-input
+                  placeholder
+                  :disabled="listingByLead.value != 0 || getUser.roles[0] !== 'ROLE_ADMIN'"
+                  label="ห้องน้ำ"
+                  type="number"
+                  v-model="listingByLead.toilet"
                 ></fg-input>
               </div>
               <div class="col-md-4">
@@ -207,6 +228,7 @@
                   <label>Notes</label>
                   <textarea
                     rows="5"
+                    :disabled="getUser.roles[0] !== 'ROLE_ADMIN'"
                     class="form-control border-input"
                     placeholder="Here can be your notes"
                     v-model="listingByLead.notes"
@@ -227,6 +249,7 @@
                 <model-select
                   :options="listingSelects2"
                   v-model="listingByAdmin"
+                  :isDisabled="getUser.roles[0] !== 'ROLE_ADMIN'"
                   class="select"
                   placeholder="select item"
                 >
@@ -235,7 +258,7 @@
               <div class="col-md-4">
                 <fg-input
                   placeholder
-                  disabled
+                  :disabled="listingByAdmin.value != 0 || getUser.roles[0] !== 'ROLE_ADMIN'"
                   label="ประเภท"
                   v-model="listingByAdmin.propertyType"
                 ></fg-input>
@@ -243,25 +266,45 @@
               <div class="col-md-4">
                 <fg-input
                   placeholder
-                  disabled
-                  label="พื้นที่"
+                  :disabled="listingByAdmin.value != 0 || getUser.roles[0] !== 'ROLE_ADMIN'"
+                  label="พื้นที่ (ตร.ม.)"
+                  type="number"
                   v-model="listingByAdmin.area"
                 ></fg-input>
               </div>
               <div class="col-md-4">
                 <fg-input
                   placeholder
-                  disabled
+                  :disabled="listingByAdmin.value != 0 || getUser.roles[0] !== 'ROLE_ADMIN'"
                   label="ชั้น"
+                  type="number"
                   v-model="listingByAdmin.floor"
                 ></fg-input>
               </div>
               <div class="col-md-4">
                 <fg-input
                   placeholder
-                  disabled
+                  :disabled="listingByAdmin.value != 0 || getUser.roles[0] !== 'ROLE_ADMIN'"
                   label="วิว"
                   v-model="listingByAdmin.direction"
+                ></fg-input>
+              </div>
+              <div class="col-md-4">
+                <fg-input
+                  placeholder
+                  :disabled="listingByAdmin.value != 0 || getUser.roles[0] !== 'ROLE_ADMIN'"
+                  label="ห้องนอน"
+                  type="number"
+                  v-model="listingByAdmin.bed"
+                ></fg-input>
+              </div>
+              <div class="col-md-4">
+                <fg-input
+                  placeholder
+                  :disabled="listingByAdmin.value != 0 || getUser.roles[0] !== 'ROLE_ADMIN'"
+                  label="ห้องน้ำ"
+                  type="number"
+                  v-model="listingByAdmin.toilet"
                 ></fg-input>
               </div>
               <div class="col-md-4">
@@ -269,6 +312,7 @@
                   <label>Notes</label>
                   <textarea
                     rows="5"
+                    :disabled="getUser.roles[0] !== 'ROLE_ADMIN'"
                     class="form-control border-input"
                     placeholder="Here can be your notes"
                     v-model="listingByAdmin.notes"
@@ -423,8 +467,23 @@
         <div class="row">
           <div class="col-md-3">
             <div class="row">
-              <div class="col-md-12">
-                <h5>ระดับ</h5>
+              <div class="col-md-12" v-if="getUser.roles[0] == 'ROLE_ADMIN'">
+                <div>
+                  <label>Sale</label>
+                </div>
+                <el-select
+                  class="select-primary"
+                  placeholder="select"
+                  v-model="userSelects.select"
+                >
+                  <el-option
+                    v-for="option in userSelects.data"
+                    class="select-primary"
+                    :value="option.value"
+                    :label="option.label"
+                    :key="option.label"
+                  ></el-option>
+                </el-select>
               </div>
               <div class="col-md-12">
                 <div>
@@ -447,9 +506,17 @@
               <div class="col-md-12">
                 <fg-input
                   placeholder
-                  label="เงิน"
+                  label="เงิน (min)"
                   type="number"
-                  v-model="lead.price"
+                  v-model="lead.priceMin"
+                ></fg-input>
+              </div>
+              <div class="col-md-12">
+                <fg-input
+                  placeholder
+                  label="เงิน (max)"
+                  type="number"
+                  v-model="lead.priceMax"
                 ></fg-input>
               </div>
               <div class="col-md-12">
@@ -529,6 +596,7 @@
                   <label>Project</label>
                 </div>
                 <model-select
+                  :isDisabled="getUser.roles[0] === 'ROLE_ADMIN'"
                   :options="listingSelects3"
                   v-model="listingLifeStyleBySale"
                   class="select"
@@ -539,7 +607,7 @@
               <div class="col-md-4">
                 <fg-input
                   placeholder
-                  disabled
+                  :disabled="listingLifeStyleBySale.value != 0 || getUser.roles[0] === 'ROLE_ADMIN'"
                   label="ประเภท"
                   v-model="listingLifeStyleBySale.propertyType"
                 ></fg-input>
@@ -547,25 +615,45 @@
               <div class="col-md-4">
                 <fg-input
                   placeholder
-                  disabled
-                  label="พื้นที่"
+                  :disabled="listingLifeStyleBySale.value != 0 || getUser.roles[0] === 'ROLE_ADMIN'"
+                  label="พื้นที่ (ตร.ม.)"
+                  type="number"
                   v-model="listingLifeStyleBySale.area"
                 ></fg-input>
               </div>
               <div class="col-md-4">
                 <fg-input
                   placeholder
-                  disabled
+                  :disabled="listingLifeStyleBySale.value != 0 || getUser.roles[0] === 'ROLE_ADMIN'"
                   label="ชั้น"
+                  type="number"
                   v-model="listingLifeStyleBySale.floor"
                 ></fg-input>
               </div>
               <div class="col-md-4">
                 <fg-input
                   placeholder
-                  disabled
+                  :disabled="listingLifeStyleBySale.value != 0 || getUser.roles[0] === 'ROLE_ADMIN'"
                   label="วิว"
                   v-model="listingLifeStyleBySale.direction"
+                ></fg-input>
+              </div>
+              <div class="col-md-4">
+                <fg-input
+                  placeholder
+                  :disabled="listingLifeStyleBySale.value != 0 || getUser.roles[0] === 'ROLE_ADMIN'"
+                  label="ห้องนอน"
+                  type="number"
+                  v-model="listingLifeStyleBySale.bed"
+                ></fg-input>
+              </div>
+              <div class="col-md-4">
+                <fg-input
+                  placeholder
+                  :disabled="listingLifeStyleBySale.value != 0 || getUser.roles[0] === 'ROLE_ADMIN'"
+                  label="ห้องน้ำ"
+                  type="number"
+                  v-model="listingLifeStyleBySale.toilet"
                 ></fg-input>
               </div>
               <div class="col-md-4">
@@ -573,6 +661,7 @@
                   <label>Notes</label>
                   <textarea
                     rows="5"
+                    :disabled="getUser.roles[0] === 'ROLE_ADMIN'"
                     class="form-control border-input"
                     placeholder="Here can be your notes"
                     v-model="listingLifeStyleBySale.notes"
@@ -609,6 +698,7 @@
                   <label>Project</label>
                 </div>
                 <model-select
+                  :isDisabled="getUser.roles[0] === 'ROLE_ADMIN'"
                   :options="listingSelects4"
                   v-model="listingBySale"
                   class="select"
@@ -619,7 +709,7 @@
               <div class="col-md-4">
                 <fg-input
                   placeholder
-                  disabled
+                  :disabled="listingBySale.value != 0 || getUser.roles[0] === 'ROLE_ADMIN'"
                   label="ประเภท"
                   v-model="listingBySale.propertyType"
                 ></fg-input>
@@ -627,25 +717,45 @@
               <div class="col-md-4">
                 <fg-input
                   placeholder
-                  disabled
-                  label="พื้นที่"
+                  :disabled="listingBySale.value != 0 || getUser.roles[0] === 'ROLE_ADMIN'"
+                  label="พื้นที่ (ตร.ม.)"
+                  type="number"
                   v-model="listingBySale.area"
                 ></fg-input>
               </div>
               <div class="col-md-4">
                 <fg-input
                   placeholder
-                  disabled
+                  :disabled="listingBySale.value != 0 || getUser.roles[0] === 'ROLE_ADMIN'"
                   label="ชั้น"
+                  type="number"
                   v-model="listingBySale.floor"
                 ></fg-input>
               </div>
               <div class="col-md-4">
                 <fg-input
                   placeholder
-                  disabled
+                  :disabled="listingBySale.value != 0 || getUser.roles[0] === 'ROLE_ADMIN'"
                   label="วิว"
                   v-model="listingBySale.direction"
+                ></fg-input>
+              </div>
+              <div class="col-md-4">
+                <fg-input
+                  placeholder
+                  :disabled="listingBySale.value != 0 || getUser.roles[0] === 'ROLE_ADMIN'"
+                  label="ห้องนอน"
+                  type="number"
+                  v-model="listingBySale.bed"
+                ></fg-input>
+              </div>
+              <div class="col-md-4">
+                <fg-input
+                  placeholder
+                  :disabled="listingBySale.value != 0 || getUser.roles[0] === 'ROLE_ADMIN'"
+                  label="ห้องน้ำ"
+                  type="number"
+                  v-model="listingBySale.toilet"
                 ></fg-input>
               </div>
               <div class="col-md-4">
@@ -653,6 +763,7 @@
                   <label>Notes</label>
                   <textarea
                     rows="5"
+                    :disabled="getUser.roles[0] === 'ROLE_ADMIN'"
                     class="form-control border-input"
                     placeholder="Here can be your notes"
                     v-model="listingBySale.notes"
@@ -806,6 +917,26 @@ export default {
         this.getLead();
       }, 500);
     }
+    if (this.getUser.roles[0] == "ROLE_ADMIN") {
+      const AXIOS = axios.create({
+        baseURL: process.env.VUE_APP_BACKEND_URL,
+      });
+      let postBody = {};
+      AXIOS.post(`api/user/list`, postBody, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+      }).then((resp) => {
+        // console.log("getUser all resp : " + JSON.stringify(resp));
+        this.userSelects.data = resp.data.map((item) => {
+          return {
+            value: item.username,
+            label: item.firstName + " " + item.lastName,
+          };
+        });
+      });
+    }
   },
 
   data() {
@@ -827,7 +958,10 @@ export default {
       difficulty: 0,
       rapport: 0,
       info: 0,
-
+      userSelects: {
+        select: "",
+        data: [],
+      },
       painSales: {
         dynamicPainSales: [],
         inputVisible: true,
@@ -867,37 +1001,41 @@ export default {
       listingSelects3: [],
       listingSelects4: [],
       listingByLead: {
-        value: "",
+        value: "-1",
+        building: "",
         text: "",
         propertyType: "",
-        area: "",
+        area: "0",
         floor: "",
         direction: "",
         notes: "",
       },
       listingByAdmin: {
-        value: "",
+        value: "-1",
+        building: "",
         text: "",
         propertyType: "",
-        area: "",
+        area: "0",
         floor: "",
         direction: "",
         notes: "",
       },
       listingLifeStyleBySale: {
-        value: "",
+        value: "-1",
+        building: "",
         text: "",
         propertyType: "",
-        area: "",
+        area: "0",
         floor: "",
         direction: "",
         notes: "",
       },
       listingBySale: {
-        value: "",
+        value: "-1",
+        building: "",
         text: "",
         propertyType: "",
-        area: "",
+        area: "0",
         floor: "",
         direction: "",
         notes: "",
@@ -908,7 +1046,8 @@ export default {
         nickName: "",
         email: "",
         line: "",
-        price: "",
+        priceMin: "",
+        priceMax: "",
         phone: "",
         address: "",
         reason: "",
@@ -928,69 +1067,99 @@ export default {
     };
   },
 
+  computed: {
+    ...mapGetters({ getUser: "getUser" }),
+    isLoggedIn: function () {
+      return this.$store.getters.isLoggedIn;
+    },
+  },
+
   watch: {
     listingByLead: function (event) {
       let listing = this.listings.filter((listing) => {
         if (listing.id == event.value) return true;
       });
       // console.log("listing : "+ JSON.stringify(listing))
-      this.listingByLead.propertyType = this.dataPropertyType.filter((data) => {
-        if (data.value == listing[0].room.propertyType) return true;
-      })[0].label;
-      this.listingByLead.area = listing[0].room.area + " ตร.ม.";
-      this.listingByLead.floor = listing[0].room.floor;
-      this.listingByLead.direction = this.dataDirection.filter((data) => {
-        if (data.value == listing[0].room.direction) return true;
-      })[0].label;
+      if (listing.length > 0) {
+        this.listingByLead.propertyType = this.dataPropertyType.filter(
+          (data) => {
+            if (data.value == listing[0].room.propertyType) return true;
+          }
+        )[0].label;
+        this.listingByLead.building = listing[0].room.building;
+        this.listingByLead.area = listing[0].room.area;
+        this.listingByLead.floor = listing[0].room.floor;
+        this.listingByLead.bed = listing[0].room.bed;
+        this.listingByLead.toilet = listing[0].room.toilet;
+        this.listingByLead.direction = this.dataDirection.filter((data) => {
+          if (data.value == listing[0].room.direction) return true;
+        })[0].label;
+      }
     },
     listingByAdmin: function (event) {
       let listing = this.listings.filter((listing) => {
         if (listing.id == event.value) return true;
       });
       // console.log("listing : "+ JSON.stringify(listing))
-      this.listingByAdmin.propertyType = this.dataPropertyType.filter(
-        (data) => {
-          if (data.value == listing[0].room.propertyType) return true;
-        }
-      )[0].label;
-      this.listingByAdmin.area = listing[0].room.area + " ตร.ม.";
-      this.listingByAdmin.floor = listing[0].room.floor;
-      this.listingByAdmin.direction = this.dataDirection.filter((data) => {
-        if (data.value == listing[0].room.direction) return true;
-      })[0].label;
-
+      if (listing.length > 0) {
+        this.listingByAdmin.propertyType = this.dataPropertyType.filter(
+          (data) => {
+            if (data.value == listing[0].room.propertyType) return true;
+          }
+        )[0].label;
+        this.listingByAdmin.building = listing[0].room.building;
+        this.listingByAdmin.area = listing[0].room.area;
+        this.listingByAdmin.floor = listing[0].room.floor;
+        this.listingByAdmin.bed = listing[0].room.bed;
+        this.listingByAdmin.toilet = listing[0].room.toilet;
+        this.listingByAdmin.direction = this.dataDirection.filter((data) => {
+          if (data.value == listing[0].room.direction) return true;
+        })[0].label;
+      }
     },
     listingLifeStyleBySale: function (event) {
       let listing = this.listings.filter((listing) => {
         if (listing.id == event.value) return true;
       });
-      // console.log("listing : "+ JSON.stringify(listing))
-      this.listingLifeStyleBySale.propertyType = this.dataPropertyType.filter(
-        (data) => {
-          if (data.value == listing[0].room.propertyType) return true;
-        }
-      )[0].label;
-      this.listingLifeStyleBySale.area = listing[0].room.area + " ตร.ม.";
-      this.listingLifeStyleBySale.floor = listing[0].room.floor;
-      this.listingLifeStyleBySale.direction = this.dataDirection.filter(
-        (data) => {
-          if (data.value == listing[0].room.direction) return true;
-        }
-      )[0].label;
+      if (listing.length > 0) {
+        // console.log("listing : "+ JSON.stringify(listing))
+        this.listingLifeStyleBySale.propertyType = this.dataPropertyType.filter(
+          (data) => {
+            if (data.value == listing[0].room.propertyType) return true;
+          }
+        )[0].label;
+        this.listingLifeStyleBySale.building = listing[0].room.building;
+        this.listingLifeStyleBySale.area = listing[0].room.area;
+        this.listingLifeStyleBySale.floor = listing[0].room.floor;
+        this.listingLifeStyleBySale.bed = listing[0].room.bed;
+        this.listingLifeStyleBySale.toilet = listing[0].room.toilet;
+        this.listingLifeStyleBySale.direction = this.dataDirection.filter(
+          (data) => {
+            if (data.value == listing[0].room.direction) return true;
+          }
+        )[0].label;
+      }
     },
     listingBySale: function (event) {
       let listing = this.listings.filter((listing) => {
         if (listing.id == event.value) return true;
       });
-      // console.log("listing : "+ JSON.stringify(listing))
-      this.listingBySale.propertyType = this.dataPropertyType.filter((data) => {
-        if (data.value == listing[0].room.propertyType) return true;
-      })[0].label;
-      this.listingBySale.area = listing[0].room.area + " ตร.ม.";
-      this.listingBySale.floor = listing[0].room.floor;
-      this.listingBySale.direction = this.dataDirection.filter((data) => {
-        if (data.value == listing[0].room.direction) return true;
-      })[0].label;
+      if (listing.length > 0) {
+        // console.log("listing : "+ JSON.stringify(listing))
+        this.listingBySale.propertyType = this.dataPropertyType.filter(
+          (data) => {
+            if (data.value == listing[0].room.propertyType) return true;
+          }
+        )[0].label;
+        this.listingBySale.building = listing[0].room.building;
+        this.listingBySale.area = listing[0].room.area;
+        this.listingBySale.floor = listing[0].room.floor;
+        this.listingBySale.bed = listing[0].room.bed;
+        this.listingBySale.toilet = listing[0].room.toilet;
+        this.listingBySale.direction = this.dataDirection.filter((data) => {
+          if (data.value == listing[0].room.direction) return true;
+        })[0].label;
+      }
     },
   },
 
@@ -1036,6 +1205,22 @@ export default {
               text: value.projects[0].name + " - " + value.owner.listingCode,
             });
           }
+          this.listingSelects1.push({
+            value: "0",
+            text: "อื่น ๆ",
+          });
+          this.listingSelects2.push({
+            value: "0",
+            text: "อื่น ๆ",
+          });
+          this.listingSelects3.push({
+            value: "0",
+            text: "อื่น ๆ",
+          });
+          this.listingSelects4.push({
+            value: "0",
+            text: "อื่น ๆ",
+          });
           // console.log(
           //   "listingSelects resp : " + JSON.stringify(this.listingSelects)
           // );
@@ -1060,8 +1245,14 @@ export default {
         params: paramsValue,
       })
         .then((resp) => {
-          // console.log("getLead resp : " + JSON.stringify(resp.data));
+          console.log("getLead resp : " + JSON.stringify(resp.data));
           this.lead = resp.data;
+          this.userSelects.select = resp.data.saleUser.username;
+          this.listingByLead.notes = resp.data.listingByLeadNotes;
+          this.listingByAdmin.notes = resp.data.listingByAdminNotes;
+          this.listingBySale.notes = resp.data.listingBySaleNotes;
+          this.listingLifeStyleBySale.notes =
+            resp.data.listingLifeStyleBySaleNotes;
           //listingLead
           if (resp.data.listingByLead != null) {
             let selectListing = this.listingSelects1.filter((listing) => {
@@ -1077,11 +1268,21 @@ export default {
             )[0].label;
             this.listingByLead.area = resp.data.listingByLead.room.area;
             this.listingByLead.floor = resp.data.listingByLead.room.floor;
+            this.listingByLead.bed = resp.data.listingByLead.room.bed;
+            this.listingByLead.toilet = resp.data.listingByLead.room.toilet;
             this.listingByLead.direction = this.dataDirection.filter((data) => {
               if (data.value == resp.data.listingByLead.room.direction)
                 return true;
             })[0].label;
-            this.listingByLead.notes = resp.data.listingByLeadNotes;
+          } else {
+            this.listingByLead.value = "0";
+            this.listingByLead.text = "อื่น ๆ";
+            this.listingByLead.propertyType = resp.data.propertyTypeListingByLead;
+            this.listingByLead.area = resp.data.areaListingByLead;
+            this.listingByLead.floor = resp.data.floorListingByLead;
+            this.listingByLead.bed = resp.data.bedListingByLead;
+            this.listingByLead.toilet = resp.data.toiletListingByLead;
+            this.listingByLead.direction = resp.data.directionListingByLead;
           }
 
           //listingAdmin
@@ -1099,13 +1300,23 @@ export default {
             )[0].label;
             this.listingByAdmin.area = resp.data.listingByAdmin.room.area;
             this.listingByAdmin.floor = resp.data.listingByAdmin.room.floor;
+            this.listingByAdmin.bed = resp.data.listingByAdmin.room.bed;
+            this.listingByAdmin.toilet = resp.data.listingByAdmin.room.toilet;
             this.listingByAdmin.direction = this.dataDirection.filter(
               (data) => {
                 if (data.value == resp.data.listingByAdmin.room.direction)
                   return true;
               }
             )[0].label;
-            this.listingByAdmin.notes = resp.data.listingByAdminNotes;
+          } else {
+            this.listingByAdmin.value = "0";
+            this.listingByAdmin.text = "อื่น ๆ";
+            this.listingByAdmin.propertyType = resp.data.propertyTypeListingByAdmin;
+            this.listingByAdmin.area = resp.data.areaListingByAdmin;
+            this.listingByAdmin.floor = resp.data.floorListingByAdmin;
+            this.listingByAdmin.bed = resp.data.bedListingByAdmin;
+            this.listingByAdmin.toilet = resp.data.toiletListingByAdmin;
+            this.listingByAdmin.direction = resp.data.directionListingByAdmin;
           }
 
           //listingSale
@@ -1123,11 +1334,21 @@ export default {
             )[0].label;
             this.listingBySale.area = resp.data.listingBySale.room.area;
             this.listingBySale.floor = resp.data.listingBySale.room.floor;
+            this.listingBySale.bed = resp.data.listingBySale.room.bed;
+            this.listingBySale.toilet = resp.data.listingBySale.room.toilet;
             this.listingBySale.direction = this.dataDirection.filter((data) => {
               if (data.value == resp.data.listingBySale.room.direction)
                 return true;
             })[0].label;
-            this.listingBySale.notes = resp.data.listingBySaleNotes;
+          } else {
+            this.listingBySale.value = "0";
+            this.listingBySale.text = "อื่น ๆ";
+            this.listingBySale.propertyType = resp.data.propertyTypeListingBySale;
+            this.listingBySale.area = resp.data.areaListingBySale;
+            this.listingBySale.floor = resp.data.floorListingBySale;
+            this.listingBySale.bed = resp.data.bedListingBySale;
+            this.listingBySale.toilet = resp.data.toiletListingBySale;
+            this.listingBySale.direction = resp.data.directionListingBySale;
           }
 
           //listingLifeStyleBySale
@@ -1151,6 +1372,10 @@ export default {
               resp.data.listingLifeStyleBySale.room.area;
             this.listingLifeStyleBySale.floor =
               resp.data.listingLifeStyleBySale.room.floor;
+            this.listingLifeStyleBySale.bed =
+              resp.data.listingLifeStyleBySale.room.bed;
+            this.listingLifeStyleBySale.toilet =
+              resp.data.listingLifeStyleBySale.room.toilet;
             this.listingLifeStyleBySale.direction = this.dataDirection.filter(
               (data) => {
                 if (
@@ -1159,8 +1384,15 @@ export default {
                   return true;
               }
             )[0].label;
-            this.listingLifeStyleBySale.notes =
-              resp.data.listingLifeStyleBySaleNotes;
+          }else {
+            this.listingLifeStyleBySale.value = "0";
+            this.listingLifeStyleBySale.text = "อื่น ๆ";
+            this.listingLifeStyleBySale.propertyType = resp.data.propertyTypeListingLifeStyleBySale;
+            this.listingLifeStyleBySale.area = resp.data.areaListingLifeStyleBySale;
+            this.listingLifeStyleBySale.floor = resp.data.floorListingLifeStyleBySale;
+            this.listingLifeStyleBySale.bed = resp.data.bedListingLifeStyleBySale;
+            this.listingLifeStyleBySale.toilet = resp.data.toiletListingLifeStyleBySale;
+            this.listingLifeStyleBySale.direction = resp.data.directionListingLifeStyleBySale;
           }
 
           this.gradeSelects.select = resp.data.grade;
@@ -1224,7 +1456,8 @@ export default {
         painPoints: this.painPoints.dynamicPainPoints,
         painSales: this.painPoints.dynamicPainSales,
         grade: this.gradeSelects.select,
-        price: this.lead.price,
+        priceMin: this.lead.priceMin,
+        priceMax: this.lead.priceMax,
         typeBuy: this.checkboxTypeBuy,
         typeRent: this.checkboxTypeRent,
         firstName: this.lead.firstName,
@@ -1250,6 +1483,7 @@ export default {
         difficulty: this.difficulty,
         rapport: this.rapport,
         typePay: this.radios.typePay,
+        saleUser: this.userSelects.select,
       };
       if (this.$route.query.id) {
         path = "api/lead/edit";
@@ -1262,7 +1496,8 @@ export default {
           painPoints: this.painPoints.dynamicPainPoints,
           painSales: this.painPoints.dynamicPainSales,
           grade: this.gradeSelects.select,
-          price: this.lead.price,
+          priceMin: this.lead.priceMin,
+          priceMax: this.lead.priceMax,
           typeBuy: this.checkboxTypeBuy,
           typeRent: this.checkboxTypeRent,
           firstName: this.lead.firstName,
@@ -1288,6 +1523,7 @@ export default {
           condition: this.lead.condition,
           contract: this.lead.contract,
           typePay: this.radios.typePay,
+          saleUser: this.userSelects.select,
         };
       }
       console.log("postBody : " + JSON.stringify(postBody));

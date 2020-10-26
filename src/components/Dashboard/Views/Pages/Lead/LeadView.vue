@@ -135,6 +135,22 @@
           </div>
           <div class="col-md-12">
             <div class="row">
+              <div class="col-md-4">ห้องนอน :</div>
+              <div class="col-md-5 d-flex align-items-end">
+                <span> {{ lead.listingByLead.room.bed }} ห้อง</span>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-12">
+            <div class="row">
+              <div class="col-md-4">ห้องน้ำ :</div>
+              <div class="col-md-5 d-flex align-items-end">
+                <span> {{ lead.listingByLead.room.toilet }} ห้อง</span>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-12">
+            <div class="row">
               <div class="col-md-4">วิว :</div>
               <div class="col-md-5 d-flex align-items-end">
                 <span>
@@ -220,6 +236,22 @@
           </div>
           <div class="col-md-12">
             <div class="row">
+              <div class="col-md-4">ห้องนอน :</div>
+              <div class="col-md-5 d-flex align-items-end">
+                <span> {{ lead.listingByAdmin.room.bed }} ห้อง</span>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-12">
+            <div class="row">
+              <div class="col-md-4">ห้องน้ำ :</div>
+              <div class="col-md-5 d-flex align-items-end">
+                <span> {{ lead.listingByAdmin.room.toilet }} ห้อง</span>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-12">
+            <div class="row">
               <div class="col-md-4">วิว :</div>
               <div class="col-md-5 d-flex align-items-end">
                 <span>
@@ -257,13 +289,7 @@
           </div>
           <!-- line -->
           <svg height="5" width="150">
-            <line
-              x1="0"
-              y1="0"
-              x2="150"
-              y2="0"
-              class="active-line"
-            />
+            <line x1="0" y1="0" x2="150" y2="0" class="active-line" />
           </svg>
           <!-- status Lead End -->
           <!-- status Action Start-->
@@ -275,13 +301,7 @@
           </div>
           <!-- line -->
           <svg height="5" width="150" v-if="timeline.action">
-            <line
-              x1="0"
-              y1="0"
-              x2="150"
-              y2="0"
-              class="active-line"
-            />
+            <line x1="0" y1="0" x2="150" y2="0" class="active-line" />
           </svg>
           <div class="event1" v-if="!timeline.action">
             <svg height="20" width="20">
@@ -291,13 +311,7 @@
           </div>
           <!-- line -->
           <svg height="5" width="150" v-if="!timeline.action">
-            <line
-              x1="0"
-              y1="0"
-              x2="150"
-              y2="0"
-              class="active-no-line"
-            />
+            <line x1="0" y1="0" x2="150" y2="0" class="active-no-line" />
           </svg>
           <!-- status Action End -->
           <!-- status Following Start-->
@@ -309,13 +323,7 @@
           </div>
           <!-- line -->
           <svg height="5" width="150" v-if="timeline.following">
-            <line
-              x1="0"
-              y1="0"
-              x2="150"
-              y2="0"
-              class="active-line"
-            />
+            <line x1="0" y1="0" x2="150" y2="0" class="active-line" />
           </svg>
           <div class="event1" v-if="!timeline.following">
             <svg height="20" width="20">
@@ -325,13 +333,7 @@
           </div>
           <!-- line -->
           <svg height="5" width="150" v-if="!timeline.following">
-            <line
-              x1="0"
-              y1="0"
-              x2="150"
-              y2="0"
-              class="active-no-line"
-            />
+            <line x1="0" y1="0" x2="150" y2="0" class="active-no-line" />
           </svg>
           <!-- status Following End -->
           <!-- status Appointment Start-->
@@ -343,13 +345,7 @@
           </div>
           <!-- line -->
           <svg height="5" width="150" v-if="timeline.appointment">
-            <line
-              x1="0"
-              y1="0"
-              x2="150"
-              y2="0"
-              class="active-line"
-            />
+            <line x1="0" y1="0" x2="150" y2="0" class="active-line" />
           </svg>
           <div class="event1" v-if="!timeline.appointment">
             <svg height="20" width="20">
@@ -359,13 +355,7 @@
           </div>
           <!-- line -->
           <svg height="5" width="150" v-if="!timeline.appointment">
-            <line
-              x1="0"
-              y1="0"
-              x2="150"
-              y2="0"
-              class="active-no-line"
-            />
+            <line x1="0" y1="0" x2="150" y2="0" class="active-no-line" />
           </svg>
           <!-- status Appointment End -->
           <!-- status Showing Start-->
@@ -377,13 +367,7 @@
           </div>
           <!-- line -->
           <svg height="5" width="150" v-if="timeline.showing">
-            <line
-              x1="0"
-              y1="0"
-              x2="150"
-              y2="0"
-              class="active-line"
-            />
+            <line x1="0" y1="0" x2="150" y2="0" class="active-line" />
           </svg>
           <div class="event1" v-if="!timeline.showing">
             <svg height="20" width="20">
@@ -393,13 +377,7 @@
           </div>
           <!-- line -->
           <svg height="5" width="150" v-if="!timeline.showing">
-            <line
-              x1="0"
-              y1="0"
-              x2="150"
-              y2="0"
-              class="active-no-line"
-            />
+            <line x1="0" y1="0" x2="150" y2="0" class="active-no-line" />
           </svg>
           <!-- status Showing End -->
           <!-- status Negotiation Start-->
@@ -411,13 +389,7 @@
           </div>
           <!-- line -->
           <svg height="5" width="150" v-if="timeline.negotiation">
-            <line
-              x1="0"
-              y1="0"
-              x2="150"
-              y2="0"
-              class="active-line"
-            />
+            <line x1="0" y1="0" x2="150" y2="0" class="active-line" />
           </svg>
           <div class="event1" v-if="!timeline.negotiation">
             <svg height="20" width="20">
@@ -427,13 +399,7 @@
           </div>
           <!-- line -->
           <svg height="5" width="150" v-if="!timeline.negotiation">
-            <line
-              x1="0"
-              y1="0"
-              x2="150"
-              y2="0"
-              class="active-no-line"
-            />
+            <line x1="0" y1="0" x2="150" y2="0" class="active-no-line" />
           </svg>
           <!-- status Negotiation End -->
           <!-- status Closing Start-->
@@ -445,13 +411,7 @@
           </div>
           <!-- line -->
           <svg height="5" width="150" v-if="timeline.closing">
-            <line
-              x1="0"
-              y1="0"
-              x2="150"
-              y2="0"
-              class="active-line"
-            />
+            <line x1="0" y1="0" x2="150" y2="0" class="active-line" />
           </svg>
           <div class="event1" v-if="!timeline.closing">
             <svg height="20" width="20">
@@ -461,13 +421,7 @@
           </div>
           <!-- line -->
           <svg height="5" width="150" v-if="!timeline.closing">
-            <line
-              x1="0"
-              y1="0"
-              x2="150"
-              y2="0"
-              class="active-no-line"
-            />
+            <line x1="0" y1="0" x2="150" y2="0" class="active-no-line" />
           </svg>
           <!-- status Closing End -->
           <!-- status Done start -->
@@ -501,7 +455,10 @@
             <div class="row">
               <div class="col-md-4"><h6>Price :</h6></div>
               <div class="col-md-5 d-flex align-items-start">
-                <span> {{ Number(lead.price).toLocaleString() }}</span>
+                <span>
+                  {{ Number(lead.priceMin).toLocaleString() }} <br />-<br />
+                  {{ Number(lead.priceMax).toLocaleString() }}</span
+                >
               </div>
             </div>
           </div>
@@ -607,7 +564,15 @@
                 <div class="row">
                   <div class="col-md-4">Pain :</div>
                   <div class="col-md-5 d-flex align-items-end">
-                    <span> {{ lead.painSales }} </span>
+                    <el-tag
+                      :key="tag"
+                      v-for="tag in lead.painSales"
+                      type="primary"
+                      :closable="false"
+                      :close-transition="false"
+                      >{{ tag }}</el-tag
+                    >
+                    <!-- <span> {{ lead.painSales }} </span> -->
                   </div>
                 </div>
               </div>
@@ -643,6 +608,26 @@
                   <div class="col-md-5 d-flex align-items-end">
                     <span>
                       {{ lead.listingLifeStyleBySale.room.floor }} ชั้น</span
+                    >
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-12">
+                <div class="row">
+                  <div class="col-md-4">ห้องนอน :</div>
+                  <div class="col-md-5 d-flex align-items-end">
+                    <span>
+                      {{ lead.listingLifeStyleBySale.room.bed }} ห้อง</span
+                    >
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-12">
+                <div class="row">
+                  <div class="col-md-4">ห้องน้ำ :</div>
+                  <div class="col-md-5 d-flex align-items-end">
+                    <span>
+                      {{ lead.listingLifeStyleBySale.room.toilet }} ห้อง</span
                     >
                   </div>
                 </div>
@@ -739,6 +724,22 @@
                   <div class="col-md-4">ชั้น :</div>
                   <div class="col-md-5 d-flex align-items-end">
                     <span> {{ lead.listingBySale.room.floor }} ชั้น</span>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-12">
+                <div class="row">
+                  <div class="col-md-4">ห้องนอน :</div>
+                  <div class="col-md-5 d-flex align-items-end">
+                    <span> {{ lead.listingBySale.room.bed }} ห้อง</span>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-12">
+                <div class="row">
+                  <div class="col-md-4">ห้องน้ำ :</div>
+                  <div class="col-md-5 d-flex align-items-end">
+                    <span> {{ lead.listingBySale.room.toilet }} ห้อง</span>
                   </div>
                 </div>
               </div>
@@ -929,8 +930,13 @@
           <div class="col-md-4">
             <div class="col-md-12">
               <div class="row">
-                <div class="col-md-4">
-                  <i class="fa fa-home fa-4x" aria-hidden="true"></i>
+                <div class="col-md-4 pointer">
+                  <i
+                    class="fa fa-home fa-4x"
+                    style="cursor: pointer"
+                    aria-hidden="true"
+                    @click="showMatch"
+                  ></i>
                 </div>
                 <div class="col-md-6 d-flex justify-content-end text-center">
                   <span> 11 Unit matched</span>
@@ -1186,11 +1192,10 @@ export default {
           { value: "2", label: "Call ไม่ได้" },
           { value: "3", label: "Chat ได้" },
           { value: "4", label: "Chat ไม่ได้" },
-          { value: "5", label: "Following" },
-          { value: "6", label: "Apporintment" },
-          { value: "7", label: "Showing" },
-          { value: "8", label: "Negotiation" },
-          { value: "9", label: "Closing" },
+          { value: "5", label: "Apporintment" },
+          { value: "6", label: "Showing" },
+          { value: "7", label: "Negotiation" },
+          { value: "8", label: "Closing" },
         ],
       },
       gradeSelects: {
@@ -1242,16 +1247,16 @@ export default {
       ],
       selectActionLog: {},
       tasks: [],
-      timeline : {
-        lead : true,
-        action : false,
+      timeline: {
+        lead: true,
+        action: false,
         following: false,
         appointment: false,
         showing: false,
         negotiation: false,
         closing: false,
-        done: false
-      }
+        done: false,
+      },
     };
   },
 
@@ -1512,12 +1517,62 @@ export default {
         },
       })
         .then((resp) => {
-          console.log("resp.data : " + JSON.stringify(resp.data));
+          // console.log("resp.data : " + JSON.stringify(resp.data));
           if (resp.data.length > 0) {
-            let status = this.actionTypeSelects.data.filter(function (actionType) {
-              if (actionType.value === resp.data.status) return true;
+            let status = this.actionTypeSelects.data.filter(function (
+              actionType
+            ) {
+              if (actionType.value === resp.data[0].status) return true;
             });
+            console.log("resp.data : " + JSON.stringify(status));
+            if (status[0].value == 1 || status[0].value == 3) {
+              this.timeline.action = true;
+              this.timeline.following = true;
+            } else if (status[0].value == 2 || status[0].value == 4) {
+              this.timeline.action = true;
+            } else if (status[0].value == 5) {
+              this.timeline.action = true;
+              this.timeline.following = true;
+              this.timeline.appointment = true;
+            } else if (status[0].value == 6) {
+              this.timeline.action = true;
+              this.timeline.following = true;
+              this.timeline.appointment = true;
+              this.timeline.showing = true;
+            } else if (status[0].value == 7) {
+              this.timeline.action = true;
+              this.timeline.following = true;
+              this.timeline.appointment = true;
+              this.timeline.showing = true;
+              this.timeline.negotiation = true;
+            } else if (status[0].value == 6) {
+              this.timeline.action = true;
+              this.timeline.following = true;
+              this.timeline.appointment = true;
+              this.timeline.showing = true;
+              this.timeline.negotiation = true;
+              this.timeline.closing = true;
+            }
           }
+        })
+        .catch((err) => {
+          console.log("err : " + JSON.stringify(err));
+          reject(err);
+        });
+    },
+    showMatch: function () {
+      const AXIOS = axios.create({
+        baseURL: process.env.VUE_APP_BACKEND_URL,
+      });
+      AXIOS.get("api/listing/match/" + this.$route.query.id, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+      })
+        .then((resp) => {
+          // console.log("resp.data : " + JSON.stringify(resp.data));
+          console.log("resp.data : " + JSON.stringify(resp.data));
         })
         .catch((err) => {
           console.log("err : " + JSON.stringify(err));
@@ -1546,12 +1601,12 @@ export default {
 }
 
 .active-line {
-  stroke: #fbc658; 
+  stroke: #fbc658;
   stroke-width: 5;
 }
 
 .active-no-line {
-  stroke: #004165; 
+  stroke: #004165;
   stroke-width: 5;
 }
 </style>
