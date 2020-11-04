@@ -1300,10 +1300,10 @@
         </div>
         <div class="col-md-6">
           <div class="form-group">
-            <label >Deposit</label>
+            <label>Deposit</label>
             <p-button type="info" round @click="handleClosingCompleted"
-            >Gen PDF
-          </p-button>
+              >Gen PDF
+            </p-button>
           </div>
         </div>
       </div>
@@ -1512,9 +1512,7 @@ export default {
             "https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100",
         },
       ],
-      fileListTranfer: [
-        
-      ],
+      fileListTranfer: [],
     };
   },
 
@@ -1966,8 +1964,26 @@ export default {
             console.log("err : " + JSON.stringify(err));
             reject(err);
           });
+      } else if (type === "MATCH") {
+        const AXIOS = axios.create({
+          baseURL: process.env.VUE_APP_BACKEND_URL,
+        });
+        let postBody = this.lead.listingLifeStyleBySale;
+        AXIOS.post("api/listing/match/", postBody, {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + localStorage.getItem("token"),
+          },
+        })
+          .then((resp) => {
+            console.log("resp.data : " + JSON.stringify(resp.data));
+            this.listings = resp.data;
+          })
+          .catch((err) => {
+            console.log("err : " + JSON.stringify(err));
+            reject(err);
+          });
       }
-
       this.modals.showMatch = true;
     },
     handleMatchCompleted: function (row) {
@@ -1980,12 +1996,10 @@ export default {
         done: "2",
         listingId: row.id,
       };
-      console.log("postBody : " + JSON.stringify(postBody));
       const AXIOS = axios.create({
         baseURL: process.env.VUE_APP_BACKEND_URL,
       });
-      let postBody = this.lead.listingLifeStyleBySale;
-      AXIOS.post("api/listing/match/",postBody, {
+      AXIOS.post("api/actionLog/create", postBody, {
         headers: {
           "Content-Type": "application/json",
           Authorization: "Bearer " + localStorage.getItem("token"),

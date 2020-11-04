@@ -12,9 +12,10 @@
           <div class="col-md-3">
             <el-upload
               class="picture"
-              action="https://jsonplaceholder.typicode.com/posts/"
+              action="http://localhost:8090/api/file/lead"
+              :headers="headers"
               :on-change="handlePreview"
-              :auto-upload="false"
+              :auto-upload="true"
               :show-file-list="false"
               style="text-align: center"
             >
@@ -941,6 +942,10 @@ export default {
 
   data() {
     return {
+      headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
       fullscreenLoading: false,
       btnAction: "Add",
       checkboxTypeRent: false,
@@ -1440,7 +1445,8 @@ export default {
       );
     },
     handlePreview(file) {
-      this.imageUrl.imageUrl = URL.createObjectURL(file.raw);
+      this.imageUrl = URL.createObjectURL(file.raw);
+        console.log("imageUrl : "+ JSON.stringify(this.imageUrl))
     },
     submit() {
       this.createLead();
