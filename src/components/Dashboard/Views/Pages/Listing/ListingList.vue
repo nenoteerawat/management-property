@@ -255,7 +255,7 @@
                                 <i class="fa fa-eye"></i>
                               </div>
                               <div class="col-md-6" style="padding-left: 0">
-                                <span>14</span>
+                                <!-- <span>14</span> -->
                               </div>
                             </div>
                           </div>
@@ -267,7 +267,7 @@
                                 <i class="fa fa-paper-plane"></i>
                               </div>
                               <div class="col-md-6" style="padding-left: 0">
-                                <span>14</span>
+                                <!-- <span>14</span> -->
                               </div>
                             </div>
                           </div>
@@ -279,7 +279,7 @@
                                 <i class="fa fa-key"></i>
                               </div>
                               <div class="col-md-6" style="padding-left: 0">
-                                <span>14</span>
+                                <!-- <span>14</span> -->
                               </div>
                             </div>
                           </div>
@@ -341,7 +341,7 @@
                   </div>
                 </template>
               </el-table-column>
-              <el-table-column min-width="100" label>
+              <el-table-column min-width="130" label>
                 <template slot-scope="props">
                   <div class="cell">
                     <h6>
@@ -386,15 +386,6 @@
                     <i class="fa fa-user"></i>
                   </p-button>-->
                   <td class="td-actions text-right">
-                    <p-button
-                      v-if="props.row.status !== 'BOOKING'"
-                      type="info"
-                      size="sm"
-                      icon
-                      @click="handleAction(props.$index, props.row)"
-                    >
-                      <i class="fa fa-check"></i>
-                    </p-button>
                     <p-button
                       type="success"
                       size="sm"
@@ -450,191 +441,6 @@
     <div class="col-md-3">
       <DailyBar />
     </div>
-    <div class="row">
-      <div class="col-md-12 text-center">
-        <!-- Change log detail modal end -->
-        <modal :show.sync="modals.classic" modalClasses="modal-lg">
-          <template slot="header">
-            <h4 slot="header" class="title title-up">รายละเอียด</h4>
-          </template>
-          <template>
-            <div class="row">
-              <div class="col-md-12" v-if="getUser.roles[0] == 'ROLE_ADMIN'">
-                <div>
-                  <label>sale</label>
-                </div>
-                <el-select
-                  class="select-primary select-width-100"
-                  placeholder="select"
-                  v-model="saleUserSelects.select"
-                >
-                  <el-option
-                    v-for="option in saleUserSelects.data"
-                    class="select-primary"
-                    :value="option.value"
-                    :label="option.label"
-                    :key="option.label"
-                  ></el-option>
-                </el-select>
-              </div>
-              <div class="col-md-12">
-                <div>
-                  <label>lead</label>
-                </div>
-                <el-select
-                  class="select-primary select-width-100"
-                  placeholder="select"
-                  v-model="leadSelects.select"
-                >
-                  <el-option
-                    v-for="option in leadSelects.data"
-                    class="select-primary"
-                    :value="option.value"
-                    :label="option.label"
-                    :key="option.label"
-                  ></el-option>
-                </el-select>
-              </div>
-              <div class="col-md-12">
-                <!-- <el-table-column min-width="126" label>
-                <template slot-scope="props">
-                  <div class="img-container">
-                    <img
-                      v-if="props.row.files.length > 1"
-                      style="
-                          height: 125px;
-                          width: 125px;
-                      "
-                      :src="props.row.files[0].path"
-                    />
-                  </div>
-                </template>
-              </el-table-column>-->
-                <el-table :data="tableMatchListing" thead-class="hidden_header">
-                  <el-table-column min-width="200" label>
-                    <template slot-scope="props">
-                      <div class="row">
-                        <div class="col-md-12">
-                          <h5 class="title" style="margin-bottom: 0">
-                            {{ props.row.projects[0].name }}
-                          </h5>
-                          <span>
-                            <small>Condominium</small>
-                            <badge
-                              v-show="props.row.room.exclusive"
-                              slot="header"
-                              type="success"
-                              >M</badge
-                            >
-                          </span>
-                        </div>
-                        <div class="col-md-12">
-                          <div class="row">
-                            <div class="col-md-12">
-                              <span>เจ้าของ : {{ props.row.owner.name }}</span>
-                            </div>
-                          </div>
-                        </div>
-                        <br />
-                      </div>
-                      <!-- <span>Condominium</span> -->
-                      <!-- <badge v-show="props.row.listing.exclusive" slot="header" type="success">M</badge> -->
-                    </template>
-                  </el-table-column>
-                  <el-table-column min-width="200" label>
-                    <template slot-scope="props">
-                      <div class="row">
-                        <div class="col-md-6" style="margin: 10px 0">
-                          <div class="row">
-                            <div class="col-md-4">
-                              <i class="fa fa-area-chart"></i>
-                            </div>
-                            <div class="col-md-6" style="padding-left: 0">
-                              <span>{{ props.row.room.area }} ตร.ม.</span>
-                            </div>
-                          </div>
-                        </div>
-                        <div class="col-md-6" style="margin: 10px 0">
-                          <div class="row">
-                            <div class="col-md-4">
-                              <i class="fa fa-arrows-v"></i>
-                            </div>
-                            <div class="col-md-6" style="padding-left: 0">
-                              <span>{{ props.row.room.floor }} Fl.</span>
-                            </div>
-                          </div>
-                        </div>
-                        <br />
-                        <div class="col-md-6" style="margin: 10px 0">
-                          <div class="row">
-                            <div class="col-md-4">
-                              <i class="fa fa-bed"></i>
-                            </div>
-                            <div class="col-md-6" style="padding-left: 0">
-                              <span>{{ props.row.room.bed }}</span>
-                            </div>
-                          </div>
-                        </div>
-                        <div class="col-md-6" style="margin: 10px 0">
-                          <div class="row">
-                            <div class="col-md-4">
-                              <i class="fa fa-bath"></i>
-                            </div>
-                            <div class="col-md-6" style="padding-left: 0">
-                              <span>{{ props.row.room.toilet }}</span>
-                            </div>
-                          </div>
-                        </div>
-                        <!-- <span>Condominium</span> -->
-                        <!-- <badge v-show="props.row.listing.exclusive" slot="header" type="primary">M</badge> -->
-                      </div>
-                    </template>
-                  </el-table-column>
-                  <el-table-column min-width="100" label>
-                    <template slot-scope="props">
-                      <div class="cell">
-                        <h6>
-                          S {{ Number(props.row.room.price).toLocaleString() }}
-                        </h6>
-                      </div>
-                      <div class="cell" v-show="props.row.room.type == 2">
-                        <h6>
-                          R
-                          {{
-                            Number(props.row.room.priceRent).toLocaleString()
-                          }}
-                        </h6>
-                      </div>
-                      <div class="cell">
-                        <span>
-                          <i class="fa fa-plus" aria-hidden="true"></i>
-                          {{ props.row.createdBy }}
-                        </span>
-                      </div>
-                      <div class="cell">
-                        <span>
-                          <i class="fa fa-clock-o" aria-hidden="true"></i>
-                          {{ props.row.createdDateTime }}
-                        </span>
-                      </div>
-                    </template>
-                  </el-table-column>
-                </el-table>
-              </div>
-            </div>
-          </template>
-          <template slot="footer">
-            <p-button type="success" link @click="handleBooking()"
-              >จอง</p-button
-            >
-            <!-- <div class="right-side">
-              <p-button type="danger" link @click="handleCancel(modalsIndex, modalsRow)">ยกเลิก</p-button>
-            </div> -->
-          </template>
-        </modal>
-        <!-- Change log detail modal end -->
-      </div>
-    </div>
   </div>
 </template>
 <script>
@@ -657,9 +463,10 @@ export default {
   created: function () {
     this.getListing();
     this.getProjectList();
-    if (this.getUser.roles[0] == "ROLE_ADMIN") this.getSaleUser();
+    if (this.getUser.roles[0] == "ROLE_ADMIN") {
+      this.getUserList();
+    }
     this.getLead();
-    this.getUserList();
     // this.getActionLog();
   },
 
@@ -857,34 +664,6 @@ export default {
       this.transport.name = "";
       this.searchlisting();
     },
-    getSaleUser: function () {
-      let postBody = {};
-      const AXIOS = axios.create({
-        baseURL: process.env.VUE_APP_BACKEND_URL,
-      });
-      AXIOS.post(`api/user/list`, postBody, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + localStorage.getItem("token"),
-        },
-      })
-        .then((resp) => {
-          for (let value of resp.data) {
-            this.saleUserSelects.data.push({
-              value: value.username,
-              label: value.firstName + " " + value.lastName,
-            });
-            this.saleUserSearchSelects.data.push({
-              value: value.username,
-              label: value.firstName + " " + value.lastName,
-            });
-          }
-        })
-        .catch((err) => {
-          console.log("err : " + JSON.stringify(err));
-          reject(err);
-        });
-    },
     getUserList: function () {
       const AXIOS = axios.create({
         baseURL: process.env.VUE_APP_BACKEND_URL,
@@ -959,41 +738,8 @@ export default {
           reject(err);
         });
     },
-    handleBooking() {
-      let postBody = {
-        listingId: this.modalsRow.id,
-        leadId: this.leadSelects.select,
-        saleUsername: this.saleUserSelects.select,
-      };
-      const AXIOS = axios.create({
-        baseURL: process.env.VUE_APP_BACKEND_URL,
-      });
-      AXIOS.post(`api/listing/booking`, postBody, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + localStorage.getItem("token"),
-        },
-      })
-        .then((resp) => {
-          this.modals.classic = false;
-          this.getListing();
-        })
-        .catch((err) => {
-          console.log("err : " + JSON.stringify(err));
-          reject(err);
-        });
-    },
     handleLike(index, row) {
       alert(`Your clicked on Like button ${index}`);
-    },
-    handleAction(index, row) {
-      this.modalsIndex = index;
-      this.modalsRow = row;
-      console.log(row);
-      this.saleUserSelects.select = "";
-      this.tableMatchListing = [];
-      this.tableMatchListing.push(row);
-      this.modals.classic = true;
     },
     handleEdit(index, row) {
       this.$router.push("/admin/listing/create?id=" + row.id);
