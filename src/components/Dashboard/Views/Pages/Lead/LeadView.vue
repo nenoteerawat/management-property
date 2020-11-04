@@ -1984,7 +1984,8 @@ export default {
       const AXIOS = axios.create({
         baseURL: process.env.VUE_APP_BACKEND_URL,
       });
-      AXIOS.post("api/actionLog/create", postBody, {
+      let postBody = this.lead.listingLifeStyleBySale;
+      AXIOS.post("api/listing/match/",postBody, {
         headers: {
           "Content-Type": "application/json",
           Authorization: "Bearer " + localStorage.getItem("token"),
