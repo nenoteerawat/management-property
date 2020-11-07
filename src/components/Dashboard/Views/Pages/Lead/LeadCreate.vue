@@ -14,6 +14,7 @@
               class="picture"
               action="http://localhost:8090/api/file/lead"
               :headers="headers"
+              name="file"
               :on-change="handlePreview"
               :auto-upload="true"
               :show-file-list="false"

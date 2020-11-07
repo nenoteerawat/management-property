@@ -324,7 +324,7 @@
                 @click="showMatch('ALL')"
               />
             </svg>
-            <div class="time" @click="showMatch">Appointment</div>
+            <div class="time" @click="showMatch('ALL')">Appointment</div>
           </div>
           <!-- line -->
           <svg height="5" width="150" v-if="!timeline.appointment">
@@ -1957,7 +1957,7 @@ export default {
           },
         })
           .then((resp) => {
-            console.log("resp.data : " + JSON.stringify(resp.data));
+            // console.log("resp.data : " + JSON.stringify(resp.data));
             this.listings = resp.data;
           })
           .catch((err) => {
@@ -1968,18 +1968,40 @@ export default {
         const AXIOS = axios.create({
           baseURL: process.env.VUE_APP_BACKEND_URL,
         });
+        let tempD = this.listingLifeStyleBySale.direction;
+        let direction;
+        let selectDirection = this.dataDirection.filter(function (data) {
+            if (data.label === tempD) return true;
+          });
+        if(selectDirection.length > 0) {
+          direction = selectDirection[0].value;
+        } else {
+          direction = "";
+        }
+
+        let tempP = this.listingLifeStyleBySale.propertyType;
+        let propertyType;
+        let selectPropertyType = this.dataPropertyType.filter(function (data) {
+            if (data.label === tempP) return true;
+          });
+        if(selectPropertyType.length > 0) {
+          propertyType = selectPropertyType[0].value;
+        } else {
+          propertyType = "";
+        }
+
         let postBody = {
           room : {
             building: this.listingLifeStyleBySale.building,
-            propertyType: this.listingLifeStyleBySale.propertyType,
+            propertyType: propertyType,
             area: this.listingLifeStyleBySale.area,
             floor: this.listingLifeStyleBySale.floor,
             toilet: this.listingLifeStyleBySale.toilet,
-            direction: this.listingLifeStyleBySale.direction,
+            direction: direction,
             // scenery: ['3', '2'],
           }
         };
-        console.log("postBody : " + JSON.stringify(postBody));
+        console.log("postBody MATCH : " + JSON.stringify(postBody));
         AXIOS.post("api/listing/match/", postBody, {
           headers: {
             "Content-Type": "application/json",
