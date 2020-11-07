@@ -1303,8 +1303,9 @@ export default {
     },
     uploadImageSuccess(formData, index, fileList) {
       this.fullscreenLoading = true;
-      console.log("formData", JSON.stringify(formData));
-      console.log("index", JSON.stringify(index));
+      // console.log("formData", JSON.stringify(formData));
+      // console.log("index", JSON.stringify(index));
+      console.log("fileList[index]", JSON.stringify(fileList[index]));
       // console.log(
       //   "fileList[index].path : ",
       //   JSON.stringify(fileList[index].path)
@@ -1421,65 +1422,6 @@ export default {
     //   }
     //   return isIMAGE && isLt1M;
     // },
-    UploadImage(param) {
-      this.fullscreenLoading = true;
-      const formData = new FormData();
-      formData.append("files", param.file);
-
-      console.log("file upload : ", JSON.stringify(param.file.naturalWidth));
-      console.log("file upload : ", JSON.stringify(param));
-
-      const AXIOS = axios.create({
-        baseURL: process.env.VUE_APP_BACKEND_URL,
-      });
-      AXIOS.post(`api/file/upload`, formData, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + localStorage.getItem("token"),
-        },
-      })
-        .then((resp) => {
-          this.fullscreenLoading = false;
-          this.$notify({
-            message: "Upload Success",
-            icon: "fa fa-gift",
-            horizontalAlign: "center",
-            verticalAlign: "top",
-            type: "success",
-          });
-          console.log("upload resp : " + JSON.stringify(resp.data));
-          let file = {
-            id: resp.data.id,
-            name: resp.data.name,
-            url: resp.data.url,
-          };
-          this.fileList.push(file);
-          console.log("fileList : ", JSON.stringify(this.fileList));
-          let slide = {
-            id: resp.data.id,
-            src: resp.data.url,
-            msrc: resp.data.url,
-            alt: resp.data.id,
-            title: resp.data.name,
-            w: 1100,
-            h: 800,
-          };
-          this.slides.push(slide);
-        })
-        .catch((err) => {
-          this.fullscreenLoading = false;
-          this.$notify({
-            message: "Error",
-            // icon: 'fa fa-gift',
-            // component: NotificationTemplate,
-            horizontalAlign: "center",
-            verticalAlign: "top",
-            type: "warning",
-          });
-          console.log("err : " + JSON.stringify(err));
-          reject(err);
-        });
-    },
     // handleCloseImage() {
     //   console.log("close event");
     // },

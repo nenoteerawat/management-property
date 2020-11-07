@@ -1364,7 +1364,7 @@ export default {
       btnAction: "edit",
       checkboxTypeRent: false,
       checkboxTypeBuy: false,
-      imageUrl: "/static/img/default-avatar.png",
+      imageUrl: "",
 
       district: "",
       amphoe: "",
@@ -1586,7 +1586,7 @@ export default {
         params: paramsValue,
       })
         .then((resp) => {
-          // console.log("getLead resp : " + JSON.stringify(resp.data));
+          console.log("getLead resp : " + JSON.stringify(resp.data));
           this.lead = resp.data;
           // listingByLead
           if (resp.data.listingByLead != null) {
@@ -1708,6 +1708,7 @@ export default {
               resp.data.directionListingLifeStyleBySale;
           }
 
+          if (resp.data.file !== null) this.imageUrl = resp.data.file.path;
           // String propertyTypeListingByLead;
           // String toiletListingByLead;
           // String bedListingByLead;
@@ -1971,9 +1972,9 @@ export default {
         let tempD = this.listingLifeStyleBySale.direction;
         let direction;
         let selectDirection = this.dataDirection.filter(function (data) {
-            if (data.label === tempD) return true;
-          });
-        if(selectDirection.length > 0) {
+          if (data.label === tempD) return true;
+        });
+        if (selectDirection.length > 0) {
           direction = selectDirection[0].value;
         } else {
           direction = "";
@@ -1982,16 +1983,16 @@ export default {
         let tempP = this.listingLifeStyleBySale.propertyType;
         let propertyType;
         let selectPropertyType = this.dataPropertyType.filter(function (data) {
-            if (data.label === tempP) return true;
-          });
-        if(selectPropertyType.length > 0) {
+          if (data.label === tempP) return true;
+        });
+        if (selectPropertyType.length > 0) {
           propertyType = selectPropertyType[0].value;
         } else {
           propertyType = "";
         }
 
         let postBody = {
-          room : {
+          room: {
             building: this.listingLifeStyleBySale.building,
             propertyType: propertyType,
             area: this.listingLifeStyleBySale.area,
@@ -1999,7 +2000,7 @@ export default {
             toilet: this.listingLifeStyleBySale.toilet,
             direction: direction,
             // scenery: ['3', '2'],
-          }
+          },
         };
         console.log("postBody MATCH : " + JSON.stringify(postBody));
         AXIOS.post("api/listing/match/", postBody, {
