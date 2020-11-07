@@ -152,6 +152,7 @@ import DailyBar from "../Daily/DailyBar";
 import { Card } from "src/components/UIComponents";
 import axios from "axios";
 import en from "element-ui/lib/locale/lang/en.js";
+import { mapGetters } from "vuex";
 
 Vue.use({ locale: en });
 export default {
@@ -203,6 +204,7 @@ export default {
         },
       ],
       tableData: [],
+      comment: "",
     };
   },
 
@@ -235,39 +237,68 @@ export default {
       window.location.href = "/admin/lead/create?id=" + row.id;
       // alert(`Your want to edit ${row.name}`);
     },
-    handleDelete(index, row) {
-      this.$confirm("This will permanently delete user. Continue?", "Warning", {
+    deleteList(row) {
+      let postBody = {
+        id: row.id,
+        comment: this.comment,
+      };
+      const AXIOS = axios.create({
+        baseURL: process.env.VUE_APP_BACKEND_URL,
+      });
+      AXIOS.post(`api/lead/delete`, postBody, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+      }).then((resp) => {
+        this.$message({
+          type: "success",
+          message: "Delete completed",
+        });
+        this.getLead();
+      });
+    },
+    validateComment(input) {
+      console.log("input : " + input);
+      if (input == null || input.length < 1) {
+        return "Comment Not Found";
+      } else {
+        this.comment = input;
+        return true;
+      }
+    },
+    openBoxComment(row) {
+      this.$prompt("Please input your comment", "comment", {
         confirmButtonText: "OK",
         cancelButtonText: "Cancel",
-        type: "warning",
+        inputValidator: this.validateComment,
       })
-        .then(() => {
-          let paramValue = {
-            id: row.id,
-          };
-          const AXIOS = axios.create({
-            baseURL: process.env.VUE_APP_BACKEND_URL,
-          });
-          AXIOS.get(`api/lead/delete`,  {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: "Bearer " + localStorage.getItem("token"),
-            },
-            params: paramValue,
-          }).then((resp) => {
-            this.$message({
-              type: "success",
-              message: "Delete completed",
-            });
-            this.getLead();
-          });
+        .then(({ value }) => {
+          this.deleteList(row);
         })
         .catch(() => {
-          this.$message({
-            type: "info",
-            message: "Delete canceled",
-          });
+          return false;
         });
+    },
+    handleDelete(index, row) {
+      if (this.getUser.roles[0] === "ROLE_SALE") {
+        this.openBoxComment(row);
+      } else {
+        this.$confirm("This will permanently delete user. Continue?", "Warning", {
+          confirmButtonText: "OK",
+          cancelButtonText: "Cancel",
+          type: "warning",
+        })
+          .then(() => {
+            this.deleteList(row)
+          })
+          .catch(() => {
+            this.$message({
+              type: "info",
+              message: "Delete canceled",
+            });
+          });
+      }
     },
     handleTaskEdit(index) {
       alert(`You want to edit task: ${JSON.stringify(this.tasks[index])}`);
@@ -278,6 +309,7 @@ export default {
   },
 
   computed: {
+    ...mapGetters({ getUser: "getUser" }),
     pagedData() {
       return this.tableData.slice(this.from, this.to);
     },
