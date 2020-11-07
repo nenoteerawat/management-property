@@ -1968,7 +1968,18 @@ export default {
         const AXIOS = axios.create({
           baseURL: process.env.VUE_APP_BACKEND_URL,
         });
-        let postBody = this.lead.listingLifeStyleBySale;
+        let postBody = {
+          room : {
+            building: this.listingLifeStyleBySale.building,
+            propertyType: this.listingLifeStyleBySale.propertyType,
+            area: this.listingLifeStyleBySale.area,
+            floor: this.listingLifeStyleBySale.floor,
+            toilet: this.listingLifeStyleBySale.toilet,
+            direction: this.listingLifeStyleBySale.direction,
+            // scenery: ['3', '2'],
+          }
+        };
+        console.log("postBody : " + JSON.stringify(postBody));
         AXIOS.post("api/listing/match/", postBody, {
           headers: {
             "Content-Type": "application/json",
