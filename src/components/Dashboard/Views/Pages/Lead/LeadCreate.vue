@@ -1149,6 +1149,7 @@ export default {
           path: "",
         },
       },
+      comment: "",
     };
   },
 
@@ -1619,13 +1620,39 @@ export default {
       this.imageUrl = URL.createObjectURL(file.raw);
       console.log("imageUrl : " + JSON.stringify(this.imageUrl));
     },
+    validateComment(input) {
+      if (input == null || input.length < 1) {
+        return "Comment Not Found";
+      } else {
+        this.comment = input;
+        return true;
+      }
+    },
+    openBoxComment() {
+      this.$prompt("Please input your comment", "comment", {
+        confirmButtonText: "OK",
+        cancelButtonText: "Cancel",
+        inputValidator: this.validateComment,
+      })
+        .then(({ value }) => {
+          this.createLead();
+        })
+        .catch(() => {
+          return false;
+        });
+    },
     submit() {
-      this.createLead();
+      if (this.getUser.roles[0] === "ROLE_SALE") {
+        this.openBoxComment();
+      } else {
+        this.createLead();
+      }
     },
     createLead() {
       this.fullscreenLoading = true;
       let path = "api/lead/create";
       let postBody = {
+        comment: this.comment,
         listingByLead: this.listingByLead,
         listingByAdmin: this.listingByAdmin,
         listingBySale: this.listingBySale,
@@ -1666,6 +1693,7 @@ export default {
       if (this.$route.query.id) {
         path = "api/lead/edit";
         postBody = {
+          comment: this.comment,
           id: this.$route.query.id,
           listingByLead: this.listingByLead,
           listingByAdmin: this.listingByAdmin,

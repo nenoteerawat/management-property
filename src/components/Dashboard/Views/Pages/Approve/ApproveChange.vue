@@ -294,8 +294,9 @@ export default {
         }
       )
         .then(() => {
-          let headers = { "Content-Type": "application/json",
-          Authorization: "Bearer " + localStorage.getItem("token"), 
+          let headers = { 
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + localStorage.getItem("token"), 
           };
           let body = {
             changeLogId: row.id,
@@ -331,7 +332,10 @@ export default {
         }
       )
         .then(() => {
-          let headers = { "Content-Type": "application/json" };
+          let headers = { 
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + localStorage.getItem("token"), 
+          };
           let body = {
             changeLogId: row.id,
             isApprove: "false",
