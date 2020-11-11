@@ -14,31 +14,57 @@
                   <div class="form-group">
                     <label class="control-label">ประเภท</label>
                     <div class="col-md-12">
-                      <p-radio label="1" v-model="project.type" value="1" :inline="true">คอนโด</p-radio>
-                      <p-radio label="2" v-model="project.type" value="2" :inline="true">บ้าน</p-radio>
-                      <p-radio label="3" v-model="project.type" value="3" :inline="true">ที่ดิน</p-radio>
+                      <p-radio
+                        label="1"
+                        v-model="project.type"
+                        value="1"
+                        :inline="true"
+                        >คอนโด</p-radio
+                      >
+                      <p-radio
+                        label="2"
+                        v-model="project.type"
+                        value="2"
+                        :inline="true"
+                        >บ้าน</p-radio
+                      >
+                      <p-radio
+                        label="3"
+                        v-model="project.type"
+                        value="3"
+                        :inline="true"
+                        >ที่ดิน</p-radio
+                      >
                     </div>
                   </div>
                 </fieldset>
               </div>
               <div class="col-md-4">
-                <ValidationProvider name="name" rules="required" v-slot="{ passed, failed }">
+                <ValidationProvider
+                  name="name"
+                  rules="required"
+                  v-slot="{ passed, failed }"
+                >
                   <fg-input
                     placeholder
                     label="โครงการ"
                     v-model="project.name"
-                    :error="failed ? 'The field is required': null"
+                    :error="failed ? 'The field is required' : null"
                     :hasSuccess="passed"
                   ></fg-input>
                 </ValidationProvider>
               </div>
               <div class="col-md-5">
-                <ValidationProvider name="address" rules="required" v-slot="{ passed, failed }">
+                <ValidationProvider
+                  name="address"
+                  rules="required"
+                  v-slot="{ passed, failed }"
+                >
                   <fg-input
                     placeholder
                     label="ที่อยู่"
                     v-model="project.address"
-                    :error="failed ? 'The field is required': null"
+                    :error="failed ? 'The field is required' : null"
                     :hasSuccess="passed"
                   ></fg-input>
                 </ValidationProvider>
@@ -79,6 +105,24 @@
                   placeholder="รหัสไปรษณีย์..."
                 />
               </div>
+              <div class="col-md-4">
+                <div>
+                  <label>Zone</label>
+                </div>
+                <el-select
+                  class="select-primary"
+                  placeholder="Select"
+                  v-model="zoneSelect.selects"
+                >
+                  <el-option
+                    v-for="option in zoneSelect.data"
+                    class="select-primary"
+                    :value="option.value"
+                    :label="option.label"
+                    :key="option.label"
+                  ></el-option>
+                </el-select>
+              </div>
               <div class="col-md-12">
                 <div>
                   <label>ส่วนกลาง</label>
@@ -99,12 +143,21 @@
                 </el-select>
               </div>
               <div class="col-md-12">
-                <div class="row" v-for="(building,k) in buildings" :key="k">
+                <div class="row" v-for="(building, k) in buildings" :key="k">
                   <div class="col-md-2">
-                    <fg-input placeholder label="ชั้น" type="number" v-model="building.floor"></fg-input>
+                    <fg-input
+                      placeholder
+                      label="ชั้น"
+                      type="number"
+                      v-model="building.floor"
+                    ></fg-input>
                   </div>
                   <div class="col-md-2">
-                    <fg-input placeholder label="ตึก" v-model="building.building"></fg-input>
+                    <fg-input
+                      placeholder
+                      label="ตึก"
+                      v-model="building.building"
+                    ></fg-input>
                   </div>
                   <div class="col-md-2">
                     <fg-input
@@ -124,7 +177,7 @@
                         size="sm"
                         icon
                         @click="removeBuilding(k)"
-                        v-show="k || ( !k && buildings.length > 1)"
+                        v-show="k || (!k && buildings.length > 1)"
                       >
                         <i class="nc-icon nc-simple-remove"></i>
                       </p-button>
@@ -132,7 +185,7 @@
                         type="primary"
                         size="sm"
                         icon
-                        v-show="k == buildings.length-1"
+                        v-show="k == buildings.length - 1"
                         @click="addBuilding(k)"
                       >
                         <i class="nc-icon nc-simple-add"></i>
@@ -142,7 +195,7 @@
                 </div>
               </div>
               <div class="col-md-12">
-                <div class="row" v-for="(transport,k) in transports" :key="k">
+                <div class="row" v-for="(transport, k) in transports" :key="k">
                   <div class="col-md-2">
                     <div>
                       <label>การเดินทาง</label>
@@ -189,7 +242,9 @@
                         v-model="transport.range"
                       />
                       <div class="input-group-append">
-                        <span class="input-group-text bg-grey" id="basic-addon2">ม.</span>
+                        <span class="input-group-text bg-grey" id="basic-addon2"
+                          >ม.</span
+                        >
                       </div>
                     </div>
                   </div>
@@ -203,7 +258,7 @@
                         size="sm"
                         icon
                         @click="remove(k)"
-                        v-show="k || ( !k && transports.length > 1)"
+                        v-show="k || (!k && transports.length > 1)"
                       >
                         <i class="nc-icon nc-simple-remove"></i>
                       </p-button>
@@ -211,7 +266,7 @@
                         type="primary"
                         size="sm"
                         icon
-                        v-show="k == transports.length-1"
+                        v-show="k == transports.length - 1"
                         @click="add(k)"
                       >
                         <i class="nc-icon nc-simple-add"></i>
@@ -229,7 +284,8 @@
                   round
                   @click="handleSubmit(submit)"
                   v-loading.fullscreen.lock="fullscreenLoading"
-                >{{ btnAction }}</p-button>
+                  >{{ btnAction }}</p-button
+                >
               </div>
             </template>
           </card>
@@ -292,6 +348,7 @@ export default {
         this.province = resp.data[0].province;
         this.zipcode = resp.data[0].zipcode;
         this.facilitySelects.selects = resp.data[0].facilities;
+        this.zoneSelect.selects = resp.data[0].zone;
         this.transports.splice(0, 1);
         let i = 0;
         for (let value of resp.data[0].transports) {
@@ -339,6 +396,14 @@ export default {
           { value: "BTS", label: "BTS" },
           { value: "MRT", label: "MRT" },
           { value: "AIRLINK", label: "AIRLINK" },
+        ],
+      },
+      zoneSelect: {
+        selects: "",
+        data: [
+          { value: "พระราม 9", label: "พระราม 9" },
+          { value: "อโศก", label: "อโศก" },
+          { value: "สีลม", label: "สีลม" },
         ],
       },
       transportBTSSelect: [
@@ -473,6 +538,7 @@ export default {
         zipcode: this.zipcode,
         facilities: this.facilitySelects.selects,
         transports: this.transports,
+        zone: this.zoneSelect.selects,
         comment: this.comment,
       };
       if (this.$route.query.id) {
@@ -490,6 +556,7 @@ export default {
           facilities: this.facilitySelects.selects,
           transports: this.transports,
           username: this.getUser.username,
+          zone: this.zoneSelect.selects,
           comment: this.comment,
         };
       }
