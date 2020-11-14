@@ -322,9 +322,15 @@
           <!-- status Appointment Start-->
           <div class="event1" v-if="timeline.appointment">
             <svg height="20" width="20">
-              <circle cx="10" cy="11" r="5" fill="#fbc658" />
+              <circle
+                cx="10"
+                cy="11"
+                r="5"
+                fill="#fbc658"
+                @click="showMatch('ALL')"
+              />
             </svg>
-            <div class="time">Appointment</div>
+            <div class="time" @click="showMatch('ALL')">Appointment</div>
           </div>
           <!-- line -->
           <svg height="5" width="150" v-if="timeline.appointment">
@@ -822,97 +828,96 @@
       <div class="col-md-6">
         <div class="row">
           <div class="col-md-12">
-             <el-table :data="queriedData">
-            <!-- <el-table-column type="index"></el-table-column> -->
-            <el-table-column
-              v-for="column in tableColumns"
-              :key="column.label"
-              :min-width="column.minWidth"
-              :prop="column.prop"
-              :label="column.label"
-              sortable
-            ></el-table-column>
-            <el-table-column
-              class-name="action-buttons td-actions"
-              align="right"
-              label="action"
-              min-width="120"
-            >
-              <template slot-scope="props">
-                <p-button
-                  v-if="props.row.done === 'COMPLETED'"
-                  type="info"
-                  round
-                  icon
-                  @click="getActionLogDetail(props.row, 'VIEW')"
-                >
-                  <i class="fa fa-list"></i>
-                </p-button>
-                <p-button
-                  v-if="props.row.done === 'PENDING'"
-                  type="success"
-                  round
-                  icon
-                  @click="handleActionCompleted(props.row)"
-                >
-                  <i class="fa fa-check"></i>
-                </p-button>
-                <p-button
-                  v-if="props.row.done === 'PENDING'"
-                  type="info"
-                  aria-label="edit button"
-                  round
-                  icon
-                  class="btn-icon-mini btn-neutral"
-                  @click="getActionLogDetail(props.row, 'EDIT')"
-                >
-                  <i class="nc-icon nc-ruler-pencil"></i>
-                </p-button>
-                <p-button
-                  v-if="props.row.done === 'PENDING'"
-                  type="danger"
-                  aria-label="remove button"
-                  round
-                  icon
-                  class="btn-icon-mini btn-neutral"
-                  @click="handleDeleteClick(props.$index, props.row)"
-                >
-                  <i class="nc-icon nc-simple-remove"></i>
-                </p-button>
-              </template>
-            </el-table-column>
-          </el-table>
+            <el-table :data="queriedData">
+              <!-- <el-table-column type="index"></el-table-column> -->
+              <el-table-column
+                v-for="column in tableColumns"
+                :key="column.label"
+                :min-width="column.minWidth"
+                :prop="column.prop"
+                :label="column.label"
+                sortable
+              ></el-table-column>
+              <el-table-column
+                class-name="action-buttons td-actions"
+                align="right"
+                label="action"
+                min-width="120"
+              >
+                <template slot-scope="props">
+                  <p-button
+                    v-if="props.row.done === 'COMPLETED'"
+                    type="info"
+                    round
+                    icon
+                    @click="getActionLogDetail(props.row, 'VIEW')"
+                  >
+                    <i class="fa fa-list"></i>
+                  </p-button>
+                  <p-button
+                    v-if="props.row.done === 'PENDING'"
+                    type="success"
+                    round
+                    icon
+                    @click="handleActionCompleted(props.row)"
+                  >
+                    <i class="fa fa-check"></i>
+                  </p-button>
+                  <p-button
+                    v-if="props.row.done === 'PENDING'"
+                    type="info"
+                    aria-label="edit button"
+                    round
+                    icon
+                    class="btn-icon-mini btn-neutral"
+                    @click="getActionLogDetail(props.row, 'EDIT')"
+                  >
+                    <i class="nc-icon nc-ruler-pencil"></i>
+                  </p-button>
+                  <p-button
+                    v-if="props.row.done === 'PENDING'"
+                    type="danger"
+                    aria-label="remove button"
+                    round
+                    icon
+                    class="btn-icon-mini btn-neutral"
+                    @click="handleDeleteClick(props.$index, props.row)"
+                  >
+                    <i class="nc-icon nc-simple-remove"></i>
+                  </p-button>
+                </template>
+              </el-table-column>
+            </el-table>
           </div>
           <div class="col-md-6 pagination-info">
-          <p class="category">
-            Showing {{ from + 1 }} to {{ to }} of {{ total }} entries
-          </p>
-        </div>
-        <div class="col-md-6">
-          <p-pagination
-            class="pull-right"
-            v-model="pagination.currentPage"
-            :per-page="pagination.perPage"
-            :total="pagination.total"
-          ></p-pagination>
-        </div>
-        <div class="col-md-6">
-          <el-select
-            class="select-default"
-            v-model="pagination.perPage"
-            placeholder="Per page"
-          >
-            <el-option
+            <p class="category">
+              Showing {{ from + 1 }} to {{ to }} of {{ total }} entries
+            </p>
+          </div>
+          <div class="col-md-6">
+            <p-pagination
+              class="pull-right"
+              v-model="pagination.currentPage"
+              :per-page="pagination.perPage"
+              :total="pagination.total"
+            ></p-pagination>
+          </div>
+          <div class="col-md-6">
+            <el-select
               class="select-default"
-              v-for="item in pagination.perPageOptions"
-              :key="item"
-              :label="item"
-              :value="item"
-            ></el-option>
-          </el-select>
+              v-model="pagination.perPage"
+              placeholder="Per page"
+            >
+              <el-option
+                class="select-default"
+                v-for="item in pagination.perPageOptions"
+                :key="item"
+                :label="item"
+                :value="item"
+              ></el-option>
+            </el-select>
+          </div>
         </div>
-        </div>
-        
       </div>
       <!-- Action log end -->
       <!-- matched and other start -->
@@ -1035,6 +1040,7 @@
           class="select-primary select-width-100"
           placeholder="select"
           v-model="actionTypeSelects.select"
+          @change="getListingByAppointment($event)"
         >
           <el-option
             v-for="option in actionTypeSelects.data"
@@ -1045,6 +1051,30 @@
           ></el-option>
         </el-select>
       </div>
+      <div class="col-md-12" v-show="actionTypeSelects.select == 5">
+        <div>
+          <label>Listing</label>
+        </div>
+        <model-select
+          :options="listingByActionLogSelects"
+          v-model="listingByActionLog"
+          class="select"
+          placeholder="select item"
+        >
+        </model-select>
+      </div>
+      <div class="col-md-12" v-show="actionTypeSelects.select == 6">
+        <div>
+          <label>Listing</label>
+        </div>
+        <model-select
+          :options="listingByAppointmentSelects"
+          v-model="listingByAppointment"
+          class="select"
+          placeholder="select item"
+        >
+        </model-select>
+      </div>
       <div class="col-md-12">
         <div class="form-group">
           <label>Comment</label>
@@ -1054,6 +1084,18 @@
             class="form-control border-input"
             placeholder=""
             v-model="comment"
+          ></textarea>
+        </div>
+      </div>
+      <div class="col-md-12" v-show="actionTypeSelects.select == 6">
+        <div class="form-group">
+          <label>Reason</label>
+          <textarea
+            :readonly="view"
+            rows="5"
+            class="form-control border-input"
+            placeholder=""
+            v-model="reason"
           ></textarea>
         </div>
       </div>
@@ -1109,146 +1151,160 @@
         <h4 class="title title-up">Show Match</h4>
       </template>
       <div class="row">
-        <!-- Action log start -->
         <div class="col-md-12">
-          <div class="table-full-width table-tasks">
-            <el-table :data="listings">
-              <!-- <el-table-column type="index"></el-table-column> -->
-              <el-table-column min-width="126" label>
-                <template slot-scope="props">
-                  <div class="img-container">
-                    <img
-                      v-if="props.row.files.length > 1"
-                      style="height: 125px; width: 125px"
-                      :src="props.row.files[0].path"
-                    />
+          <el-table :data="queriedDataListing">
+            <!-- <el-table-column type="index"></el-table-column> -->
+            <el-table-column min-width="126" label>
+              <template slot-scope="props">
+                <div class="img-container">
+                  <img
+                    v-if="props.row.files.length > 1"
+                    style="height: 125px; width: 125px"
+                    :src="props.row.files[0].path"
+                  />
+                </div>
+              </template>
+            </el-table-column>
+            <el-table-column min-width="200" label>
+              <template slot-scope="props">
+                <div class="row">
+                  <div class="col-md-12">
+                    <h5 class="title" style="margin-bottom: 0">
+                      {{ props.row.projects[0].name }}
+                    </h5>
+                    <span>
+                      <small>Condominium</small>
+                      <badge
+                        v-show="props.row.room.exclusive"
+                        slot="header"
+                        type="success"
+                        >E
+                      </badge>
+                      <badge
+                        v-if="props.row.status == 'BOOKING'"
+                        slot="header"
+                        type="warning"
+                        >ติดจอง
+                      </badge>
+                    </span>
                   </div>
-                </template>
-              </el-table-column>
-              <el-table-column min-width="200" label>
-                <template slot-scope="props">
-                  <div class="row">
-                    <div class="col-md-12">
-                      <h5 class="title" style="margin-bottom: 0">
-                        {{ props.row.projects[0].name }}
-                      </h5>
-                      <span>
-                        <small>Condominium</small>
-                        <badge
-                          v-show="props.row.room.exclusive"
-                          slot="header"
-                          type="success"
-                          >E
-                        </badge>
-                        <badge
-                          v-if="props.row.status == 'BOOKING'"
-                          slot="header"
-                          type="warning"
-                          >ติดจอง
-                        </badge>
-                      </span>
-                    </div>
-                    <div class="col-md-12">
-                      <div class="row">
-                        <div class="col-md-12">
-                          <span>เจ้าของ : {{ props.row.owner.name }}</span>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="col-md-12">
-                      <div class="row">
-                        <div class="col-md-6">
-                          <div class="col-md-3">
-                            <i class="fa fa-area-chart"></i>
-                          </div>
-                          <div class="col-md-9" style="padding-left: 0">
-                            <span>{{ props.row.room.area }} ตร.ม.</span>
-                          </div>
-                        </div>
-                        <div class="col-md-6">
-                          <div class="col-md-3">
-                            <i class="fa fa-arrows-v"></i>
-                          </div>
-                          <div class="col-md-9" style="padding-left: 0">
-                            <span>{{ props.row.room.floor }} Fl.</span>
-                          </div>
-                        </div>
-                        <div class="col-md-6">
-                          <div class="col-md-3">
-                            <i class="fa fa-bed"></i>
-                          </div>
-                          <div class="col-md-9" style="padding-left: 0">
-                            <span>{{ props.row.room.bed }} ห้อง</span>
-                          </div>
-                        </div>
-                        <div class="col-md-6">
-                          <div class="col-md-3">
-                            <i class="fa fa-bath"></i>
-                          </div>
-                          <div class="col-md-9" style="padding-left: 0">
-                            <span>{{ props.row.room.toilet }} ห้อง</span>
-                          </div>
-                        </div>
+                  <div class="col-md-12">
+                    <div class="row">
+                      <div class="col-md-12">
+                        <span>เจ้าของ : {{ props.row.owner.name }}</span>
                       </div>
                     </div>
                   </div>
-                  <!-- <span>Condominium</span> -->
-                  <!-- <badge v-show="props.row.listing.exclusive" slot="header" type="success">M</badge> -->
-                </template>
-              </el-table-column>
-              <el-table-column min-width="150" label>
-                <template slot-scope="props">
-                  <div class="cell">
-                    <h6>
-                      S {{ Number(props.row.room.price).toLocaleString() }}
-                    </h6>
+                  <div class="col-md-12">
+                    <div class="row">
+                      <div class="col-md-6">
+                        <div class="col-md-3">
+                          <i class="fa fa-area-chart"></i>
+                        </div>
+                        <div class="col-md-9" style="padding-left: 0">
+                          <span>{{ props.row.room.area }} ตร.ม.</span>
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="col-md-3">
+                          <i class="fa fa-arrows-v"></i>
+                        </div>
+                        <div class="col-md-9" style="padding-left: 0">
+                          <span>{{ props.row.room.floor }} Fl.</span>
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="col-md-3">
+                          <i class="fa fa-bed"></i>
+                        </div>
+                        <div class="col-md-9" style="padding-left: 0">
+                          <span>{{ props.row.room.bed }} ห้อง</span>
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="col-md-3">
+                          <i class="fa fa-bath"></i>
+                        </div>
+                        <div class="col-md-9" style="padding-left: 0">
+                          <span>{{ props.row.room.toilet }} ห้อง</span>
+                        </div>
+                      </div>
+                    </div>
                   </div>
-                  <div class="cell" v-show="props.row.room.type == 2">
-                    <h6>
-                      R {{ Number(props.row.room.priceRent).toLocaleString() }}
-                    </h6>
-                  </div>
-                  <div class="cell">
-                    <span>
-                      <i class="fa fa-plus" aria-hidden="true"></i>
-                      {{ props.row.createdBy }}
-                    </span>
-                  </div>
-                  <div class="cell">
-                    <span>
-                      <i class="fa fa-clock-o" aria-hidden="true"></i>
-                      {{ props.row.createdDateTime }}
-                    </span>
-                  </div>
-                </template>
-              </el-table-column>
-              <el-table-column
-                class-name="action-buttons td-actions"
-                align="right"
-              >
-                <template slot-scope="props">
-                  <p-button
-                    type="success"
-                    round
-                    icon
-                    @click="handleMatchCompleted(props.row)"
-                  >
-                    <i class="fa fa-check"></i>
-                  </p-button>
-                </template>
-              </el-table-column>
-            </el-table>
-            <!-- <table class="table">
-            <tbody>
-              <ActionLog
-                v-for="(task, index) in tasks"
-                :key="task.title"
-                :task="task"
-                :index="index"
-              ></ActionLog>
-            </tbody>
-          </table> -->
-          </div>
+                </div>
+                <!-- <span>Condominium</span> -->
+                <!-- <badge v-show="props.row.listing.exclusive" slot="header" type="success">M</badge> -->
+              </template>
+            </el-table-column>
+            <el-table-column min-width="150" label>
+              <template slot-scope="props">
+                <div class="cell">
+                  <h6>S {{ Number(props.row.room.price).toLocaleString() }}</h6>
+                </div>
+                <div class="cell" v-show="props.row.room.type == 2">
+                  <h6>
+                    R {{ Number(props.row.room.priceRent).toLocaleString() }}
+                  </h6>
+                </div>
+                <div class="cell">
+                  <span>
+                    <i class="fa fa-plus" aria-hidden="true"></i>
+                    {{ props.row.createdBy }}
+                  </span>
+                </div>
+                <div class="cell">
+                  <span>
+                    <i class="fa fa-clock-o" aria-hidden="true"></i>
+                    {{ props.row.createdDateTime }}
+                  </span>
+                </div>
+              </template>
+            </el-table-column>
+            <el-table-column
+              class-name="action-buttons td-actions"
+              align="right"
+            >
+              <template slot-scope="props">
+                <p-button
+                  type="success"
+                  round
+                  icon
+                  @click="handleMatchCompleted(props.row)"
+                >
+                  <i class="fa fa-check"></i>
+                </p-button>
+              </template>
+            </el-table-column>
+          </el-table>
+        </div>
+        <div class="col-md-6 pagination-info">
+          <p class="category">
+            Showing {{ fromListing + 1 }} to {{ toListing }} of
+            {{ totalListing }} entries
+          </p>
+        </div>
+        <div class="col-md-6">
+          <p-pagination
+            class="pull-right"
+            v-model="paginationListing.currentPage"
+            :per-page="paginationListing.perPage"
+            :total="paginationListing.total"
+          ></p-pagination>
+        </div>
+        <div class="col-md-6">
+          <el-select
+            class="select-default"
+            v-model="paginationListing.perPage"
+            placeholder="Per page"
+          >
+            <el-option
+              class="select-default"
+              v-for="item in paginationListing.perPageOptions"
+              :key="item"
+              :label="item"
+              :value="item"
+            ></el-option>
+          </el-select>
         </div>
       </div>
     </modal>
@@ -1292,6 +1348,42 @@
             v-model="textNegotiation"
           >
           </el-input>
+        </div>
+        <div class="col-md-4">
+                <el-select
+          class="select-primary select-width-100"
+          placeholder="select"
+          v-model="negotiationSelects.select"
+        >
+          <el-option
+            v-for="option in negotiationSelects.data"
+            class="select-primary"
+            :value="option.value"
+            :label="option.label"
+            :key="option.label"
+          ></el-option>
+        </el-select>
+        </div>
+        <div class="col-md-4">
+                <fg-input
+                  placeholder
+                  label="Reason"
+                  v-model="reasonNegotiation"
+                ></fg-input>
+        </div>
+        <div class="col-md-4">
+                <fg-input
+                  placeholder
+                  label="Why"
+                  v-model="whyNegotiation"
+                ></fg-input>
+        </div>
+        <div class="col-md-4">
+                <fg-input
+                  placeholder
+                  label="Improve"
+                  v-model="improveNegotiation"
+                ></fg-input>
         </div>
       </div>
       <template slot="footer">
@@ -1390,6 +1482,7 @@ import { email, required, confirmed } from "vee-validate/dist/rules";
 import ThailandAutoComplete from "vue-thailand-address-autocomplete";
 import ActionLog from "../Action/ActionLog";
 import PPagination from "src/components/UIComponents/Pagination.vue";
+import { ModelSelect } from "vue-search-select";
 
 extend("required", required);
 extend("confirmed", confirmed);
@@ -1404,6 +1497,7 @@ export default {
     Modal,
     ActionLog,
     PPagination,
+    ModelSelect,
     // TransportBox,
   },
 
@@ -1413,6 +1507,7 @@ export default {
     setTimeout(() => {
       this.getLead();
     }, 500);
+    this.getListing();
     this.getActionLog();
   },
 
@@ -1429,6 +1524,13 @@ export default {
         perPageOptions: [5, 10, 25, 50],
         total: 0,
       },
+      paginationListing: {
+        perPage: 10,
+        currentPage: 1,
+        perPageOptions: [5, 10, 25, 50],
+        total: 0,
+      },
+      searchQuery: "",
       district: "",
       amphoe: "",
       province: "",
@@ -1451,6 +1553,7 @@ export default {
       modalBtn: "Add",
       actionDateTime: new Date(),
       comment: "",
+      reason: "",
       actionTypeSelects: {
         select: "",
         data: [
@@ -1472,6 +1575,13 @@ export default {
           { value: "c", label: "C" },
         ],
       },
+      negotiationSelects: {
+        select: "",
+        data: [
+          { value: "owner", label: "owner" },
+          { value: "lead", label: "lead" },
+        ],
+      },
       dataPropertyType: [
         { value: "1", label: "คอนโด" },
         { value: "2", label: "บ้าน" },
@@ -1488,7 +1598,10 @@ export default {
         { value: "8", label: "ตะวันตก" },
       ],
       listings: [],
-      listingSelects: [],
+      listingByActionLogSelects: [],
+      listingByActionLog: "",
+      listingByAppointmentSelects: [],
+      listingByAppointment: "",
       listingByLead: {
         name: "",
         building: "",
@@ -1562,7 +1675,9 @@ export default {
       },
       textTips: "testttttttttttttttttttttttttttttttt",
       textNegotiation: "",
-
+      reasonNegotiation: "",
+      whyNegotiation: "",
+      improveNegotiation: "",
       fileListBook: [
         {
           name: "food.jpeg",
@@ -1614,6 +1729,70 @@ export default {
         this.getTimeline();
       });
     },
+    getListing: function () {
+      let postBody = {
+        role: "",
+        id: "",
+      };
+      const AXIOS = axios.create({
+        baseURL: process.env.VUE_APP_BACKEND_URL,
+      });
+      AXIOS.post(`api/listing/list`, postBody, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+      })
+        .then((resp) => {
+          for (let value of resp.data) {
+            this.listingByActionLogSelects.push({
+              value: value.id,
+              text: value.projects[0].name + " - " + value.owner.listingCode,
+            });
+          }
+          this.listingByActionLogSelects.push({
+            value: "0",
+            text: "อื่น ๆ",
+          });
+        })
+        .catch((err) => {
+          console.log("getListing err : " + JSON.stringify(err));
+          reject(err);
+        });
+    },
+    getListingByAppointment: function (event) {
+      if (event == 6) {
+        let paramValue = {
+          leadId: this.$route.query.id,
+        };
+        const AXIOS = axios.create({
+          baseURL: process.env.VUE_APP_BACKEND_URL,
+        });
+        AXIOS.get(`api/listing/listByAppointment`, {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + localStorage.getItem("token"),
+          },
+          params: paramValue,
+        })
+          .then((resp) => {
+            for (let value of resp.data) {
+              this.listingByAppointmentSelects.push({
+                value: value.id,
+                text: value.projects[0].name + " - " + value.owner.listingCode,
+              });
+            }
+            this.listingByAppointmentSelects.push({
+              value: "0",
+              text: "อื่น ๆ",
+            });
+          })
+          .catch((err) => {
+            console.log("getListing err : " + JSON.stringify(err));
+            reject(err);
+          });
+      }
+    },
     getProject: function () {
       let postBody = {
         role: "",
@@ -1631,7 +1810,7 @@ export default {
         this.projects = resp.data.map((item) => {
           return { name: item.name, id: item.id, zone: item.zone };
         });
-        console.log("projects : " + JSON.stringify(this.projects));
+        // console.log("projects : " + JSON.stringify(this.projects));
       });
     },
     getLead: function () {
@@ -1649,7 +1828,7 @@ export default {
         params: paramsValue,
       })
         .then((resp) => {
-          console.log("getLead resp : " + JSON.stringify(resp.data));
+          // console.log("getLead resp : " + JSON.stringify(resp.data));
           this.lead = resp.data;
           // listingByLead
           if (resp.data.listingByLead != null) {
@@ -1852,14 +2031,20 @@ export default {
     },
     createActionLog: function () {
       this.fullscreenLoading = true;
-
+      let listingId = null;
+      if (this.actionTypeSelects.select == 5) {
+        listingId = this.listingByActionLog;
+      }
+      if (this.actionTypeSelects.select == 6) {
+        listingId = this.listingByAppointment;
+      }
       let postBody = {
         status: this.actionTypeSelects.select,
         comment: this.comment,
+        listingId: listingId,
         actionDateTime: this.actionDateTime,
         leadId: this.$route.query.id,
         done: this.radios.done,
-        // listingId: this.listingId,
       };
       console.log("postBody : " + JSON.stringify(postBody));
       const AXIOS = axios.create({
@@ -2043,7 +2228,6 @@ export default {
           reject(err);
         });
     },
-    
     showMatch: function (type) {
       if (type === "ALL") {
         const AXIOS = axios.create({
@@ -2323,6 +2507,46 @@ export default {
     total() {
       this.pagination.total = this.tasks.length;
       return this.tasks.length;
+    },
+
+    pagedDataListing() {
+      return this.listings.slice(this.from, this.to);
+    },
+
+    queriedDataListing() {
+      if (!this.searchQuery) {
+        this.paginationListing.total = this.listings.length;
+        return this.pagedDataListing;
+      }
+      let result = this.listings.filter((row) => {
+        let isIncluded = false;
+        for (let key of this.propsToSearch) {
+          let rowValue = row[key].toString();
+          if (rowValue.includes && rowValue.includes(this.searchQuery)) {
+            isIncluded = true;
+          }
+        }
+        return isIncluded;
+      });
+      this.paginationListing.total = result.length;
+      return result.slice(this.from, this.to);
+    },
+    toListing() {
+      let highBound = this.from + this.paginationListing.perPage;
+      if (this.total < highBound) {
+        highBound = this.total;
+      }
+      return highBound;
+    },
+    fromListing() {
+      return (
+        this.paginationListing.perPage *
+        (this.paginationListing.currentPage - 1)
+      );
+    },
+    totalListing() {
+      this.paginationListing.total = this.listings.length;
+      return this.listings.length;
     },
   },
 };
