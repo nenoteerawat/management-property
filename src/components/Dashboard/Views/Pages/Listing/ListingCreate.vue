@@ -1526,7 +1526,7 @@ export default {
         toilet: this.toiletSelects.select,
         bed: this.bedSelects.select,
         area: this.room.area,
-        floor: this.room.floor,
+        floor: this.floorSelects.select,
         price: this.room.price,
         priceRent: this.room.priceRent,
         rentDetail: this.room.rentDetail,

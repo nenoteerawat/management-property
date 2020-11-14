@@ -108,6 +108,14 @@
           </div>
           <div class="col-md-12">
             <div class="row">
+              <div class="col-md-4">Zone :</div>
+              <div class="col-md-5 d-flex align-items-end">
+                <span> {{ listingByLead.zone }}</span>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-12">
+            <div class="row">
               <div class="col-md-4">พื้นที่ :</div>
               <div class="col-md-5 d-flex align-items-end">
                 <span> {{ listingByLead.area }} ตร.ม.</span>
@@ -188,6 +196,14 @@
               <div class="col-md-4">Type :</div>
               <div class="col-md-5 d-flex align-items-end">
                 <span> {{ listingByAdmin.propertyType }}</span>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-12">
+            <div class="row">
+              <div class="col-md-4">Zone :</div>
+              <div class="col-md-5 d-flex align-items-end">
+                <span> {{ listingByAdmin.zone }}</span>
               </div>
             </div>
           </div>
@@ -563,6 +579,14 @@
               </div>
               <div class="col-md-12">
                 <div class="row">
+                  <div class="col-md-4">Zone :</div>
+                  <div class="col-md-5 d-flex align-items-end">
+                    <span> {{ listingLifeStyleBySale.zone }}</span>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-12">
+                <div class="row">
                   <div class="col-md-4">พื้นที่ :</div>
                   <div class="col-md-5 d-flex align-items-end">
                     <span> {{ listingLifeStyleBySale.area }} ตร.ม.</span>
@@ -652,6 +676,14 @@
                   <div class="col-md-4">Type :</div>
                   <div class="col-md-5 d-flex align-items-end">
                     <span> {{ listingBySale.propertyType }}</span>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-12">
+                <div class="row">
+                  <div class="col-md-4">Zone :</div>
+                  <div class="col-md-5 d-flex align-items-end">
+                    <span> {{ listingBySale.zone }}</span>
                   </div>
                 </div>
               </div>
@@ -788,8 +820,9 @@
     <div class="row">
       <!-- Action log start -->
       <div class="col-md-6">
-        <div class="table-full-width table-tasks">
-          <el-table :data="tasks">
+        <div class="row">
+          <div class="col-md-12">
+             <el-table :data="queriedData">
             <!-- <el-table-column type="index"></el-table-column> -->
             <el-table-column
               v-for="column in tableColumns"
@@ -849,17 +882,37 @@
               </template>
             </el-table-column>
           </el-table>
-          <!-- <table class="table">
-            <tbody>
-              <ActionLog
-                v-for="(task, index) in tasks"
-                :key="task.title"
-                :task="task"
-                :index="index"
-              ></ActionLog>
-            </tbody>
-          </table> -->
+          </div>
+          <div class="col-md-6 pagination-info">
+          <p class="category">
+            Showing {{ from + 1 }} to {{ to }} of {{ total }} entries
+          </p>
         </div>
+        <div class="col-md-6">
+          <p-pagination
+            class="pull-right"
+            v-model="pagination.currentPage"
+            :per-page="pagination.perPage"
+            :total="pagination.total"
+          ></p-pagination>
+        </div>
+        <div class="col-md-6">
+          <el-select
+            class="select-default"
+            v-model="pagination.perPage"
+            placeholder="Per page"
+          >
+            <el-option
+              class="select-default"
+              v-for="item in pagination.perPageOptions"
+              :key="item"
+              :label="item"
+              :value="item"
+            ></el-option>
+          </el-select>
+        </div>
+        </div>
+        
       </div>
       <!-- Action log end -->
       <!-- matched and other start -->
@@ -1336,6 +1389,7 @@ import { extend } from "vee-validate";
 import { email, required, confirmed } from "vee-validate/dist/rules";
 import ThailandAutoComplete from "vue-thailand-address-autocomplete";
 import ActionLog from "../Action/ActionLog";
+import PPagination from "src/components/UIComponents/Pagination.vue";
 
 extend("required", required);
 extend("confirmed", confirmed);
@@ -1349,12 +1403,16 @@ export default {
     Badge,
     Modal,
     ActionLog,
+    PPagination,
     // TransportBox,
   },
 
   created: function () {
-    this.getLead();
     this.getProject();
+    // this.getLead();
+    setTimeout(() => {
+      this.getLead();
+    }, 500);
     this.getActionLog();
   },
 
@@ -1364,8 +1422,13 @@ export default {
       btnAction: "edit",
       checkboxTypeRent: false,
       checkboxTypeBuy: false,
-      imageUrl: "",
-
+      imageUrl: "/static/img/photo.png",
+      pagination: {
+        perPage: 10,
+        currentPage: 1,
+        perPageOptions: [5, 10, 25, 50],
+        total: 0,
+      },
       district: "",
       amphoe: "",
       province: "",
@@ -1566,7 +1629,7 @@ export default {
         },
       }).then((resp) => {
         this.projects = resp.data.map((item) => {
-          return { name: item.name, id: item.id };
+          return { name: item.name, id: item.id, zone: item.zone };
         });
         console.log("projects : " + JSON.stringify(this.projects));
       });
@@ -1602,6 +1665,10 @@ export default {
             this.listingByLead.floor = resp.data.listingByLead.room.floor;
             this.listingByLead.bed = resp.data.listingByLead.room.bed;
             this.listingByLead.toilet = resp.data.listingByLead.room.toilet;
+            this.listingByLead.zone = this.projects.filter((data) => {
+              if (data.id == resp.data.listingByLead.room.projectId)
+                return true;
+            })[0].zone;
             this.listingByLead.direction = this.dataDirection[
               Number(resp.data.listingByLead.room.direction) - 1
             ].label;
@@ -1613,6 +1680,7 @@ export default {
             this.listingByLead.bed = resp.data.bedListingByLead;
             this.listingByLead.toilet = resp.data.toiletListingByLead;
             this.listingByLead.direction = resp.data.directionListingByLead;
+            this.listingByLead.zone = resp.data.zoneListingByLead;
           }
           // listingBySale
           if (resp.data.listingBySale != null) {
@@ -1628,6 +1696,10 @@ export default {
             this.listingBySale.floor = resp.data.listingBySale.room.floor;
             this.listingBySale.bed = resp.data.listingBySale.room.bed;
             this.listingBySale.toilet = resp.data.listingBySale.room.toilet;
+            this.listingBySale.zone = this.projects.filter((data) => {
+              if (data.id == resp.data.listingBySale.room.projectId)
+                return true;
+            })[0].zone;
             this.listingBySale.direction = this.dataDirection[
               Number(resp.data.listingBySale.room.direction) - 1
             ].label;
@@ -1639,6 +1711,7 @@ export default {
             this.listingBySale.bed = resp.data.bedListingBySale;
             this.listingBySale.toilet = resp.data.toiletListingBySale;
             this.listingBySale.direction = resp.data.directionListingBySale;
+            this.listingBySale.zone = resp.data.zoneListingBySale;
           }
           // listingByAdmin
           if (resp.data.listingByAdmin != null) {
@@ -1655,6 +1728,10 @@ export default {
             this.listingByAdmin.floor = resp.data.listingByAdmin.room.floor;
             this.listingByAdmin.bed = resp.data.listingByAdmin.room.bed;
             this.listingByAdmin.toilet = resp.data.listingByAdmin.room.toilet;
+            this.listingByAdmin.zone = this.projects.filter((data) => {
+              if (data.id == resp.data.listingByAdmin.room.projectId)
+                return true;
+            })[0].zone;
             this.listingByAdmin.direction = this.dataDirection[
               Number(resp.data.listingByAdmin.room.direction) - 1
             ].label;
@@ -1666,6 +1743,7 @@ export default {
             this.listingByAdmin.bed = resp.data.bedListingByAdmin;
             this.listingByAdmin.toilet = resp.data.toiletListingByAdmin;
             this.listingByAdmin.direction = resp.data.directionListingByAdmin;
+            this.listingByAdmin.zone = resp.data.zoneListingByAdmin;
           }
           // listingLifeStyleBySale
           if (resp.data.listingLifeStyleBySale != null) {
@@ -1690,6 +1768,10 @@ export default {
               resp.data.listingLifeStyleBySale.room.bed;
             this.listingLifeStyleBySale.toilet =
               resp.data.listingLifeStyleBySale.room.toilet;
+            this.listingLifeStyleBySale.zone = this.projects.filter((data) => {
+              if (data.id == resp.data.listingLifeStyleBySale.room.projectId)
+                return true;
+            })[0].zone;
             this.listingLifeStyleBySale.direction = this.dataDirection[
               Number(resp.data.listingLifeStyleBySale.room.direction) - 1
             ].label;
@@ -1706,6 +1788,8 @@ export default {
               resp.data.toiletListingLifeStyleBySale;
             this.listingLifeStyleBySale.direction =
               resp.data.directionListingLifeStyleBySale;
+            this.listingLifeStyleBySale.zone =
+              resp.data.zoneListingLifeStyleBySale;
           }
 
           if (resp.data.file !== null) this.imageUrl = resp.data.file.path;
@@ -1912,23 +1996,38 @@ export default {
             if (status[0].value == 1 || status[0].value == 3) {
               this.timeline.action = true;
               this.timeline.following = true;
+              this.timeline.appointment = false;
+              this.timeline.showing = false;
+              this.timeline.negotiation = false;
+              this.timeline.closing = false;
             } else if (status[0].value == 2 || status[0].value == 4) {
               this.timeline.action = true;
+              this.timeline.following = false;
+              this.timeline.appointment = false;
+              this.timeline.showing = false;
+              this.timeline.negotiation = false;
+              this.timeline.closing = false;
             } else if (status[0].value == 5) {
               this.timeline.action = true;
               this.timeline.following = true;
               this.timeline.appointment = true;
+              this.timeline.showing = false;
+              this.timeline.negotiation = false;
+              this.timeline.closing = false;
             } else if (status[0].value == 6) {
               this.timeline.action = true;
               this.timeline.following = true;
               this.timeline.appointment = true;
               this.timeline.showing = true;
+              this.timeline.negotiation = false;
+              this.timeline.closing = false;
             } else if (status[0].value == 7) {
               this.timeline.action = true;
               this.timeline.following = true;
               this.timeline.appointment = true;
               this.timeline.showing = true;
               this.timeline.negotiation = true;
+              this.timeline.closing = false;
             } else if (status[0].value == 6) {
               this.timeline.action = true;
               this.timeline.following = true;
@@ -1944,6 +2043,7 @@ export default {
           reject(err);
         });
     },
+    
     showMatch: function (type) {
       if (type === "ALL") {
         const AXIOS = axios.create({
@@ -2179,6 +2279,50 @@ export default {
     },
     beforeRemove(file, fileList) {
       return this.$confirm(`Cancel the transfert of ${file.name} ?`);
+    },
+  },
+
+  computed: {
+    ...mapGetters({ getUser: "getUser" }),
+    isLoggedIn: function () {
+      return this.$store.getters.isLoggedIn;
+    },
+
+    pagedData() {
+      return this.tasks.slice(this.from, this.to);
+    },
+
+    queriedData() {
+      if (!this.searchQuery) {
+        this.pagination.total = this.tasks.length;
+        return this.pagedData;
+      }
+      let result = this.tasks.filter((row) => {
+        let isIncluded = false;
+        for (let key of this.propsToSearch) {
+          let rowValue = row[key].toString();
+          if (rowValue.includes && rowValue.includes(this.searchQuery)) {
+            isIncluded = true;
+          }
+        }
+        return isIncluded;
+      });
+      this.pagination.total = result.length;
+      return result.slice(this.from, this.to);
+    },
+    to() {
+      let highBound = this.from + this.pagination.perPage;
+      if (this.total < highBound) {
+        highBound = this.total;
+      }
+      return highBound;
+    },
+    from() {
+      return this.pagination.perPage * (this.pagination.currentPage - 1);
+    },
+    total() {
+      this.pagination.total = this.tasks.length;
+      return this.tasks.length;
     },
   },
 };
