@@ -117,14 +117,14 @@
                     min-width="20"
                     type="index"
                   ></el-table-column>
-                  <el-table-column min-width="120" label="หัวข้อ">
+                  <el-table-column min-width="200" label="หัวข้อ">
                     <template slot-scope="props">
                       <div class="cell">
                         <h6>{{ props.row.key }}</h6>
                       </div>
                     </template>
                   </el-table-column>
-                  <el-table-column min-width="170" label="จากข้อมูล">
+                  <el-table-column min-width="150" label="จากข้อมูล">
                     <template slot-scope="props">
                       <div class="cell">
                         <h6
@@ -139,7 +139,7 @@
                       </div>
                     </template>
                   </el-table-column>
-                  <el-table-column min-width="170" label="เป็นข้อมูล">
+                  <el-table-column min-width="150" label="เป็นข้อมูล">
                     <template slot-scope="props">
                       <div class="cell">
                         <h6
@@ -154,14 +154,6 @@
                       </div>
                     </template>
                   </el-table-column>
-                  <!-- <el-table-column
-                    v-for="column in tableDetailColumns"
-                    :key="column.label"
-                    :min-width="column.minWidth"
-                    :prop="column.prop"
-                    :label="column.label"
-                    sortable
-                  ></el-table-column>-->
                 </el-table>
               </div>
             </div>
@@ -258,12 +250,10 @@ export default {
         {
           prop: "fromValue",
           label: "จากข้อมูล",
-          minWidth: 170,
         },
         {
           prop: "toValue",
           label: "เป็นข้อมูล",
-          minWidth: 170,
         },
       ],
       tableDetailData: [],

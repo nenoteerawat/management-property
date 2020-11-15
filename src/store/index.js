@@ -87,8 +87,8 @@ export default new Vuex.Store({
   },
   modules: {},
   getters: {
-    isLoggedIn: state => !!(state.token && !funIsEmpty(state.user)),
-    authStatus: state => state.status && !funIsEmpty(state.user),
+    isLoggedIn: state => !!(state.token && !funIsEmpty(state.user.roles)),
+    authStatus: state => state.status && !funIsEmpty(state.user.roles),
     getUser: state => state.user,
   },
   plugins: [
