@@ -159,7 +159,8 @@
                 <div class="row">
                   <div class="col-md-12">
                     <label>Project : </label>
-                    <span style="font-size: 25px"> {{ project.name }}</span>
+                    <span style="font-size: 25px"> {{ project.name }} </span>
+                    <span>({{project.zone}})</span>
                     <router-link to="/admin/project/create">
                       <p-button type="success" class="pull-right" outline round>
                         <i class="nc-icon nc-simple-add"></i> Add
@@ -968,6 +969,7 @@ export default {
         develop: "",
         address: "",
         price: "",
+        zone: "",
       },
       floorSelects: {
         select: "",
@@ -1111,6 +1113,7 @@ export default {
         this.project.floor = resp.data[0].floor;
         this.project.develop = resp.data[0].develop;
         this.project.address = resp.data[0].address;
+        this.project.zone = resp.data[0].zone;
         this.district = resp.data[0].district;
         this.amphoe = resp.data[0].amphoe;
         this.province = resp.data[0].province;
@@ -1523,7 +1526,7 @@ export default {
         toilet: this.toiletSelects.select,
         bed: this.bedSelects.select,
         area: this.room.area,
-        floor: this.room.floor,
+        floor: this.floorSelects.select,
         price: this.room.price,
         priceRent: this.room.priceRent,
         rentDetail: this.room.rentDetail,

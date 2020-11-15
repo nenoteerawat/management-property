@@ -193,6 +193,17 @@
                     listingByLead.value != 0 ||
                     getUser.roles[0] !== 'ROLE_ADMIN'
                   "
+                  label="zone"
+                  v-model="listingByLead.zone"
+                ></fg-input>
+              </div>
+              <div class="col-md-4">
+                <fg-input
+                  placeholder
+                  :disabled="
+                    listingByLead.value != 0 ||
+                    getUser.roles[0] !== 'ROLE_ADMIN'
+                  "
                   label="พื้นที่ (ตร.ม.)"
                   type="number"
                   v-model="listingByLead.area"
@@ -286,6 +297,17 @@
                   "
                   label="ประเภท"
                   v-model="listingByAdmin.propertyType"
+                ></fg-input>
+              </div>
+              <div class="col-md-4">
+                <fg-input
+                  placeholder
+                  :disabled="
+                    listingByAdmin.value != 0 ||
+                    getUser.roles[0] !== 'ROLE_ADMIN'
+                  "
+                  label="zone"
+                  v-model="listingByAdmin.zone"
                 ></fg-input>
               </div>
               <div class="col-md-4">
@@ -662,6 +684,17 @@
                     listingLifeStyleBySale.value != 0 ||
                     getUser.roles[0] === 'ROLE_ADMIN'
                   "
+                  label="zone"
+                  v-model="listingLifeStyleBySale.zone"
+                ></fg-input>
+              </div>
+              <div class="col-md-4">
+                <fg-input
+                  placeholder
+                  :disabled="
+                    listingLifeStyleBySale.value != 0 ||
+                    getUser.roles[0] === 'ROLE_ADMIN'
+                  "
                   label="พื้นที่ (ตร.ม.)"
                   type="number"
                   v-model="listingLifeStyleBySale.area"
@@ -773,6 +806,17 @@
                   "
                   label="ประเภท"
                   v-model="listingBySale.propertyType"
+                ></fg-input>
+              </div>
+              <div class="col-md-4">
+                <fg-input
+                  placeholder
+                  :disabled="
+                    listingBySale.value != 0 ||
+                    getUser.roles[0] === 'ROLE_ADMIN'
+                  "
+                  label="zone"
+                  v-model="listingBySale.zone"
                 ></fg-input>
               </div>
               <div class="col-md-4">
@@ -988,6 +1032,7 @@ export default {
 
   created: function () {
     this.getListings();
+    this.getProjectList();
     if (this.$route.query.id) {
       setTimeout(() => {
         this.getLead();
@@ -1025,7 +1070,7 @@ export default {
       btnAction: "Add",
       checkboxTypeRent: false,
       checkboxTypeBuy: false,
-      imageUrl: "",
+      imageUrl: "/static/img/photo.png",
 
       district: "",
       amphoe: "",
@@ -1052,6 +1097,7 @@ export default {
         inputVisible: true,
         inputValue: "",
       },
+      projects: [],
       gradeSelects: {
         select: "",
         data: [
@@ -1088,6 +1134,7 @@ export default {
         area: "0",
         floor: "",
         direction: "",
+        zone: "",
         notes: "",
       },
       listingByAdmin: {
@@ -1098,6 +1145,7 @@ export default {
         area: "0",
         floor: "",
         direction: "",
+        zone: "",
         notes: "",
       },
       listingLifeStyleBySale: {
@@ -1108,6 +1156,7 @@ export default {
         area: "0",
         floor: "",
         direction: "",
+        zone: "",
         notes: "",
       },
       listingBySale: {
@@ -1118,6 +1167,7 @@ export default {
         area: "0",
         floor: "",
         direction: "",
+        zone: "",
         notes: "",
       },
       lead: {
@@ -1165,7 +1215,7 @@ export default {
       let listing = this.listings.filter((listing) => {
         if (listing.id == event.value) return true;
       });
-      // console.log("listing : "+ JSON.stringify(listing))
+      console.log("listing : " + JSON.stringify(listing));
       if (listing.length > 0) {
         this.listingByLead.propertyType = this.dataPropertyType.filter(
           (data) => {
@@ -1177,6 +1227,7 @@ export default {
         this.listingByLead.floor = listing[0].room.floor;
         this.listingByLead.bed = listing[0].room.bed;
         this.listingByLead.toilet = listing[0].room.toilet;
+        this.listingByLead.zone = listing[0].projects[0].zone;
         this.listingByLead.direction = this.dataDirection.filter((data) => {
           if (data.value == listing[0].room.direction) return true;
         })[0].label;
@@ -1198,6 +1249,7 @@ export default {
         this.listingByAdmin.floor = listing[0].room.floor;
         this.listingByAdmin.bed = listing[0].room.bed;
         this.listingByAdmin.toilet = listing[0].room.toilet;
+        this.listingByAdmin.zone = listing[0].projects[0].zone;
         this.listingByAdmin.direction = this.dataDirection.filter((data) => {
           if (data.value == listing[0].room.direction) return true;
         })[0].label;
@@ -1219,6 +1271,7 @@ export default {
         this.listingLifeStyleBySale.floor = listing[0].room.floor;
         this.listingLifeStyleBySale.bed = listing[0].room.bed;
         this.listingLifeStyleBySale.toilet = listing[0].room.toilet;
+        this.listingLifeStyleBySale.zone = listing[0].projects[0].zone;
         this.listingLifeStyleBySale.direction = this.dataDirection.filter(
           (data) => {
             if (data.value == listing[0].room.direction) return true;
@@ -1242,6 +1295,7 @@ export default {
         this.listingBySale.floor = listing[0].room.floor;
         this.listingBySale.bed = listing[0].room.bed;
         this.listingBySale.toilet = listing[0].room.toilet;
+        this.listingBySale.zone = listing[0].projects[0].zone;
         this.listingBySale.direction = this.dataDirection.filter((data) => {
           if (data.value == listing[0].room.direction) return true;
         })[0].label;
@@ -1255,6 +1309,29 @@ export default {
       this.amphoe = address.amphoe;
       this.province = address.province;
       this.zipcode = address.zipcode;
+    },
+    getProjectList: function () {
+      let postBody = {
+        role: "",
+        id: "",
+      };
+      const AXIOS = axios.create({
+        baseURL: process.env.VUE_APP_BACKEND_URL,
+      });
+      AXIOS.post(`api/project/list`, postBody, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+      })
+        .then((resp) => {
+          this.projects = resp.data;
+          // console.log("resp : " + JSON.stringify(this.tableData));
+        })
+        .catch((err) => {
+          console.log("err : " + JSON.stringify(err));
+          reject(err);
+        });
     },
     getListings: function () {
       let postBody = {
@@ -1356,6 +1433,12 @@ export default {
             this.listingByLead.floor = resp.data.listingByLead.room.floor;
             this.listingByLead.bed = resp.data.listingByLead.room.bed;
             this.listingByLead.toilet = resp.data.listingByLead.room.toilet;
+            this.listingByLead.zone = this.projects.filter(
+              (data) => {
+                if (data.id == resp.data.listingByLead.room.projectId)
+                  return true;
+              }
+            )[0].zone;
             this.listingByLead.direction = this.dataDirection.filter((data) => {
               if (data.value == resp.data.listingByLead.room.direction)
                 return true;
@@ -1370,6 +1453,7 @@ export default {
             this.listingByLead.bed = resp.data.bedListingByLead;
             this.listingByLead.toilet = resp.data.toiletListingByLead;
             this.listingByLead.direction = resp.data.directionListingByLead;
+            this.listingByLead.zone = resp.data.zoneListingByLead;
           }
 
           //listingAdmin
@@ -1389,6 +1473,12 @@ export default {
             this.listingByAdmin.floor = resp.data.listingByAdmin.room.floor;
             this.listingByAdmin.bed = resp.data.listingByAdmin.room.bed;
             this.listingByAdmin.toilet = resp.data.listingByAdmin.room.toilet;
+            this.listingByAdmin.zone = this.projects.filter(
+              (data) => {
+                if (data.id == resp.data.listingByAdmin.room.projectId)
+                  return true;
+              }
+            )[0].zone;
             this.listingByAdmin.direction = this.dataDirection.filter(
               (data) => {
                 if (data.value == resp.data.listingByAdmin.room.direction)
@@ -1405,6 +1495,7 @@ export default {
             this.listingByAdmin.bed = resp.data.bedListingByAdmin;
             this.listingByAdmin.toilet = resp.data.toiletListingByAdmin;
             this.listingByAdmin.direction = resp.data.directionListingByAdmin;
+            this.listingByAdmin.zone = resp.data.zoneListingByAdmin;
           }
 
           //listingSale
@@ -1424,6 +1515,12 @@ export default {
             this.listingBySale.floor = resp.data.listingBySale.room.floor;
             this.listingBySale.bed = resp.data.listingBySale.room.bed;
             this.listingBySale.toilet = resp.data.listingBySale.room.toilet;
+            this.listingBySale.zone = this.projects.filter(
+              (data) => {
+                if (data.id == resp.data.listingBySale.room.projectId)
+                  return true;
+              }
+            )[0].zone;
             this.listingBySale.direction = this.dataDirection.filter((data) => {
               if (data.value == resp.data.listingBySale.room.direction)
                 return true;
@@ -1438,6 +1535,7 @@ export default {
             this.listingBySale.bed = resp.data.bedListingBySale;
             this.listingBySale.toilet = resp.data.toiletListingBySale;
             this.listingBySale.direction = resp.data.directionListingBySale;
+            this.listingBySale.zone = resp.data.zoneListingBySale;
           }
 
           //listingLifeStyleBySale
@@ -1465,6 +1563,12 @@ export default {
               resp.data.listingLifeStyleBySale.room.bed;
             this.listingLifeStyleBySale.toilet =
               resp.data.listingLifeStyleBySale.room.toilet;
+            this.listingLifeStyleBySale.zone = this.projects.filter(
+              (data) => {
+                if (data.id == resp.data.listingLifeStyleBySale.room.projectId)
+                  return true;
+              }
+            )[0].zone;
             this.listingLifeStyleBySale.direction = this.dataDirection.filter(
               (data) => {
                 if (
@@ -1488,6 +1592,8 @@ export default {
               resp.data.toiletListingLifeStyleBySale;
             this.listingLifeStyleBySale.direction =
               resp.data.directionListingLifeStyleBySale;
+            this.listingLifeStyleBySale.zone =
+              resp.data.zoneListingLifeStyleBySale;
           }
 
           this.gradeSelects.select = resp.data.grade;
@@ -1499,8 +1605,7 @@ export default {
           this.rapport = resp.data.rapport;
           this.info = resp.data.info;
           this.radios.typePay = resp.data.typePay;
-          if (resp.data.file !== null)
-            this.imageUrl = resp.data.file.path;
+          if (resp.data.file !== null) this.imageUrl = resp.data.file.path;
           this.btnAction = "Edit";
         })
         .catch((err) => {
@@ -1586,7 +1691,9 @@ export default {
               name: resp.data.name,
               path: resp.data.path,
             };
-        console.log("toggleUpload this.lead.file" + JSON.stringify(this.lead.file));
+            console.log(
+              "toggleUpload this.lead.file" + JSON.stringify(this.lead.file)
+            );
 
             this.imageUrl = URL.createObjectURL(file.raw);
           })
