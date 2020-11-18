@@ -2253,7 +2253,7 @@ export default {
         const AXIOS = axios.create({
           baseURL: process.env.VUE_APP_BACKEND_URL,
         });
-        let tempD = this.listingLifeStyleBySale.direction;
+        let tempD = this.listingBySale.direction;
         let direction;
         let selectDirection = this.dataDirection.filter(function (data) {
           if (data.label === tempD) return true;
@@ -2264,7 +2264,7 @@ export default {
           direction = "";
         }
 
-        let tempP = this.listingLifeStyleBySale.propertyType;
+        let tempP = this.listingBySale.propertyType;
         let propertyType;
         let selectPropertyType = this.dataPropertyType.filter(function (data) {
           if (data.label === tempP) return true;
@@ -2276,15 +2276,19 @@ export default {
         }
 
         let postBody = {
-          room: {
-            building: this.listingLifeStyleBySale.building,
-            propertyType: propertyType,
-            area: this.listingLifeStyleBySale.area,
-            floor: this.listingLifeStyleBySale.floor,
-            toilet: this.listingLifeStyleBySale.toilet,
-            direction: direction,
-            // scenery: ['3', '2'],
-          },
+
+          building: this.listingBySale.building,
+          propertyType: propertyType,
+          area: this.listingBySale.area,
+          floor: this.listingBySale.floor,
+          toilet: this.listingBySale.toilet,
+          bed: this.listingBySale.bed,
+          zone: this.listingBySale.zone,
+          direction: direction,
+          priceMin: this.lead.priceMin,
+          priceMax: this.lead.priceMax,
+          // scenery: ['3', '2'],
+
         };
         console.log("postBody MATCH : " + JSON.stringify(postBody));
         AXIOS.post("api/listing/match/", postBody, {
