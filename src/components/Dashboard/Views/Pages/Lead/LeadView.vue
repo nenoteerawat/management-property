@@ -406,7 +406,7 @@
           <!-- status Closing Start-->
           <div class="event1" v-if="timeline.closing">
             <svg height="20" width="20">
-              <circle cx="10" cy="11" r="5" fill="#fbc658" />
+              <circle cx="10" cy="11" r="5" fill="#fbc658" @click="showClosing"/>
             </svg>
             <div class="time">Closing</div>
           </div>
@@ -432,7 +432,13 @@
           </svg>
           <!-- status Closing End -->
           <!-- status Done start -->
-          <div class="event1">
+          <div class="event1" v-if="timeline.closing">
+            <svg height="20" width="20">
+              <circle cx="10" cy="11" r="5" fill="#fbc658" />
+            </svg>
+            <div class="time">Done</div>
+          </div>
+          <div class="event1" v-if="!timeline.closing">
             <svg height="20" width="20">
               <circle cx="10" cy="11" r="5" fill="#004165" />
             </svg>
@@ -971,7 +977,7 @@
               </div>
               <div class="col-md-6">
                 <div class="pull-right">
-                  <span>ลุกค้าคุยง่ายแค่ไหน</span>
+                  <span>ลูกค้าคุยง่ายแค่ไหน</span>
                 </div>
               </div>
               <div class="col-md-12" style="height: 30px">
@@ -991,7 +997,7 @@
               </div>
               <div class="col-md-6">
                 <div class="pull-right">
-                  <span>ลุกค้าเชื่อใจคุณแค่ไหน</span>
+                  <span>ลูกค้าเชื่อใจคุณแค่ไหน</span>
                 </div>
               </div>
               <div class="col-md-12" style="height: 30px">
@@ -1011,7 +1017,7 @@
               </div>
               <div class="col-md-6">
                 <div class="pull-right">
-                  <span>ลุกค้าคุยง่ายแค่ไหน</span>
+                  <span>คุณรู้จักลูกค้าแค่ไหน</span>
                 </div>
               </div>
               <div class="col-md-12" style="height: 30px">
@@ -1350,40 +1356,36 @@
           </el-input>
         </div>
         <div class="col-md-4">
-                <el-select
-          class="select-primary select-width-100"
-          placeholder="select"
-          v-model="negotiationSelects.select"
-        >
-          <el-option
-            v-for="option in negotiationSelects.data"
-            class="select-primary"
-            :value="option.value"
-            :label="option.label"
-            :key="option.label"
-          ></el-option>
-        </el-select>
+          <el-select
+            class="select-primary select-width-100"
+            placeholder="select"
+            v-model="negotiationSelects.select"
+          >
+            <el-option
+              v-for="option in negotiationSelects.data"
+              class="select-primary"
+              :value="option.value"
+              :label="option.label"
+              :key="option.label"
+            ></el-option>
+          </el-select>
         </div>
         <div class="col-md-4">
-                <fg-input
-                  placeholder
-                  label="Reason"
-                  v-model="reasonNegotiation"
-                ></fg-input>
+          <fg-input
+            placeholder
+            label="Reason"
+            v-model="reasonNegotiation"
+          ></fg-input>
         </div>
         <div class="col-md-4">
-                <fg-input
-                  placeholder
-                  label="Why"
-                  v-model="whyNegotiation"
-                ></fg-input>
+          <fg-input placeholder label="Why" v-model="whyNegotiation"></fg-input>
         </div>
         <div class="col-md-4">
-                <fg-input
-                  placeholder
-                  label="Improve"
-                  v-model="improveNegotiation"
-                ></fg-input>
+          <fg-input
+            placeholder
+            label="Improve"
+            v-model="improveNegotiation"
+          ></fg-input>
         </div>
       </div>
       <template slot="footer">
@@ -1421,7 +1423,7 @@
           >
             <el-button size="small" type="primary">Click to upload</el-button>
             <div slot="tip" class="el-upload__tip">
-              files with a size less than 500kb
+              <!-- files with a size less than 500kb -->
             </div>
           </el-upload>
         </div>
@@ -1439,19 +1441,305 @@
           >
             <el-button size="small" type="primary">Click to upload</el-button>
             <div slot="tip" class="el-upload__tip">
-              files with a size less than 500kb
+              <!-- files with a size less than 500kb -->
             </div>
           </el-upload>
         </div>
         <div class="col-md-6">
           <div class="form-group">
-            <label>Deposit</label>
-            <p-button type="info" round @click="handleClosingCompleted"
-              >Gen PDF
+            <p-button
+              type="info"
+              round
+              @click.native="(genRentPDF = true), (genSalePDF = false)"
+              >Gen LEASE AGREEMENT PDF
+            </p-button>
+          </div>
+        </div>
+         <div class="col-md-6">
+          <div class="form-group">
+            <p-button
+              type="info"
+              round
+              @click.native="(genRentPDF = false), (genSalePDF = true)"
+              >Gen REAL ESTATE AGENT AGREEMENT PDF
             </p-button>
           </div>
         </div>
       </div>
+      <div class="row" v-show="genRentPDF">
+        <div class="row">
+          <div class="col-md-12">
+            <h4 class="title title-up">
+              หนังสือสัญญาเช่า (LEASE AGREEMENT)
+            </h4>
+          </div>
+          <div class="col-md-6">
+            <fg-input placeholder label="เขียนที่ 1"></fg-input>
+          </div>
+          <div class="col-md-6">
+            <fg-input placeholder label="เขียนที่ 2"></fg-input>
+          </div>
+          <div class="col-md-6">
+            <fg-input placeholder label="สัญญาฉบับนี้ทำขึ้นระหว่าง"></fg-input>
+          </div>
+          <div class="col-md-6">
+            <fg-input placeholder label="เลขบัตรประจำตัวประชาชน"></fg-input>
+          </div>
+          <div class="col-md-4">
+            <fg-input placeholder label="อายุ"></fg-input>
+          </div>
+          <div class="col-md-4">
+            <fg-input placeholder label="ที่อยู่เลขที่"></fg-input>
+          </div>
+          <div class="col-md-4">
+            <fg-input placeholder label="หมู่บ้าน"></fg-input>
+          </div>
+          <div class="col-md-4">
+            <fg-input placeholder label="ถนน"></fg-input>
+          </div>
+          <div class="col-md-4">
+            <fg-input placeholder label="ตำบล/แขวง"></fg-input>
+          </div>
+          <div class="col-md-4">
+            <fg-input placeholder label="อำเภอ/เขต"></fg-input>
+          </div>
+          <div class="col-md-4">
+            <fg-input placeholder label="จังหวัด"></fg-input>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-6">
+            <fg-input placeholder label="และ"></fg-input>
+          </div>
+          <div class="col-md-6">
+            <fg-input placeholder label="เลขบัตรประจำตัวประชาชน"></fg-input>
+          </div>
+          <div class="col-md-4">
+            <fg-input placeholder label="อายุ"></fg-input>
+          </div>
+          <div class="col-md-4">
+            <fg-input placeholder label="ที่อยู่เลขที่"></fg-input>
+          </div>
+          <div class="col-md-4">
+            <fg-input placeholder label="หมู่บ้าน"></fg-input>
+          </div>
+          <div class="col-md-4">
+            <fg-input placeholder label="ถนน"></fg-input>
+          </div>
+          <div class="col-md-4">
+            <fg-input placeholder label="ตำบล/แขวง"></fg-input>
+          </div>
+          <div class="col-md-4">
+            <fg-input placeholder label="อำเภอ/เขต"></fg-input>
+          </div>
+          <div class="col-md-4">
+            <fg-input placeholder label="จังหวัด"></fg-input>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-6">
+            <fg-input placeholder label="โดยผู้ให้เช่าเป็นเจ้าของ "></fg-input>
+          </div>
+          <div class="col-md-4">
+            <fg-input placeholder label="หมายเลขห้อง"></fg-input>
+          </div>
+          <div class="col-md-4">
+            <fg-input placeholder label="ตึก"></fg-input>
+          </div>
+          <div class="col-md-4">
+            <fg-input placeholder label="ชั้น"></fg-input>
+          </div>
+          <div class="col-md-4">
+            <fg-input placeholder label="ขนาด"></fg-input>
+          </div>
+          <div class="col-md-12">
+            <fg-input placeholder label="ที่อยู่"></fg-input>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-2">
+            <fg-input
+              placeholder
+              label="ระยะเวลาเช่่ากำหนดไว้เป็นเวลา"
+            ></fg-input>
+          </div>
+          <div class="col-md-5">
+            <div>
+              <label>วันที่เริ่มสัญญา</label>
+            </div>
+            <fg-input>
+              <el-date-picker
+                type="date"
+                placeholder="Pick a day"
+              ></el-date-picker>
+            </fg-input>
+          </div>
+          <div class="col-md-5">
+            <div>
+              <label>วันที่สิ้นสุด</label>
+            </div>
+            <fg-input>
+              <el-date-picker
+                type="date"
+                placeholder="Pick a day"
+              ></el-date-picker>
+            </fg-input>
+          </div>
+          <div class="col-md-6">
+            <fg-input placeholder label="ค่าเช่าเดือนละ"></fg-input>
+          </div>
+          <div class="col-md-4">
+            <fg-input placeholder label="บัญชีธนาคาร"></fg-input>
+          </div>
+          <div class="col-md-4">
+            <fg-input placeholder label="ชื่อบัญชี"></fg-input>
+          </div>
+          <div class="col-md-4">
+            <fg-input placeholder label="เลขที่บัญชี"></fg-input>
+          </div>
+          <div class="col-md-4">
+            <fg-input
+              placeholder
+              label="ผู้เช่าจะต้องชำระค่าเช่าล่วงหน้าเป็นจำนวน"
+            ></fg-input>
+          </div>
+          <div class="col-md-4">
+            <fg-input
+              placeholder
+              label="ผู้เช่าตกลงที่จ่ายเงินตามจํานวนนี้เป็น"
+            ></fg-input>
+          </div>
+          <div class="col-md-4">
+            <fg-input
+              placeholder
+              label="ผู้เช่าตกลงจะชําระเงินทั้งสิ้น"
+            ></fg-input>
+          </div>
+        </div>
+      </div>
+<div class="row" v-show="genSalePDF">
+        <div class="row">
+          <div class="col-md-12">
+            <h4 class="title title-up">
+              หนังสือสัญญาแต่งตั้งนายหน้า (REAL ESTATE AGENT AGREEMENT)
+            </h4>
+          </div>
+          <div class="col-md-6">
+            <fg-input placeholder label="สัญญาฉบับนี้เขียนขึ้นที่"></fg-input>
+          </div>
+          <div class="col-md-6">
+            <fg-input placeholder label="เมื่อวันที่"></fg-input>
+          </div>
+          <div class="col-md-6">
+            <fg-input placeholder label="ชื่อ-นามสกุล"></fg-input>
+          </div>
+          <div class="col-md-6">
+            <fg-input placeholder label="เลขบัตรประจำตัวประชาชน"></fg-input>
+          </div>
+          <div class="col-md-4">
+            <fg-input placeholder label="ที่อยู่เลขที่"></fg-input>
+          </div>
+          <div class="col-md-4">
+            <fg-input placeholder label="หมู่บ้าน"></fg-input>
+          </div>
+          <div class="col-md-4">
+            <fg-input placeholder label="ถนน"></fg-input>
+          </div>
+          <div class="col-md-4">
+            <fg-input placeholder label="ตำบล/แขวง"></fg-input>
+          </div>
+          <div class="col-md-4">
+            <fg-input placeholder label="อำเภอ/เขต"></fg-input>
+          </div>
+          <div class="col-md-4">
+            <fg-input placeholder label="จังหวัด"></fg-input>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-6">
+            <fg-input placeholder label="ผู้จะขาย (ชื่อ-นามสกุล)"></fg-input>
+          </div>
+          <div class="col-md-6">
+            <fg-input placeholder label="เลขบัตรประจำตัวประชาชน"></fg-input>
+          </div>
+          <div class="col-md-4">
+            <fg-input placeholder label="ที่อยู่เลขที่"></fg-input>
+          </div>
+          <div class="col-md-4">
+            <fg-input placeholder label="หมู่บ้าน"></fg-input>
+          </div>
+          <div class="col-md-4">
+            <fg-input placeholder label="ถนน"></fg-input>
+          </div>
+          <div class="col-md-4">
+            <fg-input placeholder label="ตำบล/แขวง"></fg-input>
+          </div>
+          <div class="col-md-4">
+            <fg-input placeholder label="อำเภอ/เขต"></fg-input>
+          </div>
+          <div class="col-md-4">
+            <fg-input placeholder label="จังหวัด"></fg-input>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-6">
+            <fg-input placeholder label="นายหน้า ตกลงจะทำหน้าที่เป็นหน้าให้กับผู้ให้สัญญา"></fg-input>
+          </div>
+          <div class="col-md-4">
+            <fg-input placeholder label="หมายเลขห้อง"></fg-input>
+          </div>
+          <div class="col-md-4">
+            <fg-input placeholder label="ตึก"></fg-input>
+          </div>
+          <div class="col-md-4">
+            <fg-input placeholder label="ชั้น"></fg-input>
+          </div>
+          <div class="col-md-4">
+            <fg-input placeholder label="ขนาด"></fg-input>
+          </div>
+          <div class="col-md-12">
+            <fg-input placeholder label="ที่อยู่"></fg-input>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            <fg-input
+              placeholder
+              label="ผู้จะขายตกลงที่จะชําระคาบําเหน็จให้แก่นายหน้าเป็นจํานวนร้อยละ 3 จากราคาที่ตกลงซื้อขาย"
+            ></fg-input>
+          </div>
+          <div class="col-md-4">
+            <div>
+              <label>วันที่</label>
+            </div>
+            <fg-input>
+              <el-date-picker
+                type="date"
+                placeholder="Pick a day"
+              ></el-date-picker>
+            </fg-input>
+          </div>
+          <div class="col-md-4">
+            <div>
+              <label>จนถึงวันที่</label>
+            </div>
+            <fg-input>
+              <el-date-picker
+                type="date"
+                placeholder="Pick a day"
+              ></el-date-picker>
+            </fg-input>
+          </div>
+        </div>
+      </div>
+      <template slot="footer">
+        <hr />
+        <div class="stats">
+          <p-button type="info" round @click="handleClosingCompleted"
+            >Done
+          </p-button>
+        </div>
+      </template>
     </modal>
     <!-- modals.closing end -->
     <template slot="footer">
@@ -1549,6 +1837,8 @@ export default {
       radios: {
         done: "1",
       },
+      genRentPDF: false,
+      genSalePDF: false,
       view: true,
       modalBtn: "Add",
       actionDateTime: new Date(),
@@ -1776,6 +2066,7 @@ export default {
           params: paramValue,
         })
           .then((resp) => {
+            this.listingByAppointmentSelects = [];
             for (let value of resp.data) {
               this.listingByAppointmentSelects.push({
                 value: value.id,
@@ -2032,11 +2323,13 @@ export default {
     createActionLog: function () {
       this.fullscreenLoading = true;
       let listingId = null;
+      let reason = "";
       if (this.actionTypeSelects.select == 5) {
         listingId = this.listingByActionLog;
       }
       if (this.actionTypeSelects.select == 6) {
         listingId = this.listingByAppointment;
+        reason = this.reason;
       }
       let postBody = {
         status: this.actionTypeSelects.select,
@@ -2044,6 +2337,7 @@ export default {
         listingId: listingId,
         actionDateTime: this.actionDateTime,
         leadId: this.$route.query.id,
+        reason: reason,
         done: this.radios.done,
       };
       console.log("postBody : " + JSON.stringify(postBody));
@@ -2213,7 +2507,7 @@ export default {
               this.timeline.showing = true;
               this.timeline.negotiation = true;
               this.timeline.closing = false;
-            } else if (status[0].value == 6) {
+            } else if (status[0].value == 8) {
               this.timeline.action = true;
               this.timeline.following = true;
               this.timeline.appointment = true;
@@ -2364,6 +2658,10 @@ export default {
         comment: this.textNegotiation,
         actionDateTime: new Date(),
         leadId: this.$route.query.id,
+        who: this.negotiationSelects.select,
+        reason: this.reasonNegotiation,
+        why: this.whyNegotiation,
+        improve: this.improveNegotiation,
         done: "2",
       };
       console.log("postBody : " + JSON.stringify(postBody));
@@ -2409,8 +2707,8 @@ export default {
     handleClosingCompleted: function () {
       this.fullscreenLoading = true;
       let postBody = {
-        status: "7",
-        comment: this.textNegotiation,
+        status: "8",
+        comment: "Completed",
         actionDateTime: new Date(),
         leadId: this.$route.query.id,
         done: "2",
@@ -2434,7 +2732,7 @@ export default {
             verticalAlign: "top",
             type: "success",
           });
-          this.modals.negotiation = false;
+          this.modals.closing = false;
 
           this.getActionLog();
         })
