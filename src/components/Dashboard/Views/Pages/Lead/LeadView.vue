@@ -406,7 +406,13 @@
           <!-- status Closing Start-->
           <div class="event1" v-if="timeline.closing">
             <svg height="20" width="20">
-              <circle cx="10" cy="11" r="5" fill="#fbc658" @click="showClosing"/>
+              <circle
+                cx="10"
+                cy="11"
+                r="5"
+                fill="#fbc658"
+                @click="showClosing"
+              />
             </svg>
             <div class="time">Closing</div>
           </div>
@@ -1157,6 +1163,26 @@
         <h4 class="title title-up">Show Match</h4>
       </template>
       <div class="row">
+        <div class="col-md-4">
+          <div>
+            <label>Listing</label>
+          </div>
+          <model-select
+            :options="projectSelects"
+            v-model="projectName"
+            class="select"
+            placeholder="select item"
+          >
+          </model-select>
+        </div>
+        <div class="col-md-4">
+          <fg-input placeholder label="search" v-model="textShowMatch"></fg-input>
+        </div>
+        <div class="col-md-4">
+          <p-button type="info" round outline @click="searchShowMatch($event)">
+            <i class="fa fa-search"></i>Search
+          </p-button>
+        </div>
         <div class="col-md-12">
           <el-table :data="queriedDataListing">
             <!-- <el-table-column type="index"></el-table-column> -->
@@ -1455,7 +1481,7 @@
             </p-button>
           </div>
         </div>
-         <div class="col-md-6">
+        <div class="col-md-6">
           <div class="form-group">
             <p-button
               type="info"
@@ -1469,91 +1495,182 @@
       <div class="row" v-show="genRentPDF">
         <div class="row">
           <div class="col-md-12">
-            <h4 class="title title-up">
-              หนังสือสัญญาเช่า (LEASE AGREEMENT)
-            </h4>
+            <h4 class="title title-up">หนังสือสัญญาเช่า (LEASE AGREEMENT)</h4>
+            <p-button type="info" round @click="genPDF('RENT')">Gen </p-button>
           </div>
           <div class="col-md-6">
-            <fg-input placeholder label="เขียนที่ 1"></fg-input>
+            <fg-input
+              placeholder
+              label="เขียนที่ 1"
+              v-model="rendPDF.title1"
+            ></fg-input>
           </div>
           <div class="col-md-6">
-            <fg-input placeholder label="เขียนที่ 2"></fg-input>
+            <fg-input
+              placeholder
+              label="เขียนที่ 2"
+              v-model="rendPDF.title2"
+            ></fg-input>
           </div>
           <div class="col-md-6">
-            <fg-input placeholder label="สัญญาฉบับนี้ทำขึ้นระหว่าง"></fg-input>
+            <fg-input
+              placeholder
+              label="สัญญาฉบับนี้ทำขึ้นระหว่าง"
+              v-model="rendPDF.contract"
+            ></fg-input>
           </div>
           <div class="col-md-6">
-            <fg-input placeholder label="เลขบัตรประจำตัวประชาชน"></fg-input>
+            <fg-input
+              placeholder
+              label="เลขบัตรประจำตัวประชาชน"
+              v-model="rendPDF.idCardNumber"
+            ></fg-input>
           </div>
           <div class="col-md-4">
-            <fg-input placeholder label="อายุ"></fg-input>
+            <fg-input placeholder label="อายุ" v-model="rendPDF.age"></fg-input>
           </div>
           <div class="col-md-4">
-            <fg-input placeholder label="ที่อยู่เลขที่"></fg-input>
+            <fg-input
+              placeholder
+              label="ที่อยู่เลขที่"
+              v-model="rendPDF.address"
+            ></fg-input>
           </div>
           <div class="col-md-4">
-            <fg-input placeholder label="หมู่บ้าน"></fg-input>
+            <fg-input
+              placeholder
+              label="หมู่บ้าน"
+              v-model="rendPDF.village"
+            ></fg-input>
           </div>
           <div class="col-md-4">
-            <fg-input placeholder label="ถนน"></fg-input>
+            <fg-input placeholder label="ถนน" v-model="rendPDF.road"></fg-input>
           </div>
           <div class="col-md-4">
-            <fg-input placeholder label="ตำบล/แขวง"></fg-input>
+            <fg-input
+              placeholder
+              label="ตำบล/แขวง"
+              v-model="rendPDF.amphoe"
+            ></fg-input>
           </div>
           <div class="col-md-4">
-            <fg-input placeholder label="อำเภอ/เขต"></fg-input>
+            <fg-input
+              placeholder
+              label="อำเภอ/เขต"
+              v-model="rendPDF.district"
+            ></fg-input>
           </div>
           <div class="col-md-4">
-            <fg-input placeholder label="จังหวัด"></fg-input>
+            <fg-input
+              placeholder
+              label="จังหวัด"
+              v-model="rendPDF.province"
+            ></fg-input>
           </div>
         </div>
         <div class="row">
           <div class="col-md-6">
-            <fg-input placeholder label="และ"></fg-input>
+            <fg-input placeholder label="และ" v-model="rendPDF.and"></fg-input>
           </div>
           <div class="col-md-6">
-            <fg-input placeholder label="เลขบัตรประจำตัวประชาชน"></fg-input>
+            <fg-input
+              placeholder
+              label="เลขบัตรประจำตัวประชาชน"
+              v-model="rendPDF.idCardNumber2"
+            ></fg-input>
           </div>
           <div class="col-md-4">
-            <fg-input placeholder label="อายุ"></fg-input>
+            <fg-input
+              placeholder
+              label="อายุ"
+              v-model="rendPDF.age2"
+            ></fg-input>
           </div>
           <div class="col-md-4">
-            <fg-input placeholder label="ที่อยู่เลขที่"></fg-input>
+            <fg-input
+              placeholder
+              label="ที่อยู่เลขที่"
+              v-model="rendPDF.address2"
+            ></fg-input>
           </div>
           <div class="col-md-4">
-            <fg-input placeholder label="หมู่บ้าน"></fg-input>
+            <fg-input
+              placeholder
+              label="หมู่บ้าน"
+              v-model="rendPDF.village2"
+            ></fg-input>
           </div>
           <div class="col-md-4">
-            <fg-input placeholder label="ถนน"></fg-input>
+            <fg-input
+              placeholder
+              label="ถนน"
+              v-model="rendPDF.road2"
+            ></fg-input>
           </div>
           <div class="col-md-4">
-            <fg-input placeholder label="ตำบล/แขวง"></fg-input>
+            <fg-input
+              placeholder
+              label="ตำบล/แขวง"
+              v-model="rendPDF.amphoe2"
+            ></fg-input>
           </div>
           <div class="col-md-4">
-            <fg-input placeholder label="อำเภอ/เขต"></fg-input>
+            <fg-input
+              placeholder
+              label="อำเภอ/เขต"
+              v-model="rendPDF.district2"
+            ></fg-input>
           </div>
           <div class="col-md-4">
-            <fg-input placeholder label="จังหวัด"></fg-input>
+            <fg-input
+              placeholder
+              label="จังหวัด"
+              v-model="rendPDF.province2"
+            ></fg-input>
           </div>
         </div>
         <div class="row">
           <div class="col-md-6">
-            <fg-input placeholder label="โดยผู้ให้เช่าเป็นเจ้าของ "></fg-input>
+            <fg-input
+              placeholder
+              label="โดยผู้ให้เช่าเป็นเจ้าของ "
+              v-model="rendPDF.onwer"
+            ></fg-input>
           </div>
           <div class="col-md-4">
-            <fg-input placeholder label="หมายเลขห้อง"></fg-input>
+            <fg-input
+              placeholder
+              label="หมายเลขห้อง"
+              v-model="rendPDF.room"
+            ></fg-input>
           </div>
           <div class="col-md-4">
-            <fg-input placeholder label="ตึก"></fg-input>
+            <fg-input
+              placeholder
+              label="ตึก"
+              v-model="rendPDF.building"
+            ></fg-input>
           </div>
           <div class="col-md-4">
-            <fg-input placeholder label="ชั้น"></fg-input>
+            <fg-input
+              placeholder
+              label="ชั้น"
+              v-model="rendPDF.floor"
+            ></fg-input>
           </div>
           <div class="col-md-4">
-            <fg-input placeholder label="ขนาด"></fg-input>
+            <fg-input
+              placeholder
+              label="ขนาด"
+              v-model="rendPDF.area"
+            ></fg-input>
           </div>
           <div class="col-md-12">
-            <fg-input placeholder label="ที่อยู่"></fg-input>
+            <fg-input
+              placeholder
+              label="ที่อยู่"
+              v-model="rendPDF.addressFull"
+            ></fg-input>
           </div>
         </div>
         <div class="row">
@@ -1561,6 +1678,7 @@
             <fg-input
               placeholder
               label="ระยะเวลาเช่่ากำหนดไว้เป็นเวลา"
+              v-model="rendPDF.rangeMonth"
             ></fg-input>
           </div>
           <div class="col-md-5">
@@ -1571,6 +1689,7 @@
               <el-date-picker
                 type="date"
                 placeholder="Pick a day"
+                v-model="rendPDF.rangeDateStart"
               ></el-date-picker>
             </fg-input>
           </div>
@@ -1582,123 +1701,236 @@
               <el-date-picker
                 type="date"
                 placeholder="Pick a day"
+                v-model="rendPDF.rangeDateEnd"
               ></el-date-picker>
             </fg-input>
           </div>
           <div class="col-md-6">
-            <fg-input placeholder label="ค่าเช่าเดือนละ"></fg-input>
+            <fg-input
+              placeholder
+              label="ค่าเช่าเดือนละ"
+              v-model="rendPDF.monthlyRent"
+            ></fg-input>
           </div>
           <div class="col-md-4">
-            <fg-input placeholder label="บัญชีธนาคาร"></fg-input>
+            <fg-input
+              placeholder
+              label="บัญชีธนาคาร"
+              v-model="rendPDF.accountBank"
+            ></fg-input>
           </div>
           <div class="col-md-4">
-            <fg-input placeholder label="ชื่อบัญชี"></fg-input>
+            <fg-input
+              placeholder
+              label="ชื่อบัญชี"
+              v-model="rendPDF.accountName"
+            ></fg-input>
           </div>
           <div class="col-md-4">
-            <fg-input placeholder label="เลขที่บัญชี"></fg-input>
+            <fg-input
+              placeholder
+              label="เลขที่บัญชี"
+              v-model="rendPDF.accountNumber"
+            ></fg-input>
           </div>
           <div class="col-md-4">
             <fg-input
               placeholder
               label="ผู้เช่าจะต้องชำระค่าเช่าล่วงหน้าเป็นจำนวน"
+              v-model="rendPDF.monthlyRentPayAdvance"
             ></fg-input>
           </div>
           <div class="col-md-4">
             <fg-input
               placeholder
               label="ผู้เช่าตกลงที่จ่ายเงินตามจํานวนนี้เป็น"
+              v-model="rendPDF.monthlyRentPayAll"
             ></fg-input>
           </div>
           <div class="col-md-4">
             <fg-input
               placeholder
               label="ผู้เช่าตกลงจะชําระเงินทั้งสิ้น"
+              v-model="rendPDF.monthlyRentPayAll"
             ></fg-input>
           </div>
         </div>
       </div>
-<div class="row" v-show="genSalePDF">
+      <div class="row" v-show="genSalePDF">
         <div class="row">
           <div class="col-md-12">
             <h4 class="title title-up">
               หนังสือสัญญาแต่งตั้งนายหน้า (REAL ESTATE AGENT AGREEMENT)
             </h4>
+            <p-button type="info" round @click="genPDF('SALE')">Gen </p-button>
           </div>
           <div class="col-md-6">
-            <fg-input placeholder label="สัญญาฉบับนี้เขียนขึ้นที่"></fg-input>
+            <fg-input
+              placeholder
+              label="สัญญาฉบับนี้เขียนขึ้นที่"
+              v-model="salePDF.contract"
+            ></fg-input>
           </div>
           <div class="col-md-6">
-            <fg-input placeholder label="เมื่อวันที่"></fg-input>
+            <fg-input
+              placeholder
+              label="เมื่อวันที่"
+              v-model="salePDF.dateTime"
+            ></fg-input>
           </div>
           <div class="col-md-6">
-            <fg-input placeholder label="ชื่อ-นามสกุล"></fg-input>
+            <fg-input
+              placeholder
+              label="ชื่อ-นามสกุล"
+              v-model="salePDF.name"
+            ></fg-input>
           </div>
           <div class="col-md-6">
-            <fg-input placeholder label="เลขบัตรประจำตัวประชาชน"></fg-input>
+            <fg-input
+              placeholder
+              label="เลขบัตรประจำตัวประชาชน"
+              v-model="salePDF.idCardNumber"
+            ></fg-input>
           </div>
           <div class="col-md-4">
-            <fg-input placeholder label="ที่อยู่เลขที่"></fg-input>
+            <fg-input
+              placeholder
+              label="ที่อยู่เลขที่"
+              v-model="salePDF.address"
+            ></fg-input>
           </div>
           <div class="col-md-4">
-            <fg-input placeholder label="หมู่บ้าน"></fg-input>
+            <fg-input
+              placeholder
+              label="หมู่บ้าน"
+              v-model="salePDF.village"
+            ></fg-input>
           </div>
           <div class="col-md-4">
-            <fg-input placeholder label="ถนน"></fg-input>
+            <fg-input placeholder label="ถนน" v-model="salePDF.road"></fg-input>
           </div>
           <div class="col-md-4">
-            <fg-input placeholder label="ตำบล/แขวง"></fg-input>
+            <fg-input
+              placeholder
+              label="ตำบล/แขวง"
+              v-model="salePDF.amphoe"
+            ></fg-input>
           </div>
           <div class="col-md-4">
-            <fg-input placeholder label="อำเภอ/เขต"></fg-input>
+            <fg-input
+              placeholder
+              label="อำเภอ/เขต"
+              v-model="salePDF.district"
+            ></fg-input>
           </div>
           <div class="col-md-4">
-            <fg-input placeholder label="จังหวัด"></fg-input>
+            <fg-input
+              placeholder
+              label="จังหวัด"
+              v-model="salePDF.province"
+            ></fg-input>
           </div>
         </div>
         <div class="row">
           <div class="col-md-6">
-            <fg-input placeholder label="ผู้จะขาย (ชื่อ-นามสกุล)"></fg-input>
+            <fg-input
+              placeholder
+              label="ผู้จะขาย (ชื่อ-นามสกุล)"
+              v-model="salePDF.nameSale"
+            ></fg-input>
           </div>
           <div class="col-md-6">
-            <fg-input placeholder label="เลขบัตรประจำตัวประชาชน"></fg-input>
+            <fg-input
+              placeholder
+              label="เลขบัตรประจำตัวประชาชน"
+              v-model="salePDF.idCardNumberSale"
+            ></fg-input>
           </div>
           <div class="col-md-4">
-            <fg-input placeholder label="ที่อยู่เลขที่"></fg-input>
+            <fg-input
+              placeholder
+              label="ที่อยู่เลขที่"
+              v-model="salePDF.addressSale"
+            ></fg-input>
           </div>
           <div class="col-md-4">
-            <fg-input placeholder label="หมู่บ้าน"></fg-input>
+            <fg-input
+              placeholder
+              label="หมู่บ้าน"
+              v-model="salePDF.villageSale"
+            ></fg-input>
           </div>
           <div class="col-md-4">
-            <fg-input placeholder label="ถนน"></fg-input>
+            <fg-input
+              placeholder
+              label="ถนน"
+              v-model="salePDF.roadSale"
+            ></fg-input>
           </div>
           <div class="col-md-4">
-            <fg-input placeholder label="ตำบล/แขวง"></fg-input>
+            <fg-input
+              placeholder
+              label="ตำบล/แขวง"
+              v-model="salePDF.amphoeSale"
+            ></fg-input>
           </div>
           <div class="col-md-4">
-            <fg-input placeholder label="อำเภอ/เขต"></fg-input>
+            <fg-input
+              placeholder
+              label="อำเภอ/เขต"
+              v-model="salePDF.districtSale"
+            ></fg-input>
           </div>
           <div class="col-md-4">
-            <fg-input placeholder label="จังหวัด"></fg-input>
+            <fg-input
+              placeholder
+              label="จังหวัด"
+              v-model="salePDF.provinceSale"
+            ></fg-input>
           </div>
         </div>
         <div class="row">
           <div class="col-md-6">
-            <fg-input placeholder label="นายหน้า ตกลงจะทำหน้าที่เป็นหน้าให้กับผู้ให้สัญญา"></fg-input>
+            <fg-input
+              placeholder
+              label="นายหน้า ตกลงจะทำหน้าที่เป็นหน้าให้กับผู้ให้สัญญา"
+              v-model="salePDF.broker"
+            ></fg-input>
           </div>
           <div class="col-md-4">
-            <fg-input placeholder label="หมายเลขห้อง"></fg-input>
+            <fg-input
+              placeholder
+              label="หมายเลขห้อง"
+              v-model="salePDF.address2"
+            ></fg-input>
           </div>
           <div class="col-md-4">
-            <fg-input placeholder label="ตึก"></fg-input>
+            <fg-input
+              placeholder
+              label="ตึก"
+              v-model="salePDF.building"
+            ></fg-input>
           </div>
           <div class="col-md-4">
-            <fg-input placeholder label="ชั้น"></fg-input>
+            <fg-input
+              placeholder
+              label="ชั้น"
+              v-model="salePDF.floor"
+            ></fg-input>
           </div>
           <div class="col-md-4">
-            <fg-input placeholder label="ขนาด"></fg-input>
+            <fg-input
+              placeholder
+              label="ขนาด"
+              v-model="salePDF.area"
+            ></fg-input>
           </div>
           <div class="col-md-12">
-            <fg-input placeholder label="ที่อยู่"></fg-input>
+            <fg-input
+              placeholder
+              label="ที่อยู่"
+              v-model="salePDF.addressFull"
+            ></fg-input>
           </div>
         </div>
         <div class="row">
@@ -1706,6 +1938,7 @@
             <fg-input
               placeholder
               label="ผู้จะขายตกลงที่จะชําระคาบําเหน็จให้แก่นายหน้าเป็นจํานวนร้อยละ 3 จากราคาที่ตกลงซื้อขาย"
+              v-model="salePDF.saleName"
             ></fg-input>
           </div>
           <div class="col-md-4">
@@ -1716,6 +1949,7 @@
               <el-date-picker
                 type="date"
                 placeholder="Pick a day"
+                v-model="salePDF.rangeDateStart"
               ></el-date-picker>
             </fg-input>
           </div>
@@ -1727,6 +1961,7 @@
               <el-date-picker
                 type="date"
                 placeholder="Pick a day"
+                v-model="salePDF.rangeDateEnd"
               ></el-date-picker>
             </fg-input>
           </div>
@@ -1844,6 +2079,9 @@ export default {
       actionDateTime: new Date(),
       comment: "",
       reason: "",
+      projectSelects: [],
+      projectName: "",
+      textShowMatch: "",
       actionTypeSelects: {
         select: "",
         data: [
@@ -1981,12 +2219,110 @@ export default {
         },
       ],
       fileListTranfer: [],
+      rendPDF: {
+        contract: "",
+        idCardNumber: "",
+        age: "",
+        address: "",
+        village: "",
+        road: "",
+        amphoe: "",
+        district: "",
+        province: "",
+        and: "",
+        idCardNumber2: "",
+        age2: "",
+        address2: "",
+        village2: "",
+        road2: "",
+        amphoe2: "",
+        district2: "",
+        province2: "",
+        onwer: "",
+        room: "",
+        building: "",
+        floor: "",
+        area: "",
+        addressFull: "",
+        rangeMonth: "",
+        rangeDateStart: "",
+        rangeDateEnd: "",
+        monthlyRent: "",
+        accountBank: "",
+        accountName: "",
+        accountNumber: "",
+        monthlyRentPayAdvance: "",
+        monthlyRentPayAll: "",
+      },
+      salePDF: {
+        contract: "",
+        dateTime: "",
+        name: "",
+        idCardNumber: "",
+        address: "",
+        village: "",
+        road: "",
+        amphoe: "",
+        district: "",
+        province: "",
+        nameSale: "",
+        idCardNumberSale: "",
+        addressSale: "",
+        villageSale: "",
+        roadSale: "",
+        amphoeSale: "",
+        districtSale: "",
+        provinceSale: "",
+        broker: "",
+        address2: "",
+        building: "",
+        floor: "",
+        area: "",
+        addressFull: "",
+        saleName: "",
+        rangeDateStart: "",
+        rangeDateEnd: "",
+      },
     };
   },
 
   methods: {
     goToEdit: function () {
       this.$router.push("/admin/lead/create?id=" + this.lead.id);
+    },
+    searchShowMatch: function () {
+      const AXIOS = axios.create({
+        baseURL: process.env.VUE_APP_BACKEND_URL,
+      });
+      console.log(JSON.stringify(this.projectSelects));
+      let postBody = {
+        roomSearchRequest: {
+          projectId: this.projectSelects.select,
+          type: this.propertySelects.select,
+          bed: this.bedSelects.select,
+          toilet: this.toiletSelects.select,
+          price: this.price.toString(),
+          area: this.area.toString(),
+        },
+        saleUser: this.userSelects.select,
+        search: this.search,
+        transportType: this.transport.type,
+        transportName: this.transport.name,
+      };
+      console.log("searchShowMatch : " + JSON.stringify(postBody));
+      AXIOS.post(`api/listing/list`, postBody, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+      })
+        .then((resp) => {
+          this.listings = resp.data;
+        })
+        .catch((err) => {
+          console.log("err : " + JSON.stringify(err));
+          reject(err);
+        });
     },
     getActionLog: function () {
       let paramsValue = {
@@ -2036,6 +2372,10 @@ export default {
         .then((resp) => {
           for (let value of resp.data) {
             this.listingByActionLogSelects.push({
+              value: value.id,
+              text: value.projects[0].name + " - " + value.owner.listingCode,
+            });
+            this.projectSelects.push({
               value: value.id,
               text: value.projects[0].name + " - " + value.owner.listingCode,
             });
@@ -2570,7 +2910,6 @@ export default {
         }
 
         let postBody = {
-
           building: this.listingBySale.building,
           propertyType: propertyType,
           area: this.listingBySale.area,
@@ -2582,7 +2921,6 @@ export default {
           priceMin: this.lead.priceMin,
           priceMax: this.lead.priceMax,
           // scenery: ['3', '2'],
-
         };
         console.log("postBody MATCH : " + JSON.stringify(postBody));
         AXIOS.post("api/listing/match/", postBody, {
@@ -2766,18 +3104,74 @@ export default {
     beforeRemove(file, fileList) {
       return this.$confirm(`Cancel the transfert of ${file.name} ?`);
     },
-  },
+    genPDF(type) {
+      this.fullscreenLoading = true;
+      let postBody;
+      let path = "";
+      if (type === "SALE") {
+        path = "api/report/leaseAgreement";
+        postBody = this.rendPDF;
+      } else if (type === "RENT") {
+        path = "api/report/realEstateAgentAgreement";
+        postBody = this.salePDF;
+      }
 
+      console.log("postBody : " + JSON.stringify(postBody));
+      const AXIOS = axios.create({
+        baseURL: process.env.VUE_APP_BACKEND_URL,
+      });
+      AXIOS.post(path, postBody, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+      })
+        .then((resp) => {
+          this.fullscreenLoading = false;
+          console.log("resp.data : " + JSON.stringify(resp.data));
+          this.saveByteArray(resp.data);
+          // this.$notify({
+          //   message: "Success",
+          //   icon: "fa fa-gift",
+          //   horizontalAlign: "center",
+          //   verticalAlign: "top",
+          //   type: "success",
+          // });
+          // this.modals.closing = false;
+
+          // this.getActionLog();
+        })
+        .catch((err) => {
+          this.fullscreenLoading = false;
+          this.$notify({
+            message: "Error",
+            // icon: 'fa fa-gift',
+            // component: NotificationTemplate,
+            horizontalAlign: "center",
+            verticalAlign: "top",
+            type: "warning",
+          });
+          console.log("err : " + JSON.stringify(err));
+          reject(err);
+        });
+    },
+    saveByteArray: function (reportName, byte) {
+      var blob = new Blob([byte], { type: "application/pdf" });
+      var link = document.createElement("a");
+      link.href = window.URL.createObjectURL(blob);
+      var fileName = "test";
+      link.download = fileName;
+      link.click();
+    },
+  },
   computed: {
     ...mapGetters({ getUser: "getUser" }),
     isLoggedIn: function () {
       return this.$store.getters.isLoggedIn;
     },
-
     pagedData() {
       return this.tasks.slice(this.from, this.to);
     },
-
     queriedData() {
       if (!this.searchQuery) {
         this.pagination.total = this.tasks.length;
@@ -2810,11 +3204,9 @@ export default {
       this.pagination.total = this.tasks.length;
       return this.tasks.length;
     },
-
     pagedDataListing() {
       return this.listings.slice(this.from, this.to);
     },
-
     queriedDataListing() {
       if (!this.searchQuery) {
         this.paginationListing.total = this.listings.length;

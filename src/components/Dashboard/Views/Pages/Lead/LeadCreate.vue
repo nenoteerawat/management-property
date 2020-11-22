@@ -1433,12 +1433,10 @@ export default {
             this.listingByLead.floor = resp.data.listingByLead.room.floor;
             this.listingByLead.bed = resp.data.listingByLead.room.bed;
             this.listingByLead.toilet = resp.data.listingByLead.room.toilet;
-            this.listingByLead.zone = this.projects.filter(
-              (data) => {
-                if (data.id == resp.data.listingByLead.room.projectId)
-                  return true;
-              }
-            )[0].zone;
+            this.listingByLead.zone = this.projects.filter((data) => {
+              if (data.id == resp.data.listingByLead.room.projectId)
+                return true;
+            })[0].zone;
             this.listingByLead.direction = this.dataDirection.filter((data) => {
               if (data.value == resp.data.listingByLead.room.direction)
                 return true;
@@ -1473,12 +1471,10 @@ export default {
             this.listingByAdmin.floor = resp.data.listingByAdmin.room.floor;
             this.listingByAdmin.bed = resp.data.listingByAdmin.room.bed;
             this.listingByAdmin.toilet = resp.data.listingByAdmin.room.toilet;
-            this.listingByAdmin.zone = this.projects.filter(
-              (data) => {
-                if (data.id == resp.data.listingByAdmin.room.projectId)
-                  return true;
-              }
-            )[0].zone;
+            this.listingByAdmin.zone = this.projects.filter((data) => {
+              if (data.id == resp.data.listingByAdmin.room.projectId)
+                return true;
+            })[0].zone;
             this.listingByAdmin.direction = this.dataDirection.filter(
               (data) => {
                 if (data.value == resp.data.listingByAdmin.room.direction)
@@ -1515,12 +1511,10 @@ export default {
             this.listingBySale.floor = resp.data.listingBySale.room.floor;
             this.listingBySale.bed = resp.data.listingBySale.room.bed;
             this.listingBySale.toilet = resp.data.listingBySale.room.toilet;
-            this.listingBySale.zone = this.projects.filter(
-              (data) => {
-                if (data.id == resp.data.listingBySale.room.projectId)
-                  return true;
-              }
-            )[0].zone;
+            this.listingBySale.zone = this.projects.filter((data) => {
+              if (data.id == resp.data.listingBySale.room.projectId)
+                return true;
+            })[0].zone;
             this.listingBySale.direction = this.dataDirection.filter((data) => {
               if (data.value == resp.data.listingBySale.room.direction)
                 return true;
@@ -1563,12 +1557,10 @@ export default {
               resp.data.listingLifeStyleBySale.room.bed;
             this.listingLifeStyleBySale.toilet =
               resp.data.listingLifeStyleBySale.room.toilet;
-            this.listingLifeStyleBySale.zone = this.projects.filter(
-              (data) => {
-                if (data.id == resp.data.listingLifeStyleBySale.room.projectId)
-                  return true;
-              }
-            )[0].zone;
+            this.listingLifeStyleBySale.zone = this.projects.filter((data) => {
+              if (data.id == resp.data.listingLifeStyleBySale.room.projectId)
+                return true;
+            })[0].zone;
             this.listingLifeStyleBySale.direction = this.dataDirection.filter(
               (data) => {
                 if (
@@ -1795,6 +1787,10 @@ export default {
         rapport: this.rapport,
         typePay: this.radios.typePay,
         saleUser: this.userSelects.select,
+        district: this.district,
+        amphoe: this.amphoe,
+        province: this.province,
+        zipcode: this.zipcode,
         file: this.lead.file,
       };
       if (this.$route.query.id) {
@@ -1837,6 +1833,10 @@ export default {
           contract: this.lead.contract,
           typePay: this.radios.typePay,
           saleUser: this.userSelects.select,
+          district: this.district,
+          amphoe: this.amphoe,
+          province: this.province,
+          zipcode: this.zipcode,
           file: this.lead.file,
         };
       }
