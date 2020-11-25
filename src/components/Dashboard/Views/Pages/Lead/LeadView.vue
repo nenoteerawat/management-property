@@ -3108,12 +3108,15 @@ export default {
       this.fullscreenLoading = true;
       let postBody;
       let path = "";
-      if (type === "SALE") {
+      let fileName = ""
+      if (type === "RENT") {
         path = "api/report/leaseAgreement";
         postBody = this.rendPDF;
-      } else if (type === "RENT") {
+        fileName = "leaseAgreement"
+      } else if (type === "SALE") {
         path = "api/report/realEstateAgentAgreement";
         postBody = this.salePDF;
+        fileName = "realEstateAgentAgreement"
       }
 
       console.log("postBody : " + JSON.stringify(postBody));
@@ -3129,7 +3132,8 @@ export default {
         .then((resp) => {
           this.fullscreenLoading = false;
           console.log("resp.data : " + JSON.stringify(resp.data));
-          this.saveByteArray(resp.data);
+          var byteFile = this.base64ToArrayBuffer(resp.data);
+          this.saveByteArray(fileName,byteFile);
           // this.$notify({
           //   message: "Success",
           //   icon: "fa fa-gift",
@@ -3155,11 +3159,21 @@ export default {
           reject(err);
         });
     },
-    saveByteArray: function (reportName, byte) {
-      var blob = new Blob([byte], { type: "application/pdf" });
-      var link = document.createElement("a");
+    base64ToArrayBuffer: function(base64) {
+      var binaryString = window.atob(base64);
+      var binaryLen = binaryString.length;
+      var bytes = new Uint8Array(binaryLen);
+      for (var i = 0; i < binaryLen; i++) {
+        var ascii = binaryString.charCodeAt(i);
+        bytes[i] = ascii;
+      }
+      return bytes;
+    },
+    saveByteArray: function(reportName, byte) {
+      var blob = new Blob([byte], {type: "application/pdf"});
+      var link = document.createElement('a');
       link.href = window.URL.createObjectURL(blob);
-      var fileName = "test";
+      var fileName = reportName;
       link.download = fileName;
       link.click();
     },
