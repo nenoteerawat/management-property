@@ -229,13 +229,15 @@ export default {
     },
     handleInfo(index, row) {
       // console.log("row : "+row);
-      window.location.href = "/admin/lead/view?id=" + row.id;
+      // window.location.href = "/admin/lead/view?id=" + row.id;
       // alert(`Your want to edit ${row.name}`);
+      this.$router.push("/admin/lead/view?id=" + row.id);
     },
     handleEdit(index, row) {
       // console.log("row : "+row);
-      window.location.href = "/admin/lead/create?id=" + row.id;
+      // window.location.href = "/admin/lead/create?id=" + row.id;
       // alert(`Your want to edit ${row.name}`);
+      this.$router.push("/admin/lead/create?id=" + row.id);
     },
     deleteList(row) {
       let postBody = {
