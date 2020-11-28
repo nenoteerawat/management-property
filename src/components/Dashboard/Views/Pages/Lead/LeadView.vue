@@ -31,7 +31,7 @@
       <div class="col-md-3">
         <img
           v-if="imageUrl"
-          style="width: 150px; height: 150px"
+          style="width: 200px; height: 200px"
           :src="imageUrl"
           class="avatar border-gray"
         />
