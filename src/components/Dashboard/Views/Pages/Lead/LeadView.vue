@@ -378,9 +378,15 @@
           <!-- status Negotiation Start-->
           <div class="event1" v-if="timeline.negotiation">
             <svg height="20" width="20">
-              <circle cx="10" cy="11" r="5" fill="#fbc658" />
+              <circle
+                cx="10"
+                cy="11"
+                r="5"
+                fill="#fbc658"
+                @click="showNegotiation"
+              />
             </svg>
-            <div class="time">Negotiation</div>
+            <div class="time" @click="showNegotiation">Negotiation</div>
           </div>
           <!-- line -->
           <svg height="5" width="150" v-if="timeline.negotiation">
@@ -1036,6 +1042,45 @@
             </div>
           </div>
         </div>
+        <!-- BookList start -->
+        <div class="col-md-12" v-show="lead.books != null">
+          <div class="row">
+            <div class="col-md-12">
+              <h4 class="card-title">เอกสาร</h4>
+            </div>
+            <div class="col-md-12">
+              <el-table :data="lead.books">
+                <!-- <el-table-column type="index"></el-table-column> -->
+                <el-table-column
+                  v-for="column in bookTableColumns"
+                  :key="column.label"
+                  :min-width="column.minWidth"
+                  :prop="column.prop"
+                  :label="column.label"
+                  sortable
+                ></el-table-column>
+                <el-table-column
+                  class-name="action-buttons td-actions"
+                  align="right"
+                  label="action"
+                  min-width="120"
+                >
+                  <template slot-scope="props">
+                    <p-button
+                      type="info"
+                      round
+                      icon
+                      @click="downloadFile(props.row)"
+                    >
+                      <i class="fa fa-download"></i>
+                    </p-button>
+                  </template>
+                </el-table-column>
+              </el-table>
+            </div>
+          </div>
+        </div>
+        <!-- BookList end -->
       </div>
       <!-- matched and other end -->
     </div>
@@ -1176,7 +1221,11 @@
           </model-select>
         </div>
         <div class="col-md-4">
-          <fg-input placeholder label="search" v-model="textShowMatch"></fg-input>
+          <fg-input
+            placeholder
+            label="search"
+            v-model="textShowMatch"
+          ></fg-input>
         </div>
         <div class="col-md-4">
           <p-button type="info" round outline @click="searchShowMatch($event)">
@@ -1372,7 +1421,7 @@
           </div>
         </div>
         <div class="col-md-8">
-          <label>Note</label>
+          <label>Script</label>
           <el-input
             type="textarea"
             placeholder="Please input"
@@ -1399,7 +1448,7 @@
         <div class="col-md-4">
           <fg-input
             placeholder
-            label="Reason"
+            label="Result"
             v-model="reasonNegotiation"
           ></fg-input>
         </div>
@@ -1438,32 +1487,15 @@
           <h6>Book</h6>
           <el-upload
             class="upload-demo"
-            action="https://jsonplaceholder.typicode.com/posts/"
+            action="#"
             :on-preview="handlePreview"
             :on-remove="handleRemove"
             :before-remove="beforeRemove"
             multiple
-            :limit="3"
-            :on-exceed="handleExceed"
+            :limit="10"
             :file-list="fileListBook"
-          >
-            <el-button size="small" type="primary">Click to upload</el-button>
-            <div slot="tip" class="el-upload__tip">
-              <!-- files with a size less than 500kb -->
-            </div>
-          </el-upload>
-        </div>
-        <div class="col-md-12">
-          <h6>Tranfer</h6>
-          <el-upload
-            class="upload-demo"
-            action="https://jsonplaceholder.typicode.com/posts/"
-            :on-preview="handlePreview"
-            :on-remove="handleRemove"
-            :before-remove="beforeRemove"
-            :limit="1"
-            :on-exceed="handleExceed"
-            :file-list="fileListTranfer"
+            :auto-upload="false"
+            :on-change="toggleUpload"
           >
             <el-button size="small" type="primary">Click to upload</el-button>
             <div slot="tip" class="el-upload__tip">
@@ -2189,6 +2221,13 @@ export default {
           minWidth: 100,
         },
       ],
+      bookTableColumns: [
+        {
+          prop: "name",
+          label: "ชื่อไฟล์",
+          minWidth: 150,
+        },
+      ],
       selectActionLog: {},
       tasks: [],
       timeline: {
@@ -2207,18 +2246,19 @@ export default {
       whyNegotiation: "",
       improveNegotiation: "",
       fileListBook: [
-        {
-          name: "food.jpeg",
-          url:
-            "https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100",
-        },
-        {
-          name: "food2.jpeg",
-          url:
-            "https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100",
-        },
+        // {
+        //   name: "food.jpeg",
+        //   url:
+        //     "https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100",
+        // },
+        // {
+        //   name: "food2.jpeg",
+        //   url:
+        //     "https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100",
+        // },
       ],
       fileListTranfer: [],
+      bookList: [],
       rendPDF: {
         contract: "",
         idCardNumber: "",
@@ -2603,6 +2643,7 @@ export default {
           }
 
           if (resp.data.file !== null) this.imageUrl = resp.data.file.path;
+          this.bookList = resp.data.books;
           // String propertyTypeListingByLead;
           // String toiletListingByLead;
           // String bedListingByLead;
@@ -3088,18 +3129,8 @@ export default {
           reject(err);
         });
     },
-    handleRemove(file, fileList) {
-      console.log(file, fileList);
-    },
     handlePreview(file) {
       console.log(file);
-    },
-    handleExceed(files, fileList) {
-      this.$message.warning(
-        `The limit is 3, you selected ${
-          files.length
-        } files this time, add up to ${files.length + fileList.length} totally`
-      );
     },
     beforeRemove(file, fileList) {
       return this.$confirm(`Cancel the transfert of ${file.name} ?`);
@@ -3108,15 +3139,15 @@ export default {
       this.fullscreenLoading = true;
       let postBody;
       let path = "";
-      let fileName = ""
+      let fileName = "";
       if (type === "RENT") {
         path = "api/report/leaseAgreement";
         postBody = this.rendPDF;
-        fileName = "leaseAgreement"
+        fileName = "leaseAgreement";
       } else if (type === "SALE") {
         path = "api/report/realEstateAgentAgreement";
         postBody = this.salePDF;
-        fileName = "realEstateAgentAgreement"
+        fileName = "realEstateAgentAgreement";
       }
 
       console.log("postBody : " + JSON.stringify(postBody));
@@ -3133,7 +3164,7 @@ export default {
           this.fullscreenLoading = false;
           console.log("resp.data : " + JSON.stringify(resp.data));
           var byteFile = this.base64ToArrayBuffer(resp.data);
-          this.saveByteArray(fileName,byteFile);
+          this.saveByteArray(fileName, byteFile);
           // this.$notify({
           //   message: "Success",
           //   icon: "fa fa-gift",
@@ -3159,7 +3190,7 @@ export default {
           reject(err);
         });
     },
-    base64ToArrayBuffer: function(base64) {
+    base64ToArrayBuffer: function (base64) {
       var binaryString = window.atob(base64);
       var binaryLen = binaryString.length;
       var bytes = new Uint8Array(binaryLen);
@@ -3169,15 +3200,172 @@ export default {
       }
       return bytes;
     },
-    saveByteArray: function(reportName, byte) {
-      var blob = new Blob([byte], {type: "application/pdf"});
-      var link = document.createElement('a');
+    saveByteArray: function (reportName, byte) {
+      var blob = new Blob([byte], { type: "application/pdf" });
+      var link = document.createElement("a");
       link.href = window.URL.createObjectURL(blob);
       var fileName = reportName;
       link.download = fileName;
       link.click();
     },
+    getBase64(file) {
+      return new Promise(function (resolve, reject) {
+        let reader = new FileReader();
+        let imgResult = "";
+        reader.readAsDataURL(file);
+        reader.onload = function () {
+          imgResult = reader.result;
+        };
+        reader.onerror = function (error) {
+          reject(error);
+        };
+        reader.onloadend = function () {
+          resolve(imgResult);
+        };
+      });
+    },
+    toggleUpload(file) {
+      this.fullscreenLoading = true;
+      console.log("toggleUpload file" + JSON.stringify(file));
+      var imageBase64 = this.getBase64(file.raw).then((res) => {
+        // console.log(res);
+        let postBody = {
+          name: file.name,
+          path: res,
+        };
+        // console.log("toggleUpload postBody" + JSON.stringify(postBody));
+        const AXIOS = axios.create({
+          baseURL: process.env.VUE_APP_BACKEND_URL,
+        });
+        AXIOS.post("api/v2/file/upload", postBody, {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + localStorage.getItem("token"),
+          },
+        })
+          .then((resp) => {
+            this.fullscreenLoading = false;
+            this.$notify({
+              message: "Success",
+              icon: "fa fa-gift",
+              horizontalAlign: "center",
+              verticalAlign: "top",
+              type: "success",
+            });
+            this.fileListBook.push({
+              id: resp.data.id,
+              name: resp.data.name,
+              url: resp.data.path,
+            });
+            this.saveBook(resp.data);
+          })
+          .catch((err) => {
+            this.fullscreenLoading = false;
+            this.$notify({
+              message: "Error",
+              // icon: 'fa fa-gift',
+              // component: NotificationTemplate,
+              horizontalAlign: "center",
+              verticalAlign: "top",
+              type: "warning",
+            });
+            console.log("err : " + JSON.stringify(err));
+            reject(err);
+          });
+      });
+    },
+    saveBook: function (data) {
+      let postBody = {
+        id: this.$route.query.id,
+        book: data,
+      };
+      const AXIOS = axios.create({
+        baseURL: process.env.VUE_APP_BACKEND_URL,
+      });
+      AXIOS.post("api/lead/saveBook", postBody, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+      }).then((resp) => {});
+    },
+    handleRemove(file, fileList) {
+      console.log(file, fileList);
+      this.fullscreenLoading = true;
+      const formData = new FormData();
+      formData.append("id", fileList.id);
+
+      const AXIOS = axios.create({
+        baseURL: process.env.VUE_APP_BACKEND_URL,
+      });
+      AXIOS.post(`api/file/delete`, formData, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+      }).then((resp) => {
+        this.fullscreenLoading = false;
+        this.$notify({
+          message: "Deleted Success",
+          icon: "fa fa-gift",
+          horizontalAlign: "center",
+          verticalAlign: "top",
+          type: "success",
+        });
+        console.log("deleted resp : " + JSON.stringify(resp.data));
+        this.fileListBook = fileList;
+        this.deleteBook(file);
+        // this.fileList = this.fileList.filter(function (item) {
+        //   if (item.id == file.id) {
+        //     return false;
+        //   }
+        //   return true;
+        // });
+      });
+    },
+    deleteBook: function (data) {
+      let postBody = {
+        id: this.$route.query.id,
+        book: {
+          id: data.id,
+          name: data.name,
+          path: data.url,
+        },
+      };
+
+      const AXIOS = axios.create({
+        baseURL: process.env.VUE_APP_BACKEND_URL,
+      });
+      AXIOS.post("api/lead/deleteBook", postBody, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+      }).then((resp) => {});
+    },
+    downloadFile: function (row) {
+      console.log("downloadFile row : " + JSON.stringify(row));
+
+      axios({
+        method: "GET",
+        url: row.path,
+        responseType: "blob",
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+        },
+      })
+        .then((response) => {
+          const blob = new Blob([response.data]);
+          const link = document.createElement("a");
+          link.href = URL.createObjectURL(blob);
+          link.download = label;
+          link.click();
+          URL.revokeObjectURL(link.href);
+        })
+        .catch(console.error);
+    },
   },
+
   computed: {
     ...mapGetters({ getUser: "getUser" }),
     isLoggedIn: function () {
