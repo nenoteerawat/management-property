@@ -3358,7 +3358,7 @@ export default {
           const blob = new Blob([response.data]);
           const link = document.createElement("a");
           link.href = URL.createObjectURL(blob);
-          link.download = label;
+          link.download = row.name;
           link.click();
           URL.revokeObjectURL(link.href);
         })
