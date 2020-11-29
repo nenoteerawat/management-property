@@ -1074,6 +1074,13 @@
                     >
                       <i class="fa fa-download"></i>
                     </p-button>
+                    <p-button
+                      round
+                      icon
+                      @click="removeBook(props.row)"
+                    >
+                      <i class="fa fa-trash"></i>
+                    </p-button>
                   </template>
                 </el-table-column>
               </el-table>
@@ -1484,7 +1491,7 @@
       </template>
       <div class="row">
         <div class="col-md-12">
-          <h6>Book</h6>
+          <h6>เอกสาร</h6>
           <el-upload
             class="upload-demo"
             action="#"
@@ -3290,7 +3297,7 @@ export default {
       }).then((resp) => {});
     },
     handleRemove(file, fileList) {
-      console.log(file, fileList);
+      // console.log(file, fileList);
       this.fullscreenLoading = true;
       const formData = new FormData();
       formData.append("id", fileList.id);
@@ -3345,7 +3352,6 @@ export default {
     },
     downloadFile: function (row) {
       console.log("downloadFile row : " + JSON.stringify(row));
-
       axios({
         method: "GET",
         url: row.path,
@@ -3363,6 +3369,48 @@ export default {
           URL.revokeObjectURL(link.href);
         })
         .catch(console.error);
+    },
+    removeBook: function (row) {
+      this.fullscreenLoading = true;
+      const formData = new FormData();
+      formData.append("id", row.id);
+      const AXIOS = axios.create({
+        baseURL: process.env.VUE_APP_BACKEND_URL,
+      });
+      AXIOS.post(`api/file/delete`, formData, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+      }).then((resp) => {
+        let postBody = {
+          id: this.$route.query.id,
+          book: {
+            id: row.id,
+            name: row.name,
+            path: row.path,
+          },
+        };
+        const AXIOS = axios.create({
+          baseURL: process.env.VUE_APP_BACKEND_URL,
+        });
+        AXIOS.post("api/lead/deleteBook", postBody, {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + localStorage.getItem("token"),
+          },
+        }).then((resp) => {
+          this.fullscreenLoading = false;
+          this.$notify({
+            message: "Deleted Success",
+            icon: "fa fa-gift",
+            horizontalAlign: "center",
+            verticalAlign: "top",
+            type: "success",
+          });
+          this.getLead();
+        });
+      });
     },
   },
 
