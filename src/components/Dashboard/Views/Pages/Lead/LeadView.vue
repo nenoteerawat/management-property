@@ -1196,7 +1196,10 @@
         </fieldset>
       </div>
       <template slot="footer">
-        <p-button v-show="!view" @click="createActionLog">{{
+        <p-button v-show="!view && modalBtn === 'Add'" @click="createActionLog">{{
+          modalBtn
+        }}</p-button>
+        <p-button v-show="!view && modalBtn === 'Edit'" @click="editActionLog">{{
           modalBtn
         }}</p-button>
         <!-- <p-button type="danger" @click.native="modals.actionLog = false"
@@ -2114,6 +2117,7 @@ export default {
       genRentPDF: false,
       genSalePDF: false,
       view: true,
+      actionLogId: "",
       modalBtn: "Add",
       actionDateTime: new Date(),
       comment: "",
@@ -2777,8 +2781,78 @@ export default {
           reject(err);
         });
     },
+    editActionLog: function () {
+      this.fullscreenLoading = true;
+      let listingId = null;
+      let reason = "";
+      if (this.actionTypeSelects.select == 5) {
+        listingId = this.listingByActionLog;
+      }
+      if (this.actionTypeSelects.select == 6) {
+        listingId = this.listingByAppointment;
+        reason = this.reason;
+      }
+      let postBody = {
+        id: this.actionLogId,
+        status: this.actionTypeSelects.select,
+        comment: this.comment,
+        listingId: listingId,
+        actionDateTime: this.actionDateTime,
+        leadId: this.$route.query.id,
+        reason: reason,
+        done: this.radios.done,
+      };
+      console.log("postBody : " + JSON.stringify(postBody));
+      const AXIOS = axios.create({
+        baseURL: process.env.VUE_APP_BACKEND_URL,
+      });
+      AXIOS.post("api/actionLog/edit", postBody, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+      })
+        .then((resp) => {
+          this.fullscreenLoading = false;
+          this.$notify({
+            message: "Success",
+            icon: "fa fa-gift",
+            horizontalAlign: "center",
+            verticalAlign: "top",
+            type: "success",
+          });
+          this.modals.actionLog = false;
+
+          let status = this.actionTypeSelects.data.filter(function (
+            actionType
+          ) {
+            if (actionType.value === resp.data.status) return true;
+          });
+          this.getActionLog();
+          // this.tasks.unshift({
+          //   id: resp.data.id,
+          //   comment: resp.data.comment,
+          //   actionDateTime: resp.data.actionDateTime,
+          //   status: status[0].label,
+          //   done: resp.data.done,
+          // });
+        })
+        .catch((err) => {
+          this.fullscreenLoading = false;
+          this.$notify({
+            message: "Error",
+            // icon: 'fa fa-gift',
+            // component: NotificationTemplate,
+            horizontalAlign: "center",
+            verticalAlign: "top",
+            type: "warning",
+          });
+          console.log("err : " + JSON.stringify(err));
+          reject(err);
+        });
+    },
     getActionLogDetail: function (row, type) {
-      // console.log("getActionLogDetail row : " + JSON.stringify(row));
+      console.log("getActionLogDetail row : " + JSON.stringify(row));
       let done = row.done === "COMPLETED" ? "2" : "1";
 
       let status = this.actionTypeSelects.data.filter(function (actionType) {
@@ -2786,6 +2860,7 @@ export default {
       });
 
       this.modals.actionLog = true;
+      this.actionLogId = row.id;
       this.actionTypeSelects.select = status[0].value;
       this.comment = row.comment;
       this.actionDateTime = new Date(row.actionDateTime);
