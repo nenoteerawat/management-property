@@ -537,7 +537,11 @@
                   (comment = ''),
                   (actionTypeSelects.select = ''),
                   (radios.done = '1'),
-                  (view = false)
+                  (view = false),
+                  (negotiationSelects.select = ''),
+                  (reasonNegotiation = ''),
+                  (whyNegotiation = ''),
+                  (improveNegotiation = '')
               "
               outline
               round
@@ -1172,7 +1176,8 @@
       </div>
       <div class="col-md-12">
         <div class="form-group">
-          <label>Comment</label>
+          <label v-if="actionTypeSelects.select != 7">Comment</label>
+          <label v-else>Script</label>
           <textarea
             :readonly="view"
             rows="5"
@@ -1193,6 +1198,47 @@
             v-model="reason"
           ></textarea>
         </div>
+      </div>
+      <div class="col-md-12" v-show="actionTypeSelects.select == 7">
+        <el-select
+          :disabled="view"
+          class="select-primary select-width-100"
+          placeholder="select"
+          v-model="negotiationSelects.select"
+        >
+          <el-option
+            v-for="option in negotiationSelects.data"
+            class="select-primary"
+            :value="option.value"
+            :label="option.label"
+            :key="option.label"
+          ></el-option>
+        </el-select>
+      </div>
+      <div class="col-md-12" v-show="actionTypeSelects.select == 7">
+        <fg-input
+          :disabled="view"
+          placeholder
+          label="Result"
+          v-model="reasonNegotiation"
+        ></fg-input>
+      </div>
+      <div class="col-md-12" v-show="actionTypeSelects.select == 7">
+        <fg-input
+          :disabled="view"
+          placeholder
+          label="Why"
+          v-model="whyNegotiation"
+        >
+        </fg-input>
+      </div>
+      <div class="col-md-12" v-show="actionTypeSelects.select == 7">
+        <fg-input
+          :disabled="view"
+          placeholder
+          label="Improve"
+          v-model="improveNegotiation"
+        ></fg-input>
       </div>
       <div class="col-md-12">
         <div class="form-group">
@@ -3329,9 +3375,12 @@ export default {
           this.bookList = resp.data.books;
           if (resp.data.leasePDF !== null) this.leasePDF = resp.data.leasePDF;
           if (resp.data.sellPDF !== null) this.sellPDF = resp.data.sellPDF;
-          if (resp.data.exclusivePDF !== null) this.exclusivePDF = resp.data.exclusivePDF;
-          if (resp.data.agentAgreementPDF !== null) this.agentAgreementPDF = resp.data.agentAgreementPDF;
-          if (resp.data.coBrokePDF !== null) this.coBrokePDF = resp.data.coBrokePDF;
+          if (resp.data.exclusivePDF !== null)
+            this.exclusivePDF = resp.data.exclusivePDF;
+          if (resp.data.agentAgreementPDF !== null)
+            this.agentAgreementPDF = resp.data.agentAgreementPDF;
+          if (resp.data.coBrokePDF !== null)
+            this.coBrokePDF = resp.data.coBrokePDF;
           // this.agentAgreementPDF = resp.data.agentAgreementPDF;
           // this.rendPDF = resp.data.rendPDF;
 
