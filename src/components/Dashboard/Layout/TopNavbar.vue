@@ -12,11 +12,11 @@
 
         </navbar-toggle-button>
       </div>
-      <a class="navbar-brand" href="#pablo">Vue Paper Dashboard 2 PRO</a>
+      <a class="navbar-brand" href="">Home Real Estate Services</a>
     </div>
 
     <template slot="navbar-menu">
-      <form>
+      <!-- <form>
         <div class="input-group no-border">
           <input type="text" value="" class="form-control" placeholder="Search...">
           <div class="input-group-append">
@@ -25,16 +25,16 @@
             </div>
           </div>
         </div>
-      </form>
+      </form> -->
       <ul class="navbar-nav">
-        <li class="nav-item">
+        <!-- <li class="nav-item">
           <a class="nav-link btn-magnify" href="#pablo">
             <i class="nc-icon nc-layout-11"></i>
             <p>
               <span class="d-lg-none d-md-block">Stats</span>
             </p>
           </a>
-        </li>
+        </li> -->
         <drop-down icon="nc-icon nc-bell-55" tag="li"
                    position="right"
                    direction="none"
@@ -50,34 +50,41 @@
               <span class="d-lg-none d-md-block">Some Actions</span>
             </p>
           </a>
-          <a class="dropdown-item" href="#">Action</a>
-          <a class="dropdown-item" href="#">Another action</a>
-          <a class="dropdown-item" href="#">Something else here</a>
+          <a v-for="data in listApprove" class="dropdown-item" href="/admin/approve" :key="data.message"> {{ data.message }}</a>
+          <!-- <a class="dropdown-item" href="#">Another action</a> -->
+          <!-- <a class="dropdown-item" href="#">Something else here</a> -->
         </drop-down>
-        <li class="nav-item">
+        <!-- <li class="nav-item">
           <a class="nav-link btn-rotate" href="#pablo">
             <i class="nc-icon nc-settings-gear-65"></i>
             <p>
               <span class="d-lg-none d-md-block">Account</span>
             </p>
           </a>
-        </li>
+        </li> -->
       </ul>
     </template>
   </navbar>
 </template>
 <script>
   import { Navbar, NavbarToggleButton } from 'src/components/UIComponents'
+import axios from "axios";
 
   export default {
     components: {
       Navbar,
       NavbarToggleButton
     },
+
+    created: function () {
+      this.getChangeApprove();
+    },
+
     data() {
       return {
         activeNotifications: false,
-        showNavbar: false
+        showNavbar: false,
+        listApprove: [],
       }
     },
     methods: {
@@ -101,6 +108,28 @@
       },
       toggleNavbar() {
         this.showNavbar = !this.showNavbar;
+      },
+      getChangeApprove: function () {
+        const AXIOS = axios.create({
+        baseURL: process.env.VUE_APP_BACKEND_URL,
+      });
+      const paramsValue = {
+        state: "WAIT_APPROVE",
+      };
+      AXIOS.get(`api/change/query`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+        params: paramsValue,
+      }).then((resp) => {
+        console.log("TopNavber all resp : " + JSON.stringify(resp));
+        for (let key of resp.data) {
+          this.listApprove.push({
+            message : key.type+" type : "+key.submitType+" , comment : "+ key.comment
+          })
+        }
+      });
       }
     }
   }
