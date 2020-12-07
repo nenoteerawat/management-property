@@ -3956,7 +3956,7 @@ export default {
         postBody = this.leasePDF;
         fileName = "leaseAgreement";
       } else if (type === "SELL") {
-        path = "api/report/sellAgreement";
+        path = "api/report/sellAndPurchaseAgreement";
         postBody = this.genSellPDF;
         fileName = "genSell";
       } else if (type === "AGENT_AGREEMENT") {
@@ -3964,11 +3964,11 @@ export default {
         postBody = this.agentAgreementPDF;
         fileName = "realEstateAgentAgreement";
       } else if (type === "EXCLUSIVE") {
-        path = "api/report/exclusive";
+        path = "api/report/exclusiveAgreement";
         postBody = this.exclusivePDF;
         fileName = "exclusive";
       } else if (type === "CO_BROKE") {
-        path = "api/report/coBroke";
+        path = "api/report/coBrokerForm";
         postBody = this.coBrokePDF;
         fileName = "coBroke";
       }
