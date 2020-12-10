@@ -95,13 +95,13 @@
                 </ValidationProvider>
               </div>
               <div class="col-md-6">
-                <ValidationProvider name="password" rules="required" v-slot="{ passed, failed }">
+                <ValidationProvider name="password" rules="min:6|max:40" v-slot="{ passed, failed }">
                   <fg-input
                     placeholder
                     label="password"
                     v-model="users.password"
                     type="password"
-                    :error="failed ? 'The field is required': null"
+                    :error="failed ? 'size must be between 6 and 40': null"
                     :hasSuccess="passed"
                   ></fg-input>
                 </ValidationProvider>
@@ -132,12 +132,19 @@ import "@trevoreyre/autocomplete-vue/dist/style.css";
 import { Select, Option } from "element-ui";
 import axios from "axios";
 import { mapGetters } from "vuex";
-import { extend } from "vee-validate";
-import { email, required, confirmed } from "vee-validate/dist/rules";
+import { extend } from 'vee-validate';
+import * as rules from 'vee-validate/dist/rules';
 
-extend("required", required);
-extend("confirmed", confirmed);
-extend("email", email);
+Object.keys(rules).forEach(rule => {
+  extend(rule, rules[rule]);
+});
+
+// with typescript
+for (let [rule, validation] of Object.entries(rules)) {
+  extend(rule, {
+    ...validation
+  });
+}
 
 export default {
   components: {

@@ -48,7 +48,17 @@
           </div>
           <div class="col-md-12">
             <el-table :data="queriedData" header-row-class-name="text-primary">
-              <el-table-column type="index"></el-table-column>
+              <el-table-column min-width="20" type="index"></el-table-column>
+              <el-table-column min-width="150" label="Name">
+                <template slot-scope="props">
+                  <div class="cell">
+                    <span> ชื่อ : {{ props.row.firstName}}</span>
+                  </div>
+                  <div class="cell">
+                    <span> นามสกุล : {{ props.row.lastName}}  </span>
+                  </div>
+                </template>
+              </el-table-column>
               <!-- <el-table-column min-width="60">
                 <template slot-scope="props">
                   <div class="img-container">
@@ -64,7 +74,7 @@
                 :label="column.label"
                 sortable
               ></el-table-column>
-              <el-table-column min-width="100" label="Type">
+              <el-table-column min-width="80" label="Type">
                 <template slot-scope="props">
                   <div class="cell" v-show="props.row.typeBuy">
                     <span> Buy </span>
@@ -74,7 +84,7 @@
                   </div>
                 </template>
               </el-table-column>
-              <el-table-column label>
+              <el-table-column min-width="120" label>
                 <template slot-scope="props">
                   <div class="cell">
                     <span>
@@ -93,7 +103,6 @@
               <el-table-column
                 class-name="action-buttons td-actions"
                 align="right"
-                label="Actions"
               >
                 <template slot-scope="props">
                   <p-button
@@ -183,25 +192,20 @@ export default {
         //   minWidth: 150,
         // },
         {
-          prop: "firstName",
-          label: "ชื่อ",
-        },
-        {
-          prop: "lastName",
-          label: "นามสกุล",
-        },
-        {
           prop: "status",
+          minWidth: 105,
           label: "Status",
         },
         {
           prop: "grade",
           label: "grade",
+          minWidth: 105,
         },
-        {
-          prop: "painPoints",
-          label: "painPoints",
-        },
+        // {
+        //   prop: "painPoints",
+        //   label: "pain",
+        //   minWidth: 85,
+        // },
       ],
       tableData: [],
       comment: "",

@@ -4,7 +4,7 @@
       <a
         class="simple-text logo-mini"
         aria-label="sidebar mini logo"
-        href="https://www.creative-tim.com/product/vue-paper-dashboard-2-pro"
+        href="/admin/overview"
       >
         <div class="logo-img">
           <img :src="logo" alt />
@@ -12,7 +12,7 @@
       </a>
       <a
         class="simple-text logo-normal"
-        href="https://www.creative-tim.com/vue-paper-dashboard-2-pro"
+        href="/admin/overview"
       >{{ title }}</a>
     </div>
     <div class="sidebar-wrapper" ref="sidebarScrollArea">
@@ -54,7 +54,7 @@ export default {
   props: {
     title: {
       type: String,
-      default: "Vue PDP Pro",
+      default: "Home Real Estate",
       description: "Sidebar title",
     },
     backgroundColor: {
@@ -84,7 +84,7 @@ export default {
     },
     logo: {
       type: String,
-      default: "static/img/vue-logo.png",
+      default: "/static/img/logo-home-2.png",
       description: "Sidebar Logo",
     },
     sidebarLinks: {

@@ -30,7 +30,7 @@
       </div>
     </template>
     <el-table :data="tasks" header-row-class-name="text-primary">
-      <el-table-column label="รายละเอียด" min-width="150">
+      <el-table-column label="รายละเอียด" min-width="120">
         <template slot-scope="props">
           <div class="cell">
             <span>

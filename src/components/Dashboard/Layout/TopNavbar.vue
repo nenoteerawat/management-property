@@ -123,7 +123,7 @@ import axios from "axios";
         },
         params: paramsValue,
       }).then((resp) => {
-        console.log("TopNavber all resp : " + JSON.stringify(resp));
+        // console.log("TopNavber all resp : " + JSON.stringify(resp));
         for (let key of resp.data) {
           this.listApprove.push({
             message : key.type+" type : "+key.submitType+" , comment : "+ key.comment

@@ -569,16 +569,16 @@
                 <fg-input
                   placeholder
                   label="เงิน (min)"
-                  type="number"
                   v-model="lead.priceMin"
+                  @keyup="formatCurrency(lead.priceMin, $event)"
                 ></fg-input>
               </div>
               <div class="col-md-12">
                 <fg-input
                   placeholder
                   label="เงิน (max)"
-                  type="number"
                   v-model="lead.priceMax"
+                  @keyup="formatCurrency(lead.priceMax, $event)"
                 ></fg-input>
               </div>
               <div class="col-md-12">
@@ -1304,6 +1304,18 @@ export default {
   },
 
   methods: {
+    formatCurrency(num, e) {
+      num = num + "";
+      var number = num.replace(/[^\d.-]/g, "");
+      var splitArray = number.split(".");
+      var integer = splitArray[0];
+      var mantissa = splitArray.length > 1 ? "." + splitArray[1] : "";
+      var rgx = /(\d+)(\d{3})/;
+      while (rgx.test(integer)) {
+        integer = integer.replace(rgx, "$1" + "," + "$2");
+      }
+      e.currentTarget.value = integer + mantissa.substring(0, 3);
+    },
     select(address) {
       this.district = address.district;
       this.amphoe = address.amphoe;

@@ -91,32 +91,24 @@
               <div class="col-md-4">
                 <ValidationProvider
                   name="email"
-                  rules="required|email"
+                  rules="email"
                   v-slot="{ passed, failed }"
                 >
                   <fg-input
                     placeholder="Email"
                     label="Email"
                     v-model="owner.email"
-                    :error="failed ? 'The Email field is required' : null"
+                    :error="failed ? 'The Email format ' : null"
                     :hasSuccess="passed"
                   ></fg-input>
                 </ValidationProvider>
               </div>
               <div class="col-md-4">
-                <ValidationProvider
-                  name="line"
-                  rules="required"
-                  v-slot="{ passed, failed }"
-                >
-                  <fg-input
-                    placeholder="Line"
-                    label="Line"
-                    v-model="owner.line"
-                    :error="failed ? fieldRequired : null"
-                    :hasSuccess="passed"
-                  ></fg-input>
-                </ValidationProvider>
+                <fg-input
+                  placeholder="Line"
+                  label="Line"
+                  v-model="owner.line"
+                ></fg-input>
               </div>
               <div class="col-md-4">
                 <fg-input
@@ -160,12 +152,16 @@
                   <div class="col-md-12">
                     <label>Project : </label>
                     <span style="font-size: 25px"> {{ project.name }} </span>
-                    <span>({{project.zone}})</span>
-                    <router-link to="/admin/project/create">
-                      <p-button type="success" class="pull-right" outline round>
-                        <i class="nc-icon nc-simple-add"></i> Add
-                      </p-button>
-                    </router-link>
+                    <span>({{ project.zone }})</span>
+                    <p-button
+                      type="success"
+                      class="pull-right"
+                      outline
+                      round
+                      @click="goToPageCreateProject"
+                    >
+                      <i class="nc-icon nc-simple-add"></i> Add
+                    </p-button>
                   </div>
                   <div class="col-md-12">
                     <model-select
@@ -416,18 +412,18 @@
                 <div class="row">
                   <div class="col-md-6">
                     <fg-input
-                      type="number"
                       placeholder
                       label="ราคา"
                       v-model="room.price"
+                      @keyup="formatCurrency(room.price, $event)"
                     ></fg-input>
                   </div>
                   <div class="col-md-6" v-show="activeRent">
                     <fg-input
-                      type="number"
                       placeholder
                       label="เช่า"
                       v-model="room.priceRent"
+                      @keyup="formatCurrency(room.priceRent, $event)"
                     ></fg-input>
                   </div>
                 </div>
@@ -956,6 +952,7 @@ export default {
         floor: "",
         rentDetail: "",
         priceRent: "",
+        price: "",
         exclusiveDate: "",
         description: "",
         remark: "",
@@ -1041,6 +1038,18 @@ export default {
   },
 
   methods: {
+    formatCurrency(num , e) {
+      num = num + "";
+      var number = num.replace(/[^\d.-]/g, "");
+      var splitArray = number.split(".");
+      var integer = splitArray[0];
+      var mantissa = splitArray.length > 1 ? "." + splitArray[1] : "";
+      var rgx = /(\d+)(\d{3})/;
+      while (rgx.test(integer)) {
+        integer = integer.replace(rgx, "$1" + "," + "$2");
+      }
+      e.currentTarget.value = integer + mantissa.substring(0, 3);
+    },
     getProject: function () {
       let postBody = {
         role: "",
@@ -1593,6 +1602,23 @@ export default {
           });
           console.log("err : " + JSON.stringify(err));
           reject(err);
+        });
+    },
+
+    goToPageCreateProject: function () {
+      this.$confirm("ข้อมูลที่กรอกจะหายครับx ", "Warning", {
+        confirmButtonText: "OK",
+        cancelButtonText: "Cancel",
+        type: "warning",
+      })
+        .then(() => {
+          this.$router.push("/admin/project/create");
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "canceled",
+          });
         });
     },
   },
