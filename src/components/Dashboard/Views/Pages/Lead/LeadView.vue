@@ -2543,7 +2543,7 @@
             <el-date-picker
               type="date"
               placeholder="Pick a day"
-              v-model="sellPDF.dateRegistration"
+              v-model="coBrokePDF.dateRegistration"
             ></el-date-picker>
           </fg-input>
         </div>
@@ -2945,6 +2945,7 @@ export default {
       coBrokePDF: {
         coBrokeRef: "",
         enqRef: "",
+        dateRegistration: "",
         companyName: "",
         representativeName: "",
         companyAddress: "",
@@ -3970,6 +3971,8 @@ export default {
       } else if (type === "CO_BROKE") {
         path = "api/report/coBrokerForm";
         postBody = this.coBrokePDF;
+        postBody['checkboxTypeBuyClient'] = this.checkboxTypeBuyClient;
+        postBody['checkboxTypeRentClient'] = this.checkboxTypeRentClient;
         fileName = "coBroke";
       }
 
