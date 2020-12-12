@@ -415,7 +415,7 @@
                       placeholder
                       label="ราคา"
                       v-model="room.price"
-                      @keyup="formatCurrency(room.price, $event)"
+                      @keyup="formatCurrency(room.price, 'PRICE')"
                     ></fg-input>
                   </div>
                   <div class="col-md-6" v-show="activeRent">
@@ -423,7 +423,7 @@
                       placeholder
                       label="เช่า"
                       v-model="room.priceRent"
-                      @keyup="formatCurrency(room.priceRent, $event)"
+                      @keyup="formatCurrency(room.priceRent, 'PRICE_RENT')"
                     ></fg-input>
                   </div>
                 </div>
@@ -1038,7 +1038,7 @@ export default {
   },
 
   methods: {
-    formatCurrency(num , e) {
+    formatCurrency(num , text) {
       num = num + "";
       var number = num.replace(/[^\d.-]/g, "");
       var splitArray = number.split(".");
@@ -1048,7 +1048,10 @@ export default {
       while (rgx.test(integer)) {
         integer = integer.replace(rgx, "$1" + "," + "$2");
       }
-      e.currentTarget.value = integer + mantissa.substring(0, 3);
+      if(text === "PRICE_RENT")
+        this.room.priceRent = integer + mantissa.substring(0, 3);
+      else if (text === "PRICE")
+        this.room.price = integer + mantissa.substring(0, 3);
     },
     getProject: function () {
       let postBody = {
@@ -1271,7 +1274,7 @@ export default {
         " \n" +
         "\n" +
         "*** " +
-        Number(this.room.price).toLocaleString() +
+        this.room.price +
         ".- (" +
         sellDetail +
         ") ****\n" +
@@ -1524,6 +1527,10 @@ export default {
         phone: this.owner.phone,
         email: this.owner.email,
       };
+      var num = this.room.price;
+      var numberPrice = num.replace(/[^\d.-]/g, "");
+      num = this.room.priceRent;
+      var numberPriceRent =num.replace(/[^\d.-]/g, "");
       let room = {
         projectId: this.project.id,
         building: this.buildingSelects.select,
@@ -1536,8 +1543,8 @@ export default {
         bed: this.bedSelects.select,
         area: this.room.area,
         floor: this.floorSelects.select,
-        price: this.room.price,
-        priceRent: this.room.priceRent,
+        price: numberPrice,
+        priceRent: numberPriceRent,
         rentDetail: this.room.rentDetail,
         direction: this.directionSelects.select,
         position: this.positionSelects.select,

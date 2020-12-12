@@ -570,7 +570,7 @@
                   placeholder
                   label="เงิน (min)"
                   v-model="lead.priceMin"
-                  @keyup="formatCurrency(lead.priceMin, $event)"
+                  @keyup="formatCurrency(lead.priceMin, 'PRICE_MIN')"
                 ></fg-input>
               </div>
               <div class="col-md-12">
@@ -578,7 +578,7 @@
                   placeholder
                   label="เงิน (max)"
                   v-model="lead.priceMax"
-                  @keyup="formatCurrency(lead.priceMax, $event)"
+                  @keyup="formatCurrency(lead.priceMax, 'PRICE_MAX')"
                 ></fg-input>
               </div>
               <div class="col-md-12">
@@ -1304,7 +1304,7 @@ export default {
   },
 
   methods: {
-    formatCurrency(num, e) {
+    formatCurrency(num, text) {
       num = num + "";
       var number = num.replace(/[^\d.-]/g, "");
       var splitArray = number.split(".");
@@ -1314,7 +1314,10 @@ export default {
       while (rgx.test(integer)) {
         integer = integer.replace(rgx, "$1" + "," + "$2");
       }
-      e.currentTarget.value = integer + mantissa.substring(0, 3);
+      if (text === "PRICE_MIN")
+        this.lead.priceMin = integer + mantissa.substring(0, 3);
+      else if (text === "PRICE_MAX")
+        this.lead.priceMax = integer + mantissa.substring(0, 3);
     },
     select(address) {
       this.district = address.district;
@@ -1762,6 +1765,10 @@ export default {
     createLead() {
       this.fullscreenLoading = true;
       let path = "api/lead/create";
+      var num = this.lead.priceMin;
+      var priceMin = num.replace(/[^\d.-]/g, "");
+      num = this.lead.priceMax;
+      var priceMax = num.replace(/[^\d.-]/g, "");
       let postBody = {
         comment: this.comment,
         listingByLead: this.listingByLead,
@@ -1771,8 +1778,8 @@ export default {
         painPoints: this.painPoints.dynamicPainPoints,
         painSales: this.painPoints.dynamicPainSales,
         grade: this.gradeSelects.select,
-        priceMin: this.lead.priceMin,
-        priceMax: this.lead.priceMax,
+        priceMin: priceMin,
+        priceMax: priceMax,
         typeBuy: this.checkboxTypeBuy,
         typeRent: this.checkboxTypeRent,
         firstName: this.lead.firstName,
@@ -1817,8 +1824,8 @@ export default {
           painPoints: this.painPoints.dynamicPainPoints,
           painSales: this.painPoints.dynamicPainSales,
           grade: this.gradeSelects.select,
-          priceMin: this.lead.priceMin,
-          priceMax: this.lead.priceMax,
+          priceMin: priceMin,
+          priceMax: priceMax,
           typeBuy: this.checkboxTypeBuy,
           typeRent: this.checkboxTypeRent,
           firstName: this.lead.firstName,
