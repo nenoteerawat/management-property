@@ -1614,7 +1614,29 @@
       <template slot="header">
         <h4 class="title title-up">หนังสือสัญญาเช่า (LEASE AGREEMENT)</h4>
       </template>
-      <div class="row">
+      <div class="col-md-12">
+        <fieldset>
+          <div class="form-group">
+            <div class="col-md-12">
+              <p-radio
+                label="1"
+                v-model="radios.leasePDF"
+                value="1"
+                :inline="true"
+                >TH</p-radio
+              >
+              <p-radio
+                label="2"
+                v-model="radios.leasePDF"
+                value="2"
+                :inline="true"
+                >EN</p-radio
+              >
+            </div>
+          </div>
+        </fieldset>
+      </div>
+      <div class="row" v-if="radios.leasePDF === '1'">
         <div class="row">
           <div class="col-md-6">
             <fg-input
@@ -1882,6 +1904,220 @@
           </div>
         </div>
       </div>
+      <div class="row" v-if="radios.leasePDF === '2'">
+        <div class="row">
+          <div class="col-md-6">
+            <fg-input
+              placeholder
+              label="Title1"
+              v-model="leasePDFEN.title1"
+            ></fg-input>
+          </div>
+          <div class="col-md-6">
+            <fg-input
+              placeholder
+              label="Written at "
+              v-model="leasePDFEN.title2"
+            ></fg-input>
+          </div>
+          <div class="col-md-6">
+            <fg-input
+              placeholder
+              label="This agreement is made between "
+              v-model="leasePDFEN.contract"
+            ></fg-input>
+          </div>
+          <div class="col-md-6">
+            <fg-input
+              placeholder
+              label="ID number "
+              v-model="leasePDFEN.idCardNumber"
+            ></fg-input>
+          </div>
+          <div class="col-md-4">
+            <fg-input
+              placeholder
+              label="Referred as the Lessor of "
+              v-model="leasePDFEN.contract2"
+            ></fg-input>
+          </div>
+          <div class="col-md-4">
+            <fg-input
+              placeholder
+              label="Floor "
+              v-model="leasePDFEN.floor"
+            ></fg-input>
+          </div>
+          <div class="col-md-4">
+            <fg-input
+              placeholder
+              label="Unit no"
+              v-model="leasePDFEN.unit"
+            ></fg-input>
+          </div>
+          <div class="col-md-12">
+            <fg-input
+              placeholder
+              label="Address "
+              v-model="leasePDFEN.address"
+            ></fg-input>
+          </div>
+          <div class="col-md-4">
+            <fg-input
+              placeholder
+              label="Lessee "
+              v-model="leasePDFEN.contract3"
+            ></fg-input>
+          </div>
+          <div class="col-md-4">
+            <fg-input
+              placeholder
+              label="ID number  "
+              v-model="leasePDFEN.idCardNumber2"
+            ></fg-input>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-6">
+            <fg-input
+              placeholder
+              label="Whereas the Lessor is the legal owner of  "
+              v-model="leasePDFEN.onwer"
+            ></fg-input>
+          </div>
+          <div class="col-md-4">
+            <fg-input
+              placeholder
+              label="Unit no"
+              v-model="leasePDFEN.room"
+            ></fg-input>
+          </div>
+          <div class="col-md-4">
+            <fg-input
+              placeholder
+              label="Floor"
+              v-model="leasePDFEN.floor"
+            ></fg-input>
+          </div>
+          <div class="col-md-12">
+            <fg-input
+              placeholder
+              label="Address"
+              v-model="leasePDFEN.addressFull"
+            ></fg-input>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-2">
+            <fg-input
+              placeholder
+              label="The term of this agreement shall be for a period of "
+              v-model="leasePDFEN.rangeMonth"
+            ></fg-input>
+          </div>
+          <div class="col-md-5">
+            <div>
+              <label>months commencing from </label>
+            </div>
+            <fg-input>
+              <el-date-picker
+                type="date"
+                placeholder="Pick a day"
+                v-model="leasePDFEN.rangeDateStart"
+              ></el-date-picker>
+            </fg-input>
+          </div>
+          <div class="col-md-5">
+            <div>
+              <label>to </label>
+            </div>
+            <fg-input>
+              <el-date-picker
+                type="date"
+                placeholder="Pick a day"
+                v-model="leasePDFEN.rangeDateEnd"
+              ></el-date-picker>
+            </fg-input>
+          </div>
+          <div class="col-md-6">
+            <fg-input
+              placeholder
+              label="The Lessee agrees to pay the Lessor a monthly rent of (THB)"
+              v-model="leasePDFEN.monthlyRent"
+            ></fg-input>
+          </div>
+          <div class="col-md-6">
+            <fg-input
+              placeholder
+              label="in advance per month before the "
+              v-model="leasePDFEN.monthly1"
+            ></fg-input>
+          </div>
+          <div class="col-md-6">
+            <fg-input
+              placeholder
+              label="but no later than the "
+              v-model="leasePDFEN.monthly2"
+            ></fg-input>
+          </div>
+          <div class="col-md-4">
+            <fg-input
+              placeholder
+              label="Bank Account "
+              v-model="leasePDFEN.accountBank"
+            ></fg-input>
+          </div>
+          <div class="col-md-4">
+            <fg-input
+              placeholder
+              label="Account Name "
+              v-model="leasePDFEN.accountName"
+            ></fg-input>
+          </div>
+          <div class="col-md-4">
+            <fg-input
+              placeholder
+              label="Account number "
+              v-model="leasePDFEN.accountNumber"
+            ></fg-input>
+          </div>
+          <div class="col-md-4">
+            <fg-input
+              placeholder
+              label="The first month rent of (THB)"
+              v-model="leasePDFEN.monthlyRentPayFirst"
+            ></fg-input>
+          </div>
+          <div class="col-md-4">
+            <div>
+              <label
+                >shall also be paid upon the beginning of this agreement</label
+              >
+            </div>
+            <fg-input>
+              <el-date-picker
+                type="date"
+                placeholder="Pick a day"
+                v-model="leasePDFEN.monthlyRentDate"
+              ></el-date-picker>
+            </fg-input>
+          </div>
+          <div class="col-md-4">
+            <fg-input
+              placeholder
+              label="Upon beginning of this agreement, Lessee shall pay the deposit fee to the Lessor a total of (THB)"
+              v-model="leasePDFEN.monthlyRentPayAll"
+            ></fg-input>
+          </div>
+          <div class="col-md-4">
+            <fg-input
+              placeholder
+              label="In the event that the Lessee terminate this agreement before the expiry date in any reason, the tenant agrees that the Lessor shall be entitled to keep the security deposit which in total amount of (THB)"
+              v-model="leasePDFEN.monthlyTerminate"
+            ></fg-input>
+          </div>
+        </div>
+      </div>
       <template slot="footer">
         <hr />
         <div class="stats">
@@ -1904,7 +2140,464 @@
           หนังสือสัญญาจะซื้อจะขาย (SELL AND PURCHASE AGREEMENT)
         </h4>
       </template>
-      <div class="row">
+      <div class="col-md-12">
+        <fieldset>
+          <div class="form-group">
+            <div class="col-md-12">
+              <p-radio
+                label="1"
+                v-model="radios.sellPDF"
+                value="1"
+                :inline="true"
+                >TH</p-radio
+              >
+              <p-radio
+                label="2"
+                v-model="radios.sellPDF"
+                value="2"
+                :inline="true"
+                >EN</p-radio
+              >
+            </div>
+          </div>
+        </fieldset>
+      </div>
+      <div class="row" v-if="radios.sellPDF === '2'">
+        <div class="col-md-6">
+          <fg-input
+            placeholder
+            label="Date 2563"
+            v-model="sellPDFEN.titleYear1"
+          ></fg-input>
+        </div>
+        <div class="col-md-6">
+          <fg-input
+            placeholder
+            label="Date 2020"
+            v-model="sellPDFEN.titleYear2"
+          ></fg-input>
+        </div>
+        <div class="col-md-6">
+          <fg-input
+            placeholder
+            label="เขียนที่ "
+            v-model="sellPDFEN.title1"
+          ></fg-input>
+        </div>
+        <div class="col-md-6">
+          <fg-input
+            placeholder
+            label="Written at "
+            v-model="sellPDFEN.title2"
+          ></fg-input>
+        </div>
+        <div class="col-md-6">
+          <fg-input
+            placeholder
+            label="This agreement is made between, MR "
+            v-model="sellPDFEN.contract"
+          ></fg-input>
+        </div>
+        <div class="col-md-6">
+          <fg-input
+            placeholder
+            label="Address is"
+            v-model="sellPDFEN.address1"
+          ></fg-input>
+        </div>
+        <div class="col-md-6">
+          <fg-input
+            placeholder
+            label="ID card number"
+            v-model="sellPDFEN.idCardNumber1"
+          ></fg-input>
+        </div>
+        <div class="col-md-6">
+          <fg-input
+            placeholder
+            label="and Contract MS "
+            v-model="sellPDFEN.contract2"
+          ></fg-input>
+        </div>
+        <div class="col-md-6">
+          <fg-input
+            placeholder
+            label="Address is"
+            v-model="sellPDFEN.address2"
+          ></fg-input>
+        </div>
+        <div class="col-md-6">
+          <fg-input
+            placeholder
+            label="ID card number "
+            v-model="sellPDFEN.idCardNumber2"
+          ></fg-input>
+        </div>
+        <div class="col-md-6">
+          <fg-input
+            placeholder
+            label="the Seller "
+            v-model="sellPDFEN.contract3"
+          ></fg-input>
+        </div>
+        <div class="col-md-6">
+          <fg-input
+            placeholder
+            label="Passport number "
+            v-model="sellPDFEN.passport"
+          ></fg-input>
+        </div>
+      </div>
+      <div class="row" v-if="radios.sellPDF === '2'">
+        <div class="col-md-4">
+          <fg-input
+            placeholder
+            label="the owner of the condominium "
+            v-model="sellPDFEN.roomName"
+          ></fg-input>
+        </div>
+        <div class="col-md-4">
+          <fg-input
+            placeholder
+            label="unit no"
+            type="number"
+            v-model="sellPDFEN.roomNumber"
+          ></fg-input>
+        </div>
+        <div class="col-md-4">
+          <fg-input
+            placeholder
+            label="Floor "
+            type="number"
+            v-model="sellPDFEN.floor"
+          ></fg-input>
+        </div>
+        <div class="col-md-4">
+          <fg-input
+            placeholder
+            label="area (ตร.ม.)"
+            type="number"
+            v-model="sellPDFEN.area"
+          ></fg-input>
+        </div>
+        <div class="col-md-4">
+          <fg-input
+            placeholder
+            label="width (ม.)"
+            type="number"
+            v-model="sellPDFEN.width"
+          ></fg-input>
+        </div>
+        <div class="col-md-4">
+          <fg-input
+            placeholder
+            label="long (ม.)"
+            type="number"
+            v-model="sellPDFEN.long"
+          ></fg-input>
+        </div>
+        <div class="col-md-4">
+          <fg-input
+            placeholder
+            label="height (ม.)"
+            type="number"
+            v-model="sellPDFEN.height"
+          ></fg-input>
+        </div>
+        <div class="col-md-4">
+          <fg-input
+            placeholder
+            label="deed number "
+            v-model="sellPDFEN.premises"
+          ></fg-input>
+        </div>
+      </div>
+      <div class="row" v-if="radios.sellPDF === '2'">
+        <div class="col-md-6">
+          <fg-input
+            placeholder
+            label="The seller agrees to sell and the buyer agrees to buy the “Premises” abovementioned in No. 1. By free of any obligation or any responsibility in the total price of "
+            v-model="sellPDFEN.price"
+          ></fg-input>
+        </div>
+        <div class="col-md-6">
+          <fg-input
+            placeholder
+            label="On the beginning of this contract, The Buyer agrees to pay the deposit to The Seller in the amount of "
+            v-model="sellPDFEN.price2"
+          ></fg-input>
+        </div>
+        <div class="col-md-6">
+          <fg-input
+            placeholder
+            label="Which The Buyer had already paid  "
+            v-model="sellPDFEN.price3"
+          ></fg-input>
+        </div>
+        <div class="col-md-6">
+          <div>
+            <label>as part of the total amount on </label>
+          </div>
+          <fg-input>
+            <el-date-picker
+              type="date"
+              placeholder="Pick a day"
+              v-model="sellPDFEN.dateRegistry"
+            ></el-date-picker>
+          </fg-input>
+        </div>
+        <div class="col-md-6">
+          <fg-input
+            placeholder
+            label="The rest of the amount in total of "
+            v-model="sellPDFEN.price4"
+          ></fg-input>
+        </div>
+        <div class="col-md-6">
+          <fg-input
+            placeholder
+            label="The Buyer agrees to pay the abovementioned about to The Seller at the Land Office Department "
+            v-model="sellPDFEN.registry"
+          ></fg-input>
+        </div>
+        <div class="col-md-6">
+          <div>
+            <label>branches within </label>
+          </div>
+          <fg-input>
+            <el-date-picker
+              type="date"
+              placeholder="Pick a day"
+              v-model="sellPDFEN.dateRegistry2"
+            ></el-date-picker>
+          </fg-input>
+        </div>
+      </div>
+      <div class="row" v-if="radios.sellPDF === '2'">
+        <div class="col-md-6">
+          <fg-input
+            placeholder
+            label="สัญญาฉบับนี้ทำขึ้นระหว่าง , นาย "
+            v-model="sellPDFEN.contractTH"
+          ></fg-input>
+        </div>
+        <div class="col-md-6">
+          <fg-input
+            placeholder
+            label="ที่อยู่ "
+            v-model="sellPDFEN.address1TH"
+          ></fg-input>
+        </div>
+        <div class="col-md-6">
+          <fg-input
+            placeholder
+            label="หมายเลขบัตรประจำตัวประชาชน "
+            v-model="sellPDFEN.idCardNumber1TH"
+          ></fg-input>
+        </div>
+        <div class="col-md-6">
+          <fg-input
+            placeholder
+            label="และ นางสาว "
+            v-model="sellPDFEN.contract2TH"
+          ></fg-input>
+        </div>
+        <div class="col-md-6">
+          <fg-input
+            placeholder
+            label="ที่อยู่ "
+            v-model="sellPDFEN.address2TH"
+          ></fg-input>
+        </div>
+        <div class="col-md-6">
+          <fg-input
+            placeholder
+            label="หมายเลขบัตรประจำตัวประชาชน "
+            v-model="sellPDFEN.idCardNumber2TH"
+          ></fg-input>
+        </div>
+        <div class="col-md-6">
+          <fg-input
+            placeholder
+            label="ซึ่งต่อไปในสัญญาฉบับนี้จะเรียกว่า “ผู้จะขาย” และคุณ  "
+            v-model="sellPDFEN.contract3TH"
+          ></fg-input>
+        </div>
+        <div class="col-md-6">
+          <fg-input
+            placeholder
+            label="หมายเลขพาสปอร์ต "
+            v-model="sellPDFEN.passportTH"
+          ></fg-input>
+        </div>
+      </div>
+      <div class="row" v-if="radios.sellPDF === '2'">
+        <div class="col-md-4">
+          <fg-input
+            placeholder
+            label="ผู้จะขายเป็นเจ้าของห้องชุด "
+            v-model="sellPDFEN.roomNameTH"
+          ></fg-input>
+        </div>
+        <div class="col-md-4">
+          <fg-input
+            placeholder
+            label="หมายเลขห้องชุด "
+            type="number"
+            v-model="sellPDFEN.roomNumberTH"
+          ></fg-input>
+        </div>
+        <div class="col-md-4">
+          <fg-input
+            placeholder
+            label="ชั้น "
+            type="number"
+            v-model="sellPDFEN.floorTH"
+          ></fg-input>
+        </div>
+        <div class="col-md-4">
+          <fg-input
+            placeholder
+            label="เนื้อที่ (ตร.ม.)"
+            type="number"
+            v-model="sellPDFEN.areaTH"
+          ></fg-input>
+        </div>
+        <div class="col-md-4">
+          <fg-input
+            placeholder
+            label="กว้าง (ม.)"
+            type="number"
+            v-model="sellPDFEN.widthTH"
+          ></fg-input>
+        </div>
+        <div class="col-md-4">
+          <fg-input
+            placeholder
+            label="ยาว (ม.)"
+            type="number"
+            v-model="sellPDFEN.longTH"
+          ></fg-input>
+        </div>
+        <div class="col-md-4">
+          <fg-input
+            placeholder
+            label="สูง (ม.)"
+            type="number"
+            v-model="sellPDFEN.heightTH"
+          ></fg-input>
+        </div>
+        <div class="col-md-4">
+          <fg-input
+            placeholder
+            label="ตั้งอยู่บนโฉนดเลขที่ "
+            v-model="sellPDFEN.premisesTH"
+          ></fg-input>
+        </div>
+      </div>
+      <div class="row" v-if="radios.sellPDF === '2'">
+        <div class="col-md-6">
+          <fg-input
+            placeholder
+            label="ผู้จะขายตกลงจะขาย และผู้จะซื้อตกลงจะซื้อ “ทรัพย์สิน” ดังกล่าวในข้อ 1. โดยปลอดภาระผูกพันและภาระ ติดพันใดๆ ในราคารวมทั้งสิ้น "
+            v-model="sellPDFEN.priceTH"
+          ></fg-input>
+        </div>
+        <div class="col-md-6">
+          <fg-input
+            placeholder
+            label="ในวันที่ทำสัญญาฉบับนี้ ผู้จะซื้อตกลงวางเงินมัดจำให้แก่ผู้จะขาย เป็นจำนวนเงิน "
+            v-model="sellPDFEN.price2TH"
+          ></fg-input>
+        </div>
+        <div class="col-md-6">
+          <fg-input
+            placeholder
+            label="โดยผู้จะซื้อได้ชำระเงินมัดจำมาแล้ว ส่วนหนึ่งในจำนวน "
+            v-model="sellPDFEN.price3TH"
+          ></fg-input>
+        </div>
+        <div class="col-md-6">
+          <div>
+            <label>ในวันที่ </label>
+          </div>
+          <fg-input>
+            <el-date-picker
+              type="date"
+              placeholder="Pick a day"
+              v-model="sellPDFEN.dateRegistryTH"
+            ></el-date-picker>
+          </fg-input>
+        </div>
+        <div class="col-md-6">
+          <fg-input
+            placeholder
+            label="ส่วนที่เหลือจำนวน "
+            v-model="sellPDFEN.price4TH"
+          ></fg-input>
+        </div>
+        <div class="col-md-6">
+          <fg-input
+            placeholder
+            label="ผู้จะซื้อตกลงชำระให้แก่ผู้จะขาย ในวันจดทะเบียนโอนกรรมสิทธิ์ ณ สำนักงานทะเบียนที่ดินจังหวัดกรุงเทพมหานคร สาขา "
+            v-model="sellPDFEN.registryTH"
+          ></fg-input>
+        </div>
+        <div class="col-md-6">
+          <div>
+            <label>ภายในวันที่ </label>
+          </div>
+          <fg-input>
+            <el-date-picker
+              type="date"
+              placeholder="Pick a day"
+              v-model="sellPDFEN.dateRegistry2TH"
+            ></el-date-picker>
+          </fg-input>
+        </div>
+        <div class="col-md-6">
+          <div>
+            <label>ค่าอากรสแตมป์ร้อยละ </label>
+          </div>
+          <fieldset>
+            <div class="form-group">
+              <div class="col-md-12">
+                <p-radio
+                  label="1"
+                  v-model="sellPDFEN.tax"
+                  value="1"
+                  :inline="true"
+                  >ภาษีเงินได้. (ผู้จะขาย) อากรแสตมป์ ( ผู้จะขาย) ค่าโอน
+                  (ผู้จะซื้อและผู้จะขายคนละครึ่ง)</p-radio
+                >
+                <p-radio
+                  label="2"
+                  v-model="sellPDFEN.tax"
+                  value="2"
+                  :inline="true"
+                  >ภาษีเงินได้ อากรสแตมป์ ค่าโอน
+                  (ผู้จะซื้อและผู้จะขายทั้งหมดคนละครึ่ง)</p-radio
+                >
+                <p-radio
+                  label="3"
+                  v-model="sellPDFEN.tax"
+                  value="3"
+                  :inline="true"
+                  >ทั้งหมดของผู้จะซื้อ</p-radio
+                >
+              </div>
+            </div>
+          </fieldset>
+        </div>
+        <div class="col-md-12">
+          <fg-input
+            placeholder
+            label="เพิ่มข้อ 13"
+            v-model="sellPDFEN.addNewRuleTH"
+          ></fg-input>
+        </div>
+      </div>
+      <div class="row" v-if="radios.sellPDF === '1'">
         <div class="col-md-6">
           <fg-input
             placeholder
@@ -1955,7 +2648,7 @@
           ></fg-input>
         </div>
       </div>
-      <div class="row">
+      <div class="row" v-if="radios.sellPDF === '1'">
         <div class="col-md-4">
           <fg-input
             placeholder
@@ -2057,7 +2750,7 @@
           ></fg-input>
         </div>
       </div>
-      <div class="row">
+      <div class="row" v-if="radios.sellPDF === '1'">
         <div class="col-md-6">
           <fg-input
             placeholder
@@ -2102,6 +2795,35 @@
           <div>
             <label>ค่าอากรสแตมป์ร้อยละ </label>
           </div>
+          <fieldset>
+            <div class="form-group">
+              <div class="col-md-12">
+                <p-radio
+                  label="1"
+                  v-model="sellPDFEN.tax"
+                  value="1"
+                  :inline="true"
+                  >ภาษีเงินได้. (ผู้จะขาย) อากรแสตมป์ ( ผู้จะขาย) ค่าโอน
+                  (ผู้จะซื้อและผู้จะขายคนละครึ่ง)</p-radio
+                >
+                <p-radio
+                  label="2"
+                  v-model="sellPDFEN.tax"
+                  value="2"
+                  :inline="true"
+                  >ภาษีเงินได้ อากรสแตมป์ ค่าโอน
+                  (ผู้จะซื้อและผู้จะขายทั้งหมดคนละครึ่ง)</p-radio
+                >
+                <p-radio
+                  label="3"
+                  v-model="sellPDFEN.tax"
+                  value="3"
+                  :inline="true"
+                  >ทั้งหมดของผู้จะซื้อ</p-radio
+                >
+              </div>
+            </div>
+          </fieldset>
         </div>
         <div class="col-md-12">
           <fg-input
@@ -2768,6 +3490,8 @@ export default {
       },
       radios: {
         done: "1",
+        sellPDF: "1",
+        leasePDF: "1",
       },
       view: true,
       actionLogId: "",
@@ -2995,6 +3719,35 @@ export default {
         monthlyRentPayAdvance: "",
         monthlyRentPayAll: "",
       },
+      leasePDFEN: {
+        title1: "",
+        title2: "",
+        contract: "",
+        idCardNumber: "",
+        contract2: "",
+        floor: "",
+        unit: "",
+        address: "",
+        contract3: "",
+        idCardNumber2: "",
+        onwer: "",
+        room: "",
+        floor: "",
+        addressFull: "",
+        rangeMonth: "",
+        rangeDateStart: "",
+        rangeDateEnd: "",
+        monthlyRent: "",
+        monthly1: "",
+        monthly2: "",
+        accountBank: "",
+        accountName: "",
+        accountNumber: "",
+        monthlyRentPayFirst: "",
+        monthlyRentDate: "",
+        monthlyRentPayAll: "",
+        monthlyTerminate: "",
+      },
       sellPDF: {
         title1: "",
         title2: "",
@@ -3022,7 +3775,62 @@ export default {
         price2: "",
         registry: "",
         dateRegistry: "",
+        tax: "",
         addNewRule: "",
+      },
+      sellPDFEN: {
+        titleYear1: "",
+        titleYear2: "",
+        title1: "",
+        title2: "",
+        contract: "",
+        address1: "",
+        idCardNumber1: "",
+        contract2: "",
+        address2: "",
+        idCardNumber2: "",
+        contract3: "",
+        passport: "",
+        roomName: "",
+        roomNumber: "",
+        floor: "",
+        area: "",
+        width: "",
+        long: "",
+        height: "",
+        premises: "",
+        price: "",
+        price2: "",
+        price3: "",
+        dateRegistry: "",
+        price4: "",
+        registry: "",
+        dateRegistry2: "",
+        contractTH: "",
+        address1TH: "",
+        idCardNumber1TH: "",
+        contract2TH: "",
+        address2TH: "",
+        idCardNumber2TH: "",
+        contract3TH: "",
+        passportTH: "",
+        roomNameTH: "",
+        roomNumberTH: "",
+        floorTH: "",
+        areaTH: "",
+        widthTH: "",
+        longTH: "",
+        heightTH: "",
+        premisesTH: "",
+        priceTH: "",
+        price2TH: "",
+        price3TH: "",
+        dateRegistryTH: "",
+        price4TH: "",
+        registryTH: "",
+        dateRegistry2TH: "",
+        tax: "",
+        addNewRuleTH: "",
       },
       agentAgreementPDF: {
         contract: "",
@@ -3971,8 +4779,8 @@ export default {
       } else if (type === "CO_BROKE") {
         path = "api/report/coBrokerForm";
         postBody = this.coBrokePDF;
-        postBody['checkboxTypeBuyClient'] = this.checkboxTypeBuyClient;
-        postBody['checkboxTypeRentClient'] = this.checkboxTypeRentClient;
+        postBody["checkboxTypeBuyClient"] = this.checkboxTypeBuyClient;
+        postBody["checkboxTypeRentClient"] = this.checkboxTypeRentClient;
         fileName = "coBroke";
       }
 

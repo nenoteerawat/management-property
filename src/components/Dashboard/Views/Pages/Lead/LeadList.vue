@@ -52,10 +52,10 @@
               <el-table-column min-width="150" label="Name">
                 <template slot-scope="props">
                   <div class="cell">
-                    <span> ชื่อ : {{ props.row.firstName}}</span>
+                    <span> ชื่อ : {{ props.row.firstName }}</span>
                   </div>
                   <div class="cell">
-                    <span> นามสกุล : {{ props.row.lastName}}  </span>
+                    <span> นามสกุล : {{ props.row.lastName }} </span>
                   </div>
                 </template>
               </el-table-column>
@@ -209,6 +209,20 @@ export default {
       ],
       tableData: [],
       comment: "",
+      actionTypeSelects: {
+        select: "",
+        data: [
+          { value: "0", label: "-" },
+          { value: "1", label: "Call ได้" },
+          { value: "2", label: "Call ไม่ได้" },
+          { value: "3", label: "Chat ได้" },
+          { value: "4", label: "Chat ไม่ได้" },
+          { value: "5", label: "Apporintment" },
+          { value: "6", label: "Showing" },
+          { value: "7", label: "Negotiation" },
+          { value: "8", label: "Closing" },
+        ],
+      },
     };
   },
 
@@ -224,6 +238,15 @@ export default {
         },
       })
         .then((resp) => {
+          // console.log(resp.data);
+          for (let key of resp.data) {
+            let rowValue = key.status;
+            let status = this.actionTypeSelects.data.filter(function (actionType) {
+              if (actionType.value === rowValue) return true;
+            });
+            key.status = status[0].label;
+          }
+
           this.tableData = resp.data;
         })
         .catch((err) => {
@@ -290,13 +313,17 @@ export default {
       if (this.getUser.roles[0] === "ROLE_SALE") {
         this.openBoxComment(row);
       } else {
-        this.$confirm("This will permanently delete user. Continue?", "Warning", {
-          confirmButtonText: "OK",
-          cancelButtonText: "Cancel",
-          type: "warning",
-        })
+        this.$confirm(
+          "This will permanently delete user. Continue?",
+          "Warning",
+          {
+            confirmButtonText: "OK",
+            cancelButtonText: "Cancel",
+            type: "warning",
+          }
+        )
           .then(() => {
-            this.deleteList(row)
+            this.deleteList(row);
           })
           .catch(() => {
             this.$message({
