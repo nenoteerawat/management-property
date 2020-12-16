@@ -4765,8 +4765,13 @@ export default {
         postBody = this.leasePDF;
         fileName = "leaseAgreement";
       } else if (type === "SELL") {
-        path = "api/report/sellAndPurchaseAgreement";
-        postBody = this.genSellPDF;
+        if(this.radios.sellPDF === "1"){
+          path = "api/report/sellAndPurchaseAgreement";
+          postBody = this.sellPDF
+        } else {
+          path = "api/report/sellAndPurchaseAgreementEng";
+          postBody = this.sellPDFEN;
+        }
         fileName = "genSell";
       } else if (type === "AGENT_AGREEMENT") {
         path = "api/report/realEstateAgentAgreement";
