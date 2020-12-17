@@ -17,6 +17,7 @@ const LeadView = () => import(/* webpackChunkName: "widgets" */ 'src/components/
 import User from 'src/components/Dashboard/Views/Pages/UserProfile.vue'
 import TimeLine from 'src/components/Dashboard/Views/Pages/TimeLinePage.vue'
 import Login from 'src/components/Dashboard/Views/Pages/Login.vue'
+import ListingDDProperties from 'src/components/Dashboard/Views/Pages/DDProperties/ListingDDProperties.vue'
 import Register from 'src/components/Dashboard/Views/Pages/Register.vue'
 import Lock from 'src/components/Dashboard/Views/Pages/Lock.vue'
 
@@ -206,6 +207,12 @@ let loginPage = {
   component: Login
 }
 
+let xmlDDProperties = {
+  path: '/listingDDProperties',
+  name: 'ListingDDProperties',
+  component: ListingDDProperties
+}
+
 let registerPage = {
   path: '/register',
   name: 'Register',
@@ -242,6 +249,7 @@ const routes = [
   mapsMenu,
   pagesMenu,
   loginPage,
+  xmlDDProperties,
   registerPage,
   lockPage,
   
