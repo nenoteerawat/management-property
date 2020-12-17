@@ -26,5 +26,12 @@ module.exports = {
   },
   css: {
     sourceMap: process.env.NODE_ENV !== 'production'
+  },
+  devServer: {
+    proxy: {
+      '/xml' : {
+        target : process.env.VUE_APP_BACKEND_URL + "/api/"
+      }
+    }
   }
 };
