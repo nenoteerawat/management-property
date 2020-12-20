@@ -210,10 +210,7 @@
                   <div class="img-container">
                     <img
                       v-if="props.row.files.length > 1"
-                      style="
-                          height: 125px;
-                          width: 125px;
-                      "
+                      style="height: 125px; width: 125px"
                       :src="props.row.files[0].path"
                     />
                   </div>
@@ -227,12 +224,18 @@
                         {{ props.row.projects[0].name }}
                       </h5>
                       <span>
-                        <small>Condominium</small>
+                        <small>Condo</small>
                         <badge
                           v-show="props.row.room.exclusive"
                           slot="header"
                           type="success"
                           >E
+                        </badge>
+                        <badge
+                          v-show="props.row.flag"
+                          slot="header"
+                          type="info"
+                          >DDProperties
                         </badge>
                         <badge
                           v-if="props.row.status == 'BOOKING'"
@@ -385,6 +388,24 @@
                     <i class="fa fa-user"></i>
                   </p-button>-->
                   <td class="td-actions text-right">
+                    <p-button
+                     v-show="!props.row.flag"
+                      type="info"
+                      size="sm"
+                      icon
+                      @click="handleDDProperties(props.$index, props.row, true, 'Add to DDProperties completed')"
+                    >
+                      <i class="fa fa-forward"></i>
+                    </p-button>
+                    <p-button
+                     v-show="props.row.flag"
+                      type="warning"
+                      size="sm"
+                      icon
+                      @click="handleDDProperties(props.$index, props.row, false, 'Remove from DDProperties completed')"
+                    >
+                      <i class="fa fa-backward"></i>
+                    </p-button>
                     <p-button
                       type="success"
                       size="sm"
@@ -678,14 +699,38 @@ export default {
         { value: "เตาปูน (PP16)", label: "เตาปูน (PP16)" },
       ],
       transportAIRLINKSelect: [
-        { value: "สถานีพญาไท Phaya Thai Station", label: "สถานีพญาไท Phaya Thai Station" },
-        { value: "สถานีปราชปรารภ Ratchaprarop Station", label: "สถานีปราชปรารภ Ratchaprarop Station" },
-        { value: "สถานีมักกะสัน Makkasan Station", label: "สถานีมักกะสัน Makkasan Station" },
-        { value: "สถานีรามคำแหง Ramkhamhaeng Station", label: "สถานีรามคำแหง Ramkhamhaeng Station" },
-        { value: "สถานีหัวหมาก Hua Mak Station", label: "สถานีหัวหมาก Hua Mak Station" },
-        { value: "สถานีบ้านทับช้าง Ban Thap Chang Station", label: "สถานีบ้านทับช้าง Ban Thap Chang Station" },
-        { value: "สถานีลาดกระบัง Lat Krabang Station", label: "สถานีลาดกระบัง Lat Krabang Station" },
-        { value: "สถานีสุวรรณภูมิ Suvarnabhumi (Airport) Station", label: "สถานีสุวรรณภูมิ Suvarnabhumi (Airport) Station" },
+        {
+          value: "สถานีพญาไท Phaya Thai Station",
+          label: "สถานีพญาไท Phaya Thai Station",
+        },
+        {
+          value: "สถานีปราชปรารภ Ratchaprarop Station",
+          label: "สถานีปราชปรารภ Ratchaprarop Station",
+        },
+        {
+          value: "สถานีมักกะสัน Makkasan Station",
+          label: "สถานีมักกะสัน Makkasan Station",
+        },
+        {
+          value: "สถานีรามคำแหง Ramkhamhaeng Station",
+          label: "สถานีรามคำแหง Ramkhamhaeng Station",
+        },
+        {
+          value: "สถานีหัวหมาก Hua Mak Station",
+          label: "สถานีหัวหมาก Hua Mak Station",
+        },
+        {
+          value: "สถานีบ้านทับช้าง Ban Thap Chang Station",
+          label: "สถานีบ้านทับช้าง Ban Thap Chang Station",
+        },
+        {
+          value: "สถานีลาดกระบัง Lat Krabang Station",
+          label: "สถานีลาดกระบัง Lat Krabang Station",
+        },
+        {
+          value: "สถานีสุวรรณภูมิ Suvarnabhumi (Airport) Station",
+          label: "สถานีสุวรรณภูมิ Suvarnabhumi (Airport) Station",
+        },
       ],
       tableColumns: [
         {
@@ -855,7 +900,8 @@ export default {
       })
         .then((resp) => {
           this.tableData = resp.data;
-          // console.log("getListing : " + JSON.stringify(this.tableData));
+          console.log("getListing : " + JSON.stringify(this.tableData));
+          console.log(this.tableData);
         })
         .catch((err) => {
           console.log("getListing err : " + JSON.stringify(err));
@@ -937,6 +983,29 @@ export default {
             });
           });
       }
+    },
+    handleDDProperties(index, row, flag, message) {
+      let postBody = {
+        id: row.id,
+        flag: flag,
+      };
+      console.log("postBody : " + JSON.stringify(postBody));
+      const AXIOS = axios.create({
+        baseURL: process.env.VUE_APP_BACKEND_URL,
+      });
+      AXIOS.post(`api/listing/flagDDProperties`, postBody, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+        params: postBody,
+      }).then((resp) => {
+        this.$message({
+          type: "success",
+          message: message,
+        });
+        this.getListing();
+      });
     },
     // handleTaskEdit(index) {
     //   alert(`You want to edit task: ${JSON.stringify(this.tasks[index])}`);

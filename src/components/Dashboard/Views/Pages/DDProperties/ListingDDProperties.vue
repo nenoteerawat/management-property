@@ -21,7 +21,11 @@ export default {
       }).then((resp) => {
         // console.log("getUser all resp : " + JSON.stringify(resp));
         this.xml = resp.data;
-      });
+      })
+      .catch((err) => {
+          console.log("err : " + JSON.stringify(err));
+          reject(err);
+        });
     // }
   },
 
