@@ -2121,10 +2121,18 @@
       <template slot="footer">
         <hr />
         <div class="stats">
-          <p-button type="success" round @click="saveDocument('LEASE')"
+          <p-button
+            type="success"
+            round
+            @click="saveDocument('LEASE')"
             >save</p-button
           >
-          <p-button type="info" round @click="genPDF('LEASE')">Gen </p-button>
+          <p-button
+            type="info"
+            round
+            @click="genPDF('LEASE')"
+            >Gen</p-button
+          >
         </div>
       </template>
     </modal>
@@ -4761,13 +4769,19 @@ export default {
       let path = "";
       let fileName = "";
       if (type === "LEASE") {
-        path = "api/report/leaseAgreement";
-        postBody = this.leasePDF;
-        fileName = "leaseAgreement";
+        if (this.radios.leasePDF === "1") {
+          path = "api/report/leaseAgreement";
+          postBody = this.leasePDF;
+          fileName = "leaseAgreement";
+        } else {
+          path = "api/report/leaseAgreementEng";
+          postBody = this.leasePDFEN;
+          fileName = "leaseAgreementEng";
+        }
       } else if (type === "SELL") {
-        if(this.radios.sellPDF === "1"){
+        if (this.radios.sellPDF === "1") {
           path = "api/report/sellAndPurchaseAgreement";
-          postBody = this.sellPDF
+          postBody = this.sellPDF;
         } else {
           path = "api/report/sellAndPurchaseAgreementEng";
           postBody = this.sellPDFEN;
