@@ -750,8 +750,8 @@ export default {
         this.bedSelects.select = resp.data[0].room.bed;
         this.room.area = resp.data[0].room.area;
         this.room.floor = resp.data[0].room.floor;
-        this.room.price = resp.data[0].room.price;
-        this.room.priceRent = resp.data[0].room.priceRent;
+        this.formatCurrency(resp.data[0].room.price, "PRICE");
+        this.formatCurrency(resp.data[0].room.price, "PRICE_RENT");
         this.room.rentDetail = resp.data[0].room.rentDetail;
         this.propertySelects.select = resp.data[0].room.propertyType;
         this.directionSelects.select = resp.data[0].room.direction;

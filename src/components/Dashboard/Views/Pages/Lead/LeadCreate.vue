@@ -1425,6 +1425,8 @@ export default {
         .then((resp) => {
           console.log("getLead resp : " + JSON.stringify(resp.data));
           this.lead = resp.data;
+          this.formatCurrency(resp.data.priceMin, "PRICE_MIN");
+          this.formatCurrency(resp.data.priceMax, "PRICE_MAX");
           this.userSelects.select = resp.data.saleUser.username;
           this.listingByLead.notes = resp.data.listingByLeadNotes;
           this.listingByAdmin.notes = resp.data.listingByAdminNotes;
