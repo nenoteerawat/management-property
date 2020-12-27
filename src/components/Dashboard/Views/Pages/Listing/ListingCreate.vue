@@ -733,7 +733,7 @@ export default {
           Authorization: "Bearer " + localStorage.getItem("token"),
         },
       }).then((resp) => {
-        // console.log("resp : " + JSON.stringify(resp.data[0]));
+        // console.log("listing : " + JSON.stringify(resp.data[0]));
         this.owner.listingCode = resp.data[0].owner.listingCode;
         this.owner.name = resp.data[0].owner.name;
         this.owner.line = resp.data[0].owner.line;
@@ -752,6 +752,7 @@ export default {
         this.room.floor = resp.data[0].room.floor;
         this.formatCurrency(resp.data[0].room.price, "PRICE");
         this.formatCurrency(resp.data[0].room.price, "PRICE_RENT");
+        this.room.priceRent = resp.data[0].room.priceRent;
         this.room.rentDetail = resp.data[0].room.rentDetail;
         this.propertySelects.select = resp.data[0].room.propertyType;
         this.directionSelects.select = resp.data[0].room.direction;
@@ -780,6 +781,7 @@ export default {
         this.buildingSelects.select = resp.data[0].room.building;
         setTimeout(() => {
           this.switchBuilding(resp.data[0].room.building);
+          this.floorSelects.select = Number(resp.data[0].room.floor);
         }, 500);
         this.btnAction = "Edit";
       });
@@ -886,14 +888,14 @@ export default {
       directionSelects: {
         select: "",
         data: [
-          { value: "1", label: "ตะวันออก" },
-          { value: "2", label: "ตะวันออกเฉียงเหนือ" },
-          { value: "3", label: "ตะวันออกเฉียงใต้" },
-          { value: "4", label: "เหนือ" },
-          { value: "5", label: "ใต้" },
-          { value: "6", label: "ตะวันตกเฉียงเหนือ" },
-          { value: "7", label: "ตะวันตกเฉียงใต้" },
-          { value: "8", label: "ตะวันตก" },
+          { value: "1", label: "เหนือ" },
+          { value: "2", label: "ตะวันตกเฉียงใต้" },
+          { value: "3", label: "ตะวันตกเฉียงเหนือ" },
+          { value: "4", label: "ตะวันออก" },
+          { value: "5", label: "ตะวันตก" },
+          { value: "6", label: "ตะวันออกเฉียงใต้" },
+          { value: "7", label: "ตะวันออกเฉียงเหนือ" },
+          { value: "8", label: "ใต้" },
         ],
       },
       sellDetailSelects: {
@@ -916,10 +918,10 @@ export default {
       featureSelects: {
         select: "",
         data: [
-          { value: "1", label: "ห้องมีตำหนิ" },
-          { value: "2", label: "ห้องเปล่า" },
-          { value: "3", label: "ตกแต่งไปแล้วบางส่วน" },
-          { value: "4", label: "ตกแต่งครบพร้อม" },
+          { value: "0", label: "ห้องมีตำหนิ" },
+          { value: "1", label: "ห้องเปล่า" },
+          { value: "2", label: "ตกแต่งไปแล้วบางส่วน" },
+          { value: "3", label: "ตกแต่งครบพร้อม" },
         ],
       },
       facilitySelects: {},
