@@ -10,45 +10,61 @@
             </h5>
             <div class="row">
               <div class="col-md-4">
-                <ValidationProvider name="firstName" rules="required" v-slot="{ passed, failed }">
+                <ValidationProvider
+                  name="firstName"
+                  rules="required"
+                  v-slot="{ passed, failed }"
+                >
                   <fg-input
                     placeholder
                     label="ชื่อ"
                     v-model="users.firstName"
-                    :error="failed ? 'The field is required': null"
+                    :error="failed ? 'The field is required' : null"
                     :hasSuccess="passed"
                   ></fg-input>
                 </ValidationProvider>
               </div>
               <div class="col-md-4">
-                <ValidationProvider name="lastName" rules="required" v-slot="{ passed, failed }">
+                <ValidationProvider
+                  name="lastName"
+                  rules="required"
+                  v-slot="{ passed, failed }"
+                >
                   <fg-input
                     placeholder
                     label="นามสกุล"
                     v-model="users.lastName"
-                    :error="failed ? 'The field is required': null"
+                    :error="failed ? 'The field is required' : null"
                     :hasSuccess="passed"
                   ></fg-input>
                 </ValidationProvider>
               </div>
               <div class="col-md-4">
-                <ValidationProvider name="nickName" rules="required" v-slot="{ passed, failed }">
+                <ValidationProvider
+                  name="nickName"
+                  rules="required"
+                  v-slot="{ passed, failed }"
+                >
                   <fg-input
                     placeholder
                     label="ชื่อเล่น"
                     v-model="users.nickName"
-                    :error="failed ? 'The field is required': null"
+                    :error="failed ? 'The field is required' : null"
                     :hasSuccess="passed"
                   ></fg-input>
                 </ValidationProvider>
               </div>
               <div class="col-md-6">
-                <ValidationProvider name="email" rules="required|email" v-slot="{ passed, failed }">
+                <ValidationProvider
+                  name="email"
+                  rules="required|email"
+                  v-slot="{ passed, failed }"
+                >
                   <fg-input
                     placeholder
                     label="e-mail"
                     v-model="users.email"
-                    :error="failed ? 'The field format email': null"
+                    :error="failed ? 'The field format email' : null"
                     :hasSuccess="passed"
                   ></fg-input>
                 </ValidationProvider>
@@ -72,39 +88,69 @@
                 </el-select>
               </div>
               <div class="col-md-6" v-if="$route.query.id">
-                <ValidationProvider name="username" rules="required" v-slot="{ passed, failed }">
+                <ValidationProvider
+                  name="username"
+                  rules="required"
+                  v-slot="{ passed, failed }"
+                >
                   <fg-input
                     placeholder
                     label="username"
                     disabled
                     v-model="users.username"
-                    :error="failed ? 'The field is required': null"
+                    :error="failed ? 'The field is required' : null"
                     :hasSuccess="passed"
                   ></fg-input>
                 </ValidationProvider>
               </div>
               <div class="col-md-6" v-else>
-                <ValidationProvider name="username" rules="required" v-slot="{ passed, failed }">
+                <ValidationProvider
+                  name="username"
+                  rules="required"
+                  v-slot="{ passed, failed }"
+                >
                   <fg-input
                     placeholder
                     label="username"
                     v-model="users.username"
-                    :error="failed ? 'The field is required': null"
+                    :error="failed ? 'The field is required' : null"
                     :hasSuccess="passed"
                   ></fg-input>
                 </ValidationProvider>
               </div>
               <div class="col-md-6">
-                <ValidationProvider name="password" rules="min:6|max:40" v-slot="{ passed, failed }">
+                <ValidationProvider
+                  name="password"
+                  rules="min:6|max:40"
+                  v-slot="{ passed, failed }"
+                >
                   <fg-input
                     placeholder
                     label="password"
                     v-model="users.password"
                     type="password"
-                    :error="failed ? 'size must be between 6 and 40': null"
+                    :error="failed ? 'size must be between 6 and 40' : null"
                     :hasSuccess="passed"
                   ></fg-input>
                 </ValidationProvider>
+              </div>
+              <div class="col-md-6">
+                <div>
+                  <label>Zone</label>
+                </div>
+                <el-select
+                  class="select-primary"
+                  placeholder="Select"
+                  v-model="zoneSelect.select"
+                >
+                  <el-option
+                    v-for="option in zoneSelect.data"
+                    class="select-primary"
+                    :value="option.value"
+                    :label="option.label"
+                    :key="option.label"
+                  ></el-option>
+                </el-select>
               </div>
             </div>
             <template slot="footer">
@@ -115,7 +161,8 @@
                   round
                   @click="handleSubmit(submit)"
                   v-loading.fullscreen.lock="fullscreenLoading"
-                >{{ btnAction }}</p-button>
+                  >{{ btnAction }}</p-button
+                >
               </div>
             </template>
           </card>
@@ -132,17 +179,17 @@ import "@trevoreyre/autocomplete-vue/dist/style.css";
 import { Select, Option } from "element-ui";
 import axios from "axios";
 import { mapGetters } from "vuex";
-import { extend } from 'vee-validate';
-import * as rules from 'vee-validate/dist/rules';
+import { extend } from "vee-validate";
+import * as rules from "vee-validate/dist/rules";
 
-Object.keys(rules).forEach(rule => {
+Object.keys(rules).forEach((rule) => {
   extend(rule, rules[rule]);
 });
 
 // with typescript
 for (let [rule, validation] of Object.entries(rules)) {
   extend(rule, {
-    ...validation
+    ...validation,
   });
 }
 
@@ -169,7 +216,7 @@ export default {
           Authorization: "Bearer " + localStorage.getItem("token"),
         },
       }).then((resp) => {
-        console.log("resp : " + JSON.stringify(resp.data[0]));
+        // console.log("resp : " + JSON.stringify(resp.data[0]));
         this.btnAction = "Edit";
         this.users.firstName = resp.data[0].firstName;
         this.users.lastName = resp.data[0].lastName;
@@ -178,6 +225,7 @@ export default {
         this.users.email = resp.data[0].email;
         this.users.password = resp.data[0].password;
         this.roleSelects.select = resp.data[0].roles[0].name;
+        this.zoneSelect.select = resp.data[0].zone;
       });
     }
   },
@@ -186,7 +234,14 @@ export default {
     return {
       fullscreenLoading: false,
       btnAction: "Add",
-
+      zoneSelect: {
+        select: "",
+        data: [
+          { value: "พระราม 9", label: "พระราม 9" },
+          { value: "อโศก", label: "อโศก" },
+          { value: "สีลม", label: "สีลม" },
+        ],
+      },
       roleSelects: {
         select: "",
         data: [
@@ -222,6 +277,7 @@ export default {
         username: this.users.username,
         email: this.users.email,
         password: this.users.password,
+        zone: this.zoneSelect.select,
         roles: roles,
       };
       if (this.$route.query.id) {
@@ -233,6 +289,7 @@ export default {
           username: this.users.username,
           email: this.users.email,
           password: this.users.password,
+          zone: this.zoneSelect.select,
           roles: roles,
         };
       }

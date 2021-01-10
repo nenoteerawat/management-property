@@ -9,7 +9,7 @@
               <hr />
             </h5>
             <div class="row">
-              <div class="col-md-6">
+              <div class="col-md-5">
                 <fieldset>
                   <div class="form-group">
                     <label class="control-label">Level</label>
@@ -39,24 +39,22 @@
                   </div>
                 </fieldset>
               </div>
-              <div class="col-md-6">
+              <div class="col-md-7">
                 <fieldset>
                   <div class="form-group">
                     <label class="control-label">Type</label>
                     <div class="col-md-12">
-                      <p-radio
-                        label="1"
-                        v-model="radiosTypeRole"
-                        value="1"
-                        :inline="true"
-                        >sale</p-radio
+                      <p-checkbox :inline="true" v-model="typeSale"
+                        >Sale</p-checkbox
                       >
-                      <p-radio
-                        label="2"
-                        v-model="radiosTypeRole"
-                        value="2"
-                        :inline="true"
-                        >Available</p-radio
+                      <p-checkbox :inline="true" v-model="typeAvailable"
+                        >Available</p-checkbox
+                      >
+                      <p-checkbox :inline="true" v-model="typeSaleWithTenant"
+                        >Sale with tenant</p-checkbox
+                      >
+                      <p-checkbox :inline="true" v-model="typeReSaleDownPayment"
+                        >Resale down payment</p-checkbox
                       >
                     </div>
                   </div>
@@ -448,7 +446,7 @@
                   ></el-option>
                 </el-select>
               </div>
-              <div v-show="activeSell" class="col-md-6">
+              <div v-show="activeSell || typeSaleWithTenant" class="col-md-3">
                 <div>
                   <label>รายละเอียดการซื้อ</label>
                 </div>
@@ -466,11 +464,19 @@
                   ></el-option>
                 </el-select>
               </div>
-              <div v-show="activeRent" class="col-md-6">
+              <div v-show="activeRent" class="col-md-3">
                 <fg-input
                   placeholder="จำนวนเงินประกันกี่เดือน"
                   label="รายละเอียดการเช่า"
                   v-model="room.rentDetail"
+                ></fg-input>
+              </div>
+              <div v-show="typeReSaleDownPayment" class="col-md-3">
+                <fg-input
+                  placeholder=""
+                  label="เงิน Down"
+                  v-model="room.priceDown"
+                  @keyup="formatCurrency(room.priceDown, 'PRICE_DOWN')"
                 ></fg-input>
               </div>
               <div v-show="activeCondo" class="col-md-6">
@@ -491,25 +497,11 @@
                   ></el-option>
                 </el-select>
               </div>
-              <div class="col-md-6">
-                <div>
-                  <label>วิว</label>
-                </div>
-                <el-select
-                  multiple
-                  class="select-primary"
-                  collapse-tags
-                  v-model="scenerySelects.select"
-                  placeholder="Select"
-                >
-                  <el-option
-                    v-for="option in scenerySelects.data"
-                    class="select-primary"
-                    :value="option.value"
-                    :label="option.label"
-                    :key="option.label"
-                  ></el-option>
-                </el-select>
+              <div class="col-md-4 col-offset-8">
+                <fg-input
+                    label="วิว"
+                    v-model="scenery"
+                  ></fg-input>
               </div>
               <div class="col-md-12">
                 <div>
@@ -742,7 +734,7 @@ export default {
         this.owner.email = resp.data[0].owner.email;
         this.userSelects.select = resp.data[0].saleUser;
         this.project.id = resp.data[0].room.projectId;
-        this.radiosTypeRole = resp.data[0].room.type;
+        this.typeRoles = resp.data[0].room.type;
         this.radios.level = resp.data[0].room.level;
         this.standardSelects.select = resp.data[0].room.standard;
         this.gradeSelects.select = resp.data[0].room.grade;
@@ -751,13 +743,13 @@ export default {
         this.room.area = resp.data[0].room.area;
         this.room.floor = resp.data[0].room.floor;
         this.formatCurrency(resp.data[0].room.price, "PRICE");
-        this.formatCurrency(resp.data[0].room.price, "PRICE_RENT");
-        this.room.priceRent = resp.data[0].room.priceRent;
+        this.formatCurrency(resp.data[0].room.priceRent, "PRICE_RENT");
+        this.formatCurrency(resp.data[0].room.priceDown, "PRICE_DOWN");
         this.room.rentDetail = resp.data[0].room.rentDetail;
         this.propertySelects.select = resp.data[0].room.propertyType;
         this.directionSelects.select = resp.data[0].room.direction;
         this.positionSelects.select = resp.data[0].room.position;
-        this.scenerySelects.select = resp.data[0].room.scenery;
+        this.scenery = resp.data[0].room.scenery;
         this.featureSelects.select = resp.data[0].room.feature;
         this.sellDetailSelects.select = resp.data[0].room.sellDetail;
         this.tags.dynamicTags = resp.data[0].room.tags;
@@ -828,7 +820,16 @@ export default {
       radios: {
         level: "",
       },
-      radiosTypeRole: "0",
+      typeSale: true,
+      typeAvailable: false,
+      typeSaleWithTenant: false,
+      typeReSaleDownPayment: false,
+      // checkboxTypeRoles: [
+      //   {key: "typeSale", value: "1", label: "sale" },
+      //   {key: "typeAvailable", status: false, value: "2", label: "available" },
+      //   {key: "typeSaleWithTenant", status: false, value: "3", label: "sale with tenant" },
+      //   {key: "typeReSaleDownPayment", status: false, value: "4", label: "resale down payment" },
+      // ],
       projectSelects: [],
       projectChoose: { value: "", text: "" },
       propertySelects: {
@@ -925,16 +926,7 @@ export default {
         ],
       },
       facilitySelects: {},
-      scenerySelects: {
-        select: "",
-        data: [
-          { value: "1", label: "สระว่ายน้ำ" },
-          { value: "2", label: "เมือง" },
-          { value: "3", label: "สวน" },
-          { value: "4", label: "วัด" },
-        ],
-      },
-
+      scenery: "",
       transports: [],
       tags: {
         dynamicTags: ["ครัวปิด", "สระน้ำส่วนตัว"],
@@ -954,6 +946,7 @@ export default {
         floor: "",
         rentDetail: "",
         priceRent: "",
+        priceDown: "",
         price: "",
         exclusiveDate: "",
         description: "",
@@ -1007,15 +1000,20 @@ export default {
   },
 
   watch: {
-    radiosTypeRole: function (newRole) {
-      console.log(newRole);
-      if (newRole == 1) {
-        this.activeSell = true;
-        this.activeRent = false;
-      } else if (newRole == 2) {
-        this.activeSell = false;
-        this.activeRent = true;
-      }
+    typeSale: function (event) {
+      event ? (this.activeSell = true) : (this.activeSell = false);
+    },
+    typeAvailable: function (event) {
+      if(event) 
+        this.activeRent = true
+      else if(!event && !this.typeSaleWithTenant)
+        this.activeRent = false
+    },
+    typeSaleWithTenant: function (event) {
+      if(event) 
+        this.activeRent = true
+      else if(!event && !this.typeAvailable)
+        this.activeRent = false
     },
     exclusive: function (event) {
       if (event) this.exclusiveShow = true;
@@ -1040,7 +1038,7 @@ export default {
   },
 
   methods: {
-    formatCurrency(num , text) {
+    formatCurrency(num, text) {
       num = num + "";
       var number = num.replace(/[^\d.-]/g, "");
       var splitArray = number.split(".");
@@ -1050,10 +1048,12 @@ export default {
       while (rgx.test(integer)) {
         integer = integer.replace(rgx, "$1" + "," + "$2");
       }
-      if(text === "PRICE_RENT")
+      if (text === "PRICE_RENT")
         this.room.priceRent = integer + mantissa.substring(0, 3);
       else if (text === "PRICE")
         this.room.price = integer + mantissa.substring(0, 3);
+      else if (text === "PRICE_DOWN")
+        this.room.priceDown = integer + mantissa.substring(0, 3);
     },
     getProject: function () {
       let postBody = {
@@ -1201,7 +1201,7 @@ export default {
       });
     },
     genDesc() {
-      let type = this.radiosTypeRole == 1 ? "SALE" : "AVAILABLE";
+      let type = this.typeRoles;
       let position = "";
       for (let index = 0; index < this.positionSelects.data.length; index++) {
         for (
@@ -1532,11 +1532,13 @@ export default {
       var num = this.room.price;
       var numberPrice = num.replace(/[^\d.-]/g, "");
       num = this.room.priceRent;
-      var numberPriceRent =num.replace(/[^\d.-]/g, "");
+      var numberPriceRent = num.replace(/[^\d.-]/g, "");
+      num = this.room.priceDown;
+      var numberPriceDown = num.replace(/[^\d.-]/g, "");
       let room = {
         projectId: this.project.id,
         building: this.buildingSelects.select,
-        type: this.radiosTypeRole,
+        type: this.typeRoles,
         propertyType: this.propertySelects.select,
         level: this.radios.level,
         standard: this.standardSelects.select,
@@ -1547,11 +1549,12 @@ export default {
         floor: this.floorSelects.select,
         price: numberPrice,
         priceRent: numberPriceRent,
+        priceDown: numberPriceDown,
         rentDetail: this.room.rentDetail,
         direction: this.directionSelects.select,
         position: this.positionSelects.select,
         sellDetail: this.sellDetailSelects.select,
-        scenery: this.scenerySelects.select,
+        scenery: this.scenery,
         feature: this.featureSelects.select,
         tags: this.tags.dynamicTags,
         description: this.room.description,
