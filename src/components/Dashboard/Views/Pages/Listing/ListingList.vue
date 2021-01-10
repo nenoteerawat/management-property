@@ -87,22 +87,30 @@
               </el-select>
             </div>
             <div class="col-md-3">
-              <div>
+              <!-- <div>
                 <label>ราคา (บาท)</label>
               </div>
               <el-slider
                 v-model="price"
                 range
                 :format-tooltip="formatTooltipPrice"
-              ></el-slider>
-              <div>
+              ></el-slider> -->
+              <div class="row">
+                <div class="col-md-6"><fg-input type="number" placeholder label="ราคา เริ่มที่" v-model="price[0]"></fg-input></div>
+                <div class="col-md-6"><fg-input type="number" placeholder label="ถึง (บาท)" v-model="price[1]"></fg-input></div>
+              </div>
+              <!-- <div>
                 <label>พื้นที่ (ตร.ม.)</label>
               </div>
               <el-slider
                 v-model="area"
                 range
                 :format-tooltip="formatTooltipArea"
-              ></el-slider>
+              ></el-slider> -->
+              <div class="row">
+                <div class="col-md-6"><fg-input type="number" placeholder label="พื้นที่ เริ่มที่" v-model="area[0]"></fg-input></div>
+                <div class="col-md-6"><fg-input type="number" placeholder label="ถึง (ตร.ม.)" v-model="area[1]"></fg-input></div>
+              </div>
             </div>
             <div class="col-md-3">
               <div>

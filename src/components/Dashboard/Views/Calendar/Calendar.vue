@@ -15,8 +15,6 @@
               :header="header"
               :buttonIcons="buttonIcons"
               :selectHelper="true"
-              :locale="th"
-              :eventTextColor="white"
             />
           </div>
         </div>
@@ -32,12 +30,14 @@
           </div>
           <el-select
             class="select-primary select-width-100"
+            :disabled="viewCompleteDone()"
             placeholder="select"
             v-model="actionTypeSelects.select"
           >
             <el-option
               v-for="option in actionTypeSelects.data"
               class="select-primary"
+              :disabled="viewCompleteDone()"
               :value="option.value"
               :label="option.label"
               :key="option.label"
@@ -51,6 +51,7 @@
               rows="5"
               class="form-control border-input"
               placeholder=""
+              :readonly="viewCompleteDone()"
               v-model="comment"
             ></textarea>
           </div>
@@ -60,7 +61,9 @@
             <label>Date</label>
             <fg-input>
               <el-date-picker
+                :readonly="viewCompleteDone()"
                 v-model="actionDateTime"
+                format="dd-MM-yyyy HH:mm:ss"
                 type="datetime"
                 placeholder="Pick a day"
               ></el-date-picker>
@@ -71,7 +74,10 @@
           <fieldset>
             <div class="form-group">
               <label class="control-label">สถานะ</label>
-              <div class="col-md-12">
+              <div class="col-md-12" v-if="viewCompleteDone()">
+                <span class="text-success"> COMPLETED </span>
+              </div>
+              <div class="col-md-12" v-if="!viewCompleteDone()">
                 <p-radio
                   label="1"
                   v-model="radios.done"
@@ -92,10 +98,7 @@
         </div>
         <template slot="footer">
           <p-button v-if=isAddEvent @click="createActionLog">Add</p-button>
-          <p-button v-if=!isAddEvent @click="editActionLog">Edit</p-button>
-          <p-button type="danger" @click.native="modals.actionLog = false"
-            >Close</p-button
-          >
+          <p-button v-show="!viewCompleteDone()" v-if=!isAddEvent @click="editActionLog">Edit</p-button>
         </template>
       </modal>
     </div>
@@ -230,6 +233,10 @@ export default {
     };
   },
   methods: {
+    viewCompleteDone: function(){
+      // PENDING = 1, COMPLETE = 2
+      return this.radios.done==="2";
+    },
     dateClick: function (info) {
       console.log(info);
       let calendarApi = this.$refs.calendar.getApi();
@@ -258,7 +265,7 @@ export default {
       })
         .then((resp) => {
           this.fullscreenLoading = false;
-          console.log(resp.data);
+          console.log("action logs findby id response : "+JSON.stringify(resp.data));
           this.radios.done = resp.data.done;
           this.comment = resp.data.comment;
           this.actionTypeSelects.select = resp.data.status
