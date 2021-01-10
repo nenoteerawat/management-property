@@ -2174,14 +2174,14 @@
         <div class="col-md-6">
           <fg-input
             placeholder
-            label="Date 2563"
+            :label="buddhistYear"
             v-model="sellPDFEN.titleYear1"
           ></fg-input>
         </div>
         <div class="col-md-6">
           <fg-input
             placeholder
-            label="Date 2020"
+            :label="christianityYear"
             v-model="sellPDFEN.titleYear2"
           ></fg-input>
         </div>
@@ -3869,6 +3869,8 @@ export default {
         rangeDateStart: "",
         rangeDateEnd: "",
       },
+      buddhistYear: "Date " +(new Date().getFullYear() + 543),
+      christianityYear:"Date " +new Date().getFullYear(),
     };
   },
 
