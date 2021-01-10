@@ -96,8 +96,28 @@
                 :format-tooltip="formatTooltipPrice"
               ></el-slider> -->
               <div class="row">
-                <div class="col-md-6"><fg-input placeholder label="ราคา เริ่มที่" v-model="price[0]" @keyup="formatCurrency(price[0], 'PRICE_MIN')" ></fg-input></div>
-                <div class="col-md-6"><fg-input placeholder label="ถึง (บาท)" v-model="price[1]" @keyup="formatCurrency(price[1], 'PRICE_MAX')" ></fg-input></div>
+                <div class="col-md-6">
+                  <!-- <fg-input
+                      placeholder
+                      label="ราคา"
+                      v-model="room.price"
+                      @keydown="formatCurrency(room.price, 'PRICE')"
+                    ></fg-input> -->
+                  <fg-input
+                    placeholder
+                    label="ราคา เริ่มที่"
+                    v-model="price[0]"
+                    :keyup="formatCurrency(price[0], 'PRICE_MIN')"
+                  ></fg-input>
+                </div>
+                <div class="col-md-6">
+                  <fg-input
+                    placeholder
+                    label="ถึง (บาท)"
+                    v-model="price[1]"
+                    :keyup="formatCurrency(price[1], 'PRICE_MAX')"
+                  ></fg-input>
+                </div>
               </div>
               <!-- <div>
                 <label>พื้นที่ (ตร.ม.)</label>
@@ -108,8 +128,22 @@
                 :format-tooltip="formatTooltipArea"
               ></el-slider> -->
               <div class="row">
-                <div class="col-md-6"><fg-input placeholder label="พื้นที่ เริ่มที่" v-model="area[0]" @keyup="formatCurrency(area[0], 'AREA_MIN')" ></fg-input></div>
-                <div class="col-md-6"><fg-input placeholder label="ถึง (ตร.ม.)" v-model="area[1]" @keyup="formatCurrency(area[1], 'AREA_MAX')" ></fg-input></div>
+                <div class="col-md-6">
+                  <fg-input
+                    placeholder
+                    label="พื้นที่ เริ่มที่"
+                    v-model="area[0]"
+                    :keyup="formatCurrency(area[0], 'AREA_MIN')"
+                  ></fg-input>
+                </div>
+                <div class="col-md-6">
+                  <fg-input
+                    placeholder
+                    label="ถึง (ตร.ม.)"
+                    v-model="area[1]"
+                    :keyup="formatCurrency(area[1], 'AREA_MAX')"
+                  ></fg-input>
+                </div>
               </div>
             </div>
             <div class="col-md-3">
@@ -239,10 +273,7 @@
                           type="success"
                           >E
                         </badge>
-                        <badge
-                          v-show="props.row.flag"
-                          slot="header"
-                          type="info"
+                        <badge v-show="props.row.flag" slot="header" type="info"
                           >DDProperties
                         </badge>
                         <badge
@@ -397,20 +428,34 @@
                   </p-button>-->
                   <td class="td-actions text-right">
                     <p-button
-                     v-show="!props.row.flag"
+                      v-show="!props.row.flag"
                       type="info"
                       size="sm"
                       icon
-                      @click="handleDDProperties(props.$index, props.row, true, 'Add to DDProperties completed')"
+                      @click="
+                        handleDDProperties(
+                          props.$index,
+                          props.row,
+                          true,
+                          'Add to DDProperties completed'
+                        )
+                      "
                     >
                       <i class="fa fa-forward"></i>
                     </p-button>
                     <p-button
-                     v-show="props.row.flag"
+                      v-show="props.row.flag"
                       type="warning"
                       size="sm"
                       icon
-                      @click="handleDDProperties(props.$index, props.row, false, 'Remove from DDProperties completed')"
+                      @click="
+                        handleDDProperties(
+                          props.$index,
+                          props.row,
+                          false,
+                          'Remove from DDProperties completed'
+                        )
+                      "
                     >
                       <i class="fa fa-backward"></i>
                     </p-button>
@@ -508,8 +553,8 @@ export default {
       },
       search: "",
       searchQuery: "",
-      price: [0, 0],
-      area: [0, 0],
+      price: [],
+      area: [],
       tableColumns: [],
       tableMatchListing: [],
       modals: {
@@ -795,14 +840,24 @@ export default {
         baseURL: process.env.VUE_APP_BACKEND_URL,
       });
       console.log(JSON.stringify(this.projectSelects));
+      var num = this.price[0];
+      var numberPriceMin = num.replace(/[^\d.-]/g, "");
+      var num = this.price[1];
+      var numberPriceMax = num.replace(/[^\d.-]/g, "");
+      var num = this.area[0];
+      var numberAreaMin = num.replace(/[^\d.-]/g, "");
+      var num = this.area[1];
+      var numberAreaMax = num.replace(/[^\d.-]/g, "");
+      let tmpPrice = [numberPriceMin, numberPriceMax]
+      let tmpArea = [numberAreaMin, numberAreaMax]
       let postBody = {
         roomSearchRequest: {
           projectId: this.projectSelects.select,
           type: this.propertySelects.select,
           bed: this.bedSelects.select,
           toilet: this.toiletSelects.select,
-          price: this.price.toString(),
-          area: this.area.toString(),
+          price: tmpPrice.toString(),
+          area: tmpArea.toString(),
         },
         saleUser: this.userSelects.select,
         search: this.search,
