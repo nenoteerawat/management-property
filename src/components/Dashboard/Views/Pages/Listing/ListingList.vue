@@ -96,8 +96,8 @@
                 :format-tooltip="formatTooltipPrice"
               ></el-slider> -->
               <div class="row">
-                <div class="col-md-6"><fg-input type="number" placeholder label="ราคา เริ่มที่" v-model="price[0]"></fg-input></div>
-                <div class="col-md-6"><fg-input type="number" placeholder label="ถึง (บาท)" v-model="price[1]"></fg-input></div>
+                <div class="col-md-6"><fg-input placeholder label="ราคา เริ่มที่" v-model="price[0]" @keyup="formatCurrency(price[0], 'PRICE_MIN')" ></fg-input></div>
+                <div class="col-md-6"><fg-input placeholder label="ถึง (บาท)" v-model="price[1]" @keyup="formatCurrency(price[1], 'PRICE_MAX')" ></fg-input></div>
               </div>
               <!-- <div>
                 <label>พื้นที่ (ตร.ม.)</label>
@@ -108,8 +108,8 @@
                 :format-tooltip="formatTooltipArea"
               ></el-slider> -->
               <div class="row">
-                <div class="col-md-6"><fg-input type="number" placeholder label="พื้นที่ เริ่มที่" v-model="area[0]"></fg-input></div>
-                <div class="col-md-6"><fg-input type="number" placeholder label="ถึง (ตร.ม.)" v-model="area[1]"></fg-input></div>
+                <div class="col-md-6"><fg-input placeholder label="พื้นที่ เริ่มที่" v-model="area[0]" @keyup="formatCurrency(area[0], 'AREA_MIN')" ></fg-input></div>
+                <div class="col-md-6"><fg-input placeholder label="ถึง (ตร.ม.)" v-model="area[1]" @keyup="formatCurrency(area[1], 'AREA_MAX')" ></fg-input></div>
               </div>
             </div>
             <div class="col-md-3">
@@ -757,6 +757,25 @@ export default {
   },
 
   methods: {
+    formatCurrency(num, text) {
+      num = num + "";
+      var number = num.replace(/[^\d.-]/g, "");
+      var splitArray = number.split(".");
+      var integer = splitArray[0];
+      var mantissa = splitArray.length > 1 ? "." + splitArray[1] : "";
+      var rgx = /(\d+)(\d{3})/;
+      while (rgx.test(integer)) {
+        integer = integer.replace(rgx, "$1" + "," + "$2");
+      }
+      if (text === "PRICE_MIN")
+        this.price[0] = integer + mantissa.substring(0, 3);
+      else if (text === "PRICE_MAX")
+        this.price[1] = integer + mantissa.substring(0, 3);
+      else if (text === "AREA_MIN")
+        this.area[0] = integer + mantissa.substring(0, 3);
+      else if (text === "AREA_MAX")
+        this.area[1] = integer + mantissa.substring(0, 3);
+    },
     formatTooltipPrice(val) {
       return val * 10000;
     },
