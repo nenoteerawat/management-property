@@ -839,7 +839,7 @@ export default {
       const AXIOS = axios.create({
         baseURL: process.env.VUE_APP_BACKEND_URL,
       });
-      console.log(JSON.stringify(this.projectSelects));
+      
       var num = this.price[0];
       var numberPriceMin = num.replace(/[^\d.-]/g, "");
       var num = this.price[1];
@@ -907,8 +907,8 @@ export default {
       this.propertySelects.select = "";
       this.bedSelects.select = "";
       this.toiletSelects.select = "";
-      this.price = [0, 0];
-      this.area = [0, 0];
+      this.price = [];
+      this.area = [];
       this.userSelects.select = "";
       this.search = "";
       this.transport.type = "";
