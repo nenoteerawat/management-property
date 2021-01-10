@@ -87,26 +87,10 @@
               </el-select>
             </div>
             <div class="col-md-3">
-              <!-- <div>
-                <label>ราคา (บาท)</label>
-              </div>
-              <el-slider
-                v-model="price"
-                range
-                :format-tooltip="formatTooltipPrice"
-              ></el-slider> -->
               <div class="row">
                 <div class="col-md-6"><fg-input placeholder label="ราคา เริ่มที่" v-model="price[0]" @keyup="formatCurrency(price[0], 'PRICE_MIN')" ></fg-input></div>
                 <div class="col-md-6"><fg-input placeholder label="ถึง (บาท)" v-model="price[1]" @keyup="formatCurrency(price[1], 'PRICE_MAX')" ></fg-input></div>
               </div>
-              <!-- <div>
-                <label>พื้นที่ (ตร.ม.)</label>
-              </div>
-              <el-slider
-                v-model="area"
-                range
-                :format-tooltip="formatTooltipArea"
-              ></el-slider> -->
               <div class="row">
                 <div class="col-md-6"><fg-input placeholder label="พื้นที่ เริ่มที่" v-model="area[0]" @keyup="formatCurrency(area[0], 'AREA_MIN')" ></fg-input></div>
                 <div class="col-md-6"><fg-input placeholder label="ถึง (ตร.ม.)" v-model="area[1]" @keyup="formatCurrency(area[1], 'AREA_MAX')" ></fg-input></div>
