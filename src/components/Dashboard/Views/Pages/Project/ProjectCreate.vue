@@ -109,6 +109,18 @@
                 <div>
                   <label>Zone</label>
                 </div>
+                <model-select
+                  :options="zoneSelect"
+                  v-model="project.zone"
+                  class="select"
+                  placeholder="select zone"
+                >
+                </model-select>
+              </div>
+              <!-- <div class="col-md-4">
+                <div>
+                  <label>Zone</label>
+                </div>
                 <el-select
                   class="select-primary"
                   placeholder="Select"
@@ -122,7 +134,7 @@
                     :key="option.label"
                   ></el-option>
                 </el-select>
-              </div>
+              </div> -->
               <div class="col-md-12">
                 <div>
                   <label>ส่วนกลาง</label>
@@ -305,6 +317,7 @@ import axios from "axios";
 import { mapGetters } from "vuex";
 import { extend } from "vee-validate";
 import { required, confirmed } from "vee-validate/dist/rules";
+import { ModelSelect } from "vue-search-select";
 
 extend("required", required);
 extend("confirmed", confirmed);
@@ -316,6 +329,7 @@ export default {
     [Option.name]: Option,
     [Tag.name]: Tag,
     ThailandAutoComplete,
+    ModelSelect,
     // TransportBox,
   },
 
@@ -348,7 +362,7 @@ export default {
         this.province = resp.data[0].province;
         this.zipcode = resp.data[0].zipcode;
         this.facilitySelects.selects = resp.data[0].facilities;
-        this.zoneSelect.selects = resp.data[0].zone;
+        this.project.zone = resp.data[0].zone;
         this.transports.splice(0, 1);
         let i = 0;
         for (let value of resp.data[0].transports) {
@@ -398,14 +412,83 @@ export default {
           { value: "AIRLINK", label: "AIRLINK" },
         ],
       },
-      zoneSelect: {
-        selects: "",
-        data: [
-          { value: "พระราม 9", label: "พระราม 9" },
-          { value: "อโศก", label: "อโศก" },
-          { value: "สีลม", label: "สีลม" },
-        ],
-      },
+      zoneSelect: [
+        { text: "Silom", value: "Silom" },
+        { text: "Sathorn", value: "Sathorn" },
+        { text: "Charoenkrung", value: "Charoenkrung" },
+        { text: "Rama3", value: "Rama3" },
+        { text: "Sam Yan", value: "Sam Yan" },
+        { text: "Charoen Nakorn", value: "Charoen Nakorn" },
+        { text: "Wong Wian Yai", value: "Wong Wian Yai" },
+        { text: "Tha Phra", value: "Tha Phra" },
+        { text: "Bang Wa", value: "Bang Wa" },
+        { text: "Bang Kae", value: "Bang Kae" },
+        { text: "Rat Burana", value: "Rat Burana" },
+        { text: "Ratchada", value: "Ratchada" },
+        { text: "Asoke", value: "Asoke" },
+        { text: "Phetchaburi", value: "Phetchaburi" },
+        { text: "Rama9", value: "Rama9" },
+        { text: "Ramkamhang", value: "Ramkamhang" },
+        { text: "Thailand Cultural Centre", value: "Thailand Cultural Centre" },
+        { text: "Huai khawng", value: "Huai khawng" },
+        { text: "Suthisan", value: "Suthisan" },
+        { text: "Ladphrao ตอนต้น", value: "Ladphrao ตอนต้น" },
+        { text: "Ladphrao ตอนปลาย", value: "Ladphrao ตอนปลาย" },
+        { text: "Ratchayothin", value: "Ratchayothin" },
+        { text: "Kaset", value: "Kaset" },
+        { text: "Bangkhen", value: "Bangkhen" },
+        { text: "Vibhavadi", value: "Vibhavadi" },
+        { text: "Ram Inthra", value: "Ram Inthra" },
+        { text: "Liab duan Ram Inthra", value: "Liab duan Ram Inthra" },
+        { text: "Nana", value: "Nana" },
+        { text: "South Sukhumvit", value: "South Sukhumvit" },
+        { text: "Rama4", value: "Rama4" },
+        { text: "Pattanakan", value: "Pattanakan" },
+        { text: "Srinagarindra", value: "Srinagarindra" },
+        { text: "Bang Na", value: "Bang Na" },
+        { text: "Lat Krabang", value: "Lat Krabang" },
+        { text: "Theparak", value: "Theparak" },
+        { text: "BTS Erawan", value: "BTS Erawan" },
+        { text: "BTS Pu Chao", value: "BTS Pu Chao" },
+        { text: "BTS Bearing", value: "BTS Bearing" },
+        { text: "BTS Bang Na", value: "BTS Bang Na" },
+        { text: "BTS Udom Suk", value: "BTS Udom Suk" },
+        { text: "BTS Punnawithi", value: "BTS Punnawithi" },
+        { text: "BTS Bang Chak", value: "BTS Bang Chak" },
+        { text: "BTS ON Nut", value: "BTS ON Nut" },
+        { text: "BTS Phra Khanong", value: "BTS Phra Khanong" },
+        { text: "BTS Ekamai", value: "BTS Ekamai" },
+        { text: "BTS Thong Lo", value: "BTS Thong Lo" },
+        { text: "BTS Phrom Phong", value: "BTS Phrom Phong" },
+        { text: "North Sukhumvit", value: "North Sukhumvit" },
+        { text: "BTS Siam", value: "BTS Siam" },
+        { text: "BTS Ratchathewi", value: "BTS Ratchathewi" },
+        { text: "BTS Phaya Thai", value: "BTS Phaya Thai" },
+        { text: "BTS Victory Monument", value: "BTS Victory Monument" },
+        { text: "BTS Sanam Pao", value: "BTS Sanam Pao" },
+        { text: "BTS Ari ", value: "BTS Ari " },
+        { text: "BTS Saphan Khwai", value: "BTS Saphan Khwai" },
+        { text: "BTS Mo Chit", value: "BTS Mo Chit" },
+        { text: "Phahon Yothin", value: "Phahon Yothin" },
+        { text: "Chatuchak Park", value: "Chatuchak Park" },
+        { text: "MRT Bang Sue", value: "MRT Bang Sue" },
+        { text: "MRT Tao Poon", value: "MRT Tao Poon" },
+        { text: "MRT Bang Pho", value: "MRT Bang Pho" },
+        { text: "MRT Bang O", value: "MRT Bang O" },
+        { text: "MRT Bang Phlat", value: "MRT Bang Phlat" },
+        { text: "MRT Charan", value: "MRT Charan" },
+        { text: "MRT Bang Khun Non", value: "MRT Bang Khun Non" },
+        { text: "MRT Sirindhorn", value: "MRT Sirindhorn" },
+        { text: "MRT Bang Yi Khan", value: "MRT Bang Yi Khan" },
+      ],
+      // zoneSelect: {
+      //   selects: "",
+      //   data: [
+      //     { value: "พระราม 9", label: "พระราม 9" },
+      //     { value: "อโศก", label: "อโศก" },
+      //     { value: "สีลม", label: "สีลม" },
+      //   ],
+      // },
       transportBTSSelect: [
         { value: "[N17] วัดพระศรีมหาธาตุ", label: "[N17] วัดพระศรีมหาธาตุ" },
         { value: "[N16] กรมทหารราบที่", label: "[N16] กรมทหารราบที่" },
@@ -635,6 +718,7 @@ export default {
         building: "",
         developer: "",
         address: "",
+        zone: "",
       },
       comment: "",
     };
@@ -726,7 +810,7 @@ export default {
         zipcode: this.zipcode,
         facilities: this.facilitySelects.selects,
         transports: this.transports,
-        zone: this.zoneSelect.selects,
+        zone: this.project.zone,
         comment: this.comment,
       };
       if (this.$route.query.id) {
@@ -744,7 +828,7 @@ export default {
           facilities: this.facilitySelects.selects,
           transports: this.transports,
           username: this.getUser.username,
-          zone: this.zoneSelect.selects,
+          zone: this.project.zone,
           comment: this.comment,
         };
       }
