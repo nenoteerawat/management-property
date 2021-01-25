@@ -891,8 +891,8 @@ export default {
       this.propertySelects.select = "";
       this.bedSelects.select = "";
       this.toiletSelects.select = "";
-      this.price = [];
-      this.area = [];
+      this.price = ["", ""];
+      this.area = ["", ""];
       this.userSelects.select = "";
       this.search = "";
       this.transport.type = "";
