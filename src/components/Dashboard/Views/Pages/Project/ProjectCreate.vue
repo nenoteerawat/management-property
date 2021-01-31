@@ -105,6 +105,25 @@
                   placeholder="รหัสไปรษณีย์..."
                 />
               </div>
+              <div class="col-md-12">
+                <GmapMap
+                  :center="{ lat: 13.727739463595237, lng: 100.57668640850876 }"
+                  :zoom="15"
+                  map-type-id="terrain"
+                  style="width: 700px; height: 300px"
+                >
+                  <GmapMarker
+                    :key="index"
+                    v-for="(m, index) in markers"
+                    :position="m.position"
+                    :title="m.title"
+                    :clickable="true"
+                    :draggable="true"
+                    @dragend="updateCoordinates"
+                    @click="center = m.position"
+                  />
+                </GmapMap>
+              </div>
               <div class="col-md-4">
                 <div>
                   <label>Zone</label>
@@ -385,8 +404,27 @@ export default {
     }
   },
 
+  props: {
+    latitude: Number,
+    longitude: Number,
+    title: String,
+  },
+
   data() {
     return {
+      markers: [
+        // {
+        //   position: { lat: 13.727739463595237, lng: 100.57668640850876 },
+        //   title: "HOME"
+        // },
+      ],
+      infoWindow: {
+        position: { lat: 0, lng: 0 },
+        open: false,
+        template: "",
+      },
+      newAddress: {},
+      place: null,
       fullscreenLoading: false,
       btnAction: "Add",
       transports: [
@@ -729,9 +767,27 @@ export default {
     isLoggedIn: function () {
       return this.$store.getters.isLoggedIn;
     },
+    ...mapGetters(["getDealers", "getCenterPosition", "getZoomLevel"]),
+    loadedDealers() {
+      return this.getDealers;
+    },
   },
 
   methods: {
+    openInfoWindowTemplate(index) {
+      const { lat, lng, name, street, zip, city } = this.loadedDealers[index];
+      this.infoWindow.position = { lat: lat, lng: lng };
+      this.infoWindow.template = `<b>${name}</b><br>${street}<br>${zip} ${city}<br>`;
+      this.infoWindow.open = true;
+    },
+    updateCoordinates(newAddress) {
+      console.log(newAddress);
+      console.log(newAddress.latLng);
+      // this.place = {
+      //   lat: newAddress.geometry.location.latLng.lat(),
+      //   lng: newAddress.geometry.location.latLng.lng(),
+      // };
+    },
     add(index) {
       this.transports.push({
         type: "",
