@@ -158,6 +158,25 @@
                 <div>
                   <label>ส่วนกลาง</label>
                 </div>
+                <div class="row">
+                  <div
+                    class="col-md-3"
+                    v-for="(item, k) of facilitySelects.data"
+                    :key="k"
+                  >
+                    <p-checkbox
+                      :inline="true"
+                      v-model="facilityCheckboxSelects[k]"
+                      :value="item.value"
+                      >{{ item.label }}</p-checkbox
+                    >
+                  </div>
+                </div>
+              </div>
+              <!-- <div class="col-md-12">
+                <div>
+                  <label>ส่วนกลาง {{ facilitySelects.selects }}</label>
+                </div>
                 <el-select
                   multiple
                   class="select-primary select-width-100"
@@ -172,7 +191,7 @@
                     :key="option.label"
                   ></el-option>
                 </el-select>
-              </div>
+              </div> -->
               <div class="col-md-12">
                 <div class="row" v-for="(building, k) in buildings" :key="k">
                   <div class="col-md-2">
@@ -353,14 +372,14 @@ export default {
   },
 
   created: function () {
-    console.log("this.getUser : " + JSON.stringify(this.getUser));
+    // console.log("this.getUser : " + JSON.stringify(this.getUser));
 
     if (this.$route.query.id) {
       let postBody = {
         role: "",
         id: this.$route.query.id,
       };
-      console.log("postBody : " + JSON.stringify(postBody));
+      // console.log("postBody : " + JSON.stringify(postBody));
       const AXIOS = axios.create({
         baseURL: process.env.VUE_APP_BACKEND_URL,
       });
@@ -370,7 +389,7 @@ export default {
           Authorization: "Bearer " + localStorage.getItem("token"),
         },
       }).then((resp) => {
-        console.log("resp : " + JSON.stringify(resp));
+        // console.log("resp : " + JSON.stringify(resp));
         this.btnAction = "Edit";
         this.project.name = resp.data[0].name;
         this.project.type = resp.data[0].type;
@@ -380,6 +399,13 @@ export default {
         this.amphoe = resp.data[0].amphoe;
         this.province = resp.data[0].province;
         this.zipcode = resp.data[0].zipcode;
+
+        let f = 0;
+        for (let value of this.facilitySelects.data) {
+          let item = resp.data[0].facilities.indexOf(value.value);
+          if (item != -1) this.facilityCheckboxSelects[f] = true;
+          f++;
+        }
         this.facilitySelects.selects = resp.data[0].facilities;
         this.project.zone = resp.data[0].zone;
         this.transports.splice(0, 1);
@@ -519,14 +545,6 @@ export default {
         { text: "MRT Sirindhorn", value: "MRT Sirindhorn" },
         { text: "MRT Bang Yi Khan", value: "MRT Bang Yi Khan" },
       ],
-      // zoneSelect: {
-      //   selects: "",
-      //   data: [
-      //     { value: "พระราม 9", label: "พระราม 9" },
-      //     { value: "อโศก", label: "อโศก" },
-      //     { value: "สีลม", label: "สีลม" },
-      //   ],
-      // },
       transportBTSSelect: [
         { value: "[N17] วัดพระศรีมหาธาตุ", label: "[N17] วัดพระศรีมหาธาตุ" },
         { value: "[N16] กรมทหารราบที่", label: "[N16] กรมทหารราบที่" },
@@ -688,8 +706,45 @@ export default {
           label: "สถานีสุวรรณภูมิ Suvarnabhumi (Airport) Station",
         },
       ],
+      facilityCheckboxSelects: [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+      ],
       facilitySelects: {
-        selects: "",
+        selects: [],
         data: [
           // { value: "ฟิตเนส", label: "ฟิตเนส" },
           // { value: "สระว่ายน้ำ (Indoor)", label: "สระว่ายน้ำ (Indoor)" },
@@ -706,41 +761,78 @@ export default {
           // { value: "สนามบาส", label: "สนามบาส" },
           // { value: "ตู้ซักผ้าหยอดเหรียญ", label: "ตู้ซักผ้าหยอดเหรียญ" },
           // { value : "24 hours security", label : "24 hours security"},
-          { value: "Badminton hall", label: "Badminton hall" },
-          { value: "Basement car park", label: "Basement car park" },
-          { value: "Basketball court", label: "Basketball court" },
-          { value: "BBQ pits", label: "BBQ pits" },
-          { value: "Billiards room", label: "Billiards room" },
+          // { value: "Badminton hall", label: "Badminton hall" },
+          // { value: "Basement car park", label: "Basement car park" },
+          // { value: "Basketball court", label: "Basketball court" },
+          // { value: "BBQ pits", label: "BBQ pits" },
+          // { value: "Billiards room", label: "Billiards room" },
+          // { value: "Clubhouse", label: "Clubhouse" },
+          // { value: "Covered car park", label: "Covered car park" },
+          // { value: "Driving range", label: "Driving range" },
+          // { value: "Fitness corner", label: "Fitness corner" },
+          // { value: "Function room", label: "Function room" },
+          // { value: "Game room", label: "Game room" },
+          // { value: "Gymnasium room", label: "Gymnasium room" },
+          // { value: "Jacuzzi KAR Karaoke", label: "Jacuzzi KAR Karaoke" },
+          // { value: "Launderette", label: "Launderette" },
+          // { value: "Library", label: "Library" },
+          // { value: "Lounge", label: "Lounge" },
+          // { value: "Mini golf range", label: "Mini golf range" },
+          // { value: "Mini mart", label: "Mini mart" },
+          // { value: "Multi purpose hall", label: "Multi purpose hall" },
+          // { value: "Open car park", label: "Open car park" },
+          // { value: "Playground", label: "Playground" },
+          // { value: "Putting green", label: "Putting green" },
+          // { value: "Reflexology Path", label: "Reflexology Path" },
+          // { value: "Sauna", label: "Sauna" },
+          // { value: "Spa pool", label: "Spa pool" },
+          // { value: "Squash court", label: "Squash court" },
+          // { value: "Steam bath", label: "Steam bath" },
+          // { value: "Swimming pool", label: "Swimming pool" },
+          // { value: "Tennis courts", label: "Tennis courts" },
+          // { value: "Wading pool", label: "Wading pool" },
+          // { value: "Pool deck", label: "Pool deck" },
+          // { value: "Pavilion", label: "Pavilion" },
+          // { value: "Sky lounge", label: "Sky lounge" },
+          // { value: "Club", label: "Club" },
+          // { value: "CCTV", label: "CCTV" },
+          { value: "Badminton hall", label: "Badminton hall (สนามแบดมินตัน)" },
+          { value: "Basement car park", label: "Basement car park (ที่จอดรถใต้ดิน)", },
+          { value: "Basketball court", label: "Basketball court (สนามบาสเกตบอล)", },
+          { value: "Billiards room", label: "Billiards room (ห้องสนุกเกอร์)" },
           { value: "Clubhouse", label: "Clubhouse" },
           { value: "Covered car park", label: "Covered car park" },
-          { value: "Driving range", label: "Driving range" },
-          { value: "Fitness corner", label: "Fitness corner" },
-          { value: "Function room", label: "Function room" },
-          { value: "Game room", label: "Game room" },
-          { value: "Gymnasium room", label: "Gymnasium room" },
+          { value: "Driving range", label: "Driving range (สนามไดรฟ์)" },
+          { value: "Fitness corner", label: "Fitness corner (มุมออกกำลังกาย)" },
+          { value: "Function room", label: "Function room (ห้องฟังก์ชัน)" },
+          { value: "Game room", label: "Game room (ห้องเกมส์)" },
+          { value: "Gymnasium room", label: "Gymnasium room (โรงยิม)" },
           { value: "Jacuzzi KAR Karaoke", label: "Jacuzzi KAR Karaoke" },
-          { value: "Launderette", label: "Launderette" },
-          { value: "Library", label: "Library" },
-          { value: "Lounge", label: "Lounge" },
+          { value: "Launderette", label: "Launderette (พื้นที่ซักผ้า)" },
+          { value: "Library", label: "Library (ห้องสมุด)" },
+          { value: "Lounge", label: "Lounge (ห้องนั่งเล่น)" },
           { value: "Mini golf range", label: "Mini golf range" },
-          { value: "Mini mart", label: "Mini mart" },
-          { value: "Multi purpose hall", label: "Multi purpose hall" },
-          { value: "Open car park", label: "Open car park" },
-          { value: "Playground", label: "Playground" },
+          { value: "Mini mart", label: "Mini mart (ร้านสะดวกซื้อ)" },
+          { value: "Multi purpose hall", label: "Multi purpose hall (ห้องเอนกประสงค์)", },
+          { value: "Open car park", label: "Open car park (ที่จอดรถกลางแจ้ง)" },
+          { value: "Playground", label: "Playground (สนามเด็กเล่น)" },
           { value: "Putting green", label: "Putting green" },
           { value: "Reflexology Path", label: "Reflexology Path" },
-          { value: "Sauna", label: "Sauna" },
+          { value: "Sauna", label: "Sauna (ซาวน่า)" },
           { value: "Spa pool", label: "Spa pool" },
-          { value: "Squash court", label: "Squash court" },
-          { value: "Steam bath", label: "Steam bath" },
-          { value: "Swimming pool", label: "Swimming pool" },
-          { value: "Tennis courts", label: "Tennis courts" },
+          { value: "Squash court", label: "Squash court (สนามสควอช)" },
+          { value: "Steam bath", label: "Steam bath (ห้องอบไอน้ำ)" },
+          { value: "Swimming pool", label: "Swimming pool (สระว่ายน้ำ)" },
+          { value: "Tennis courts", label: "Tennis courts (สนามเทนนิส)" },
           { value: "Wading pool", label: "Wading pool" },
-          { value: "Pool deck", label: "Pool deck" },
+          { value: "Pool deck", label: "Pool deck (สระน้ำบนดาดฟ้า)" },
           { value: "Pavilion", label: "Pavilion" },
-          { value: "Sky lounge", label: "Sky lounge" },
-          { value: "Club", label: "Club" },
-          { value: "CCTV", label: "CCTV" },
+          { value: "Sky lounge", label: "Sky lounge (ห้องนั่งเล่นบนดาดฟ้า)" },
+          { value: "Club", label: "Club (สโมสร)" },
+          { value: "CCTV", label: "CCTV (กล้องวงจรปิด)" },
+          { value: "Elevator", label: "Elevator (ลิฟต์)" },
+          { value: "24-hours Security", label: "24-hours Security (ระบบรักษาความปลอดภัย 24 ชั่วโมง)",},
+          { value: "Restaurant", label: "Restaurant (ร้านอาหาร)" },
         ],
       },
       // เก็บข้อมูลที่อยู่ที่ได้จาก input ไว้ใน data return {
@@ -774,20 +866,6 @@ export default {
   },
 
   methods: {
-    openInfoWindowTemplate(index) {
-      const { lat, lng, name, street, zip, city } = this.loadedDealers[index];
-      this.infoWindow.position = { lat: lat, lng: lng };
-      this.infoWindow.template = `<b>${name}</b><br>${street}<br>${zip} ${city}<br>`;
-      this.infoWindow.open = true;
-    },
-    updateCoordinates(newAddress) {
-      console.log(newAddress);
-      console.log(newAddress.latLng);
-      // this.place = {
-      //   lat: newAddress.geometry.location.latLng.lat(),
-      //   lng: newAddress.geometry.location.latLng.lng(),
-      // };
-    },
     add(index) {
       this.transports.push({
         type: "",
@@ -853,7 +931,16 @@ export default {
         });
     },
     createProject() {
-      this.fullscreenLoading = true;
+      // this.fullscreenLoading = true;
+      this.facilitySelects.selects = [];
+      let i = 0;
+      for (let value of this.facilityCheckboxSelects) {
+        if (value) {
+          this.facilitySelects.selects.push(this.facilitySelects.data[i].value);
+        }
+        i++;
+      }
+
       let path = "api/project/create";
       let postBody = {
         type: this.project.type,
