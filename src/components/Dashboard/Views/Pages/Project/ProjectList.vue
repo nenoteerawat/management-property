@@ -1,6 +1,6 @@
 <template>
   <div class="row">
-    <div class="col-md-9">
+    <div class="col-md-12">
       <card>
         <div class="card-header">
           <div class="row">
@@ -135,9 +135,9 @@
         </div>
       </card>
     </div>
-    <div class="col-md-3">
+    <!-- <div class="col-md-3">
       <DailyBar />
-    </div>
+    </div> -->
   </div>
 </template>
 <script>
@@ -168,13 +168,17 @@ export default {
         total: 0,
       },
       searchQuery: "",
-      propsToSearch: ["name"],
+      propsToSearch: ["name","team","floor","building","develop"],
       tableColumns: [
         // {
         //   prop: "name",
         //   label: "Name",
         //   minWidth: 150,
         // },
+        {
+          prop: "team",
+          label: "Team",
+        },
         {
           prop: "floor",
           label: "ชั้น",
@@ -322,7 +326,8 @@ export default {
       let result = this.tableData.filter((row) => {
         let isIncluded = false;
         for (let key of this.propsToSearch) {
-          let rowValue = row[key].toString();
+          let rowTemp = row[key] == null ? "" : row[key].toString();
+          let rowValue = rowTemp;
           if (rowValue.includes && rowValue.includes(this.searchQuery)) {
             isIncluded = true;
           }
@@ -354,5 +359,9 @@ export default {
   button.btn {
     margin-right: 2px;
   }
+}
+
+.card label {
+  color: black;
 }
 </style>

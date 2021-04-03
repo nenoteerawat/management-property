@@ -105,7 +105,7 @@
                   placeholder="รหัสไปรษณีย์..."
                 />
               </div>
-              <div class="col-md-12">
+              <!-- <div class="col-md-12">
                 <GmapMap
                   :center="{ lat: 13.727739463595237, lng: 100.57668640850876 }"
                   :zoom="15"
@@ -123,16 +123,28 @@
                     @click="center = m.position"
                   />
                 </GmapMap>
-              </div>
+              </div> -->
               <div class="col-md-4">
                 <div>
-                  <label>Zone</label>
+                  <label>Area</label>
                 </div>
                 <model-select
                   :options="zoneSelect"
                   v-model="project.zone"
                   class="select"
                   placeholder="select zone"
+                >
+                </model-select>
+              </div>
+              <div class="col-md-4">
+                <div>
+                  <label>Team</label>
+                </div>
+                <model-select
+                  :options="teamSelect"
+                  v-model="project.team"
+                  class="select"
+                  placeholder="select team"
                 >
                 </model-select>
               </div>
@@ -408,6 +420,7 @@ export default {
         }
         this.facilitySelects.selects = resp.data[0].facilities;
         this.project.zone = resp.data[0].zone;
+        this.project.team = resp.data[0].team;
         this.transports.splice(0, 1);
         let i = 0;
         for (let value of resp.data[0].transports) {
@@ -428,12 +441,6 @@ export default {
         }
       });
     }
-  },
-
-  props: {
-    latitude: Number,
-    longitude: Number,
-    title: String,
   },
 
   data() {
@@ -476,6 +483,12 @@ export default {
           { value: "AIRLINK", label: "AIRLINK" },
         ],
       },
+      teamSelect: [
+        { text: "Red", value: "Red" },
+        { text: "Yellow", value: "Yellow" },
+        { text: "Green", value: "Green" },
+        { text: "Blue", value: "Blue" },
+      ],
       zoneSelect: [
         { text: "Silom", value: "Silom" },
         { text: "Sathorn", value: "Sathorn" },
@@ -849,6 +862,7 @@ export default {
         developer: "",
         address: "",
         zone: "",
+        team: "",
       },
       comment: "",
     };
@@ -954,6 +968,7 @@ export default {
         facilities: this.facilitySelects.selects,
         transports: this.transports,
         zone: this.project.zone,
+        team: this.project.team,
         comment: this.comment,
       };
       if (this.$route.query.id) {
@@ -972,6 +987,7 @@ export default {
           transports: this.transports,
           username: this.getUser.username,
           zone: this.project.zone,
+          team: this.project.team,
           comment: this.comment,
         };
       }
