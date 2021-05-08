@@ -185,6 +185,13 @@
                   </div>
                 </div>
               </div>
+              <div class="col-md-3">
+                <fg-input
+                  placeholder
+                  label="ส่วนกลาง อื่น ๆ"
+                  v-model="project.facilityOther"
+                ></fg-input>
+              </div>
               <!-- <div class="col-md-12">
                 <div>
                   <label>ส่วนกลาง {{ facilitySelects.selects }}</label>
@@ -209,7 +216,7 @@
                   <div class="col-md-2">
                     <fg-input
                       placeholder
-                      label="ชั้น"
+                      label="จำนวนชั้นทั้งหมด"
                       type="number"
                       v-model="building.floor"
                     ></fg-input>
@@ -217,17 +224,27 @@
                   <div class="col-md-2">
                     <fg-input
                       placeholder
-                      label="ตึก"
+                      label="จำนวนตึก"
                       v-model="building.building"
                     ></fg-input>
                   </div>
                   <div class="col-md-2">
-                    <fg-input
+                    <div>
+                      <label>ปีที่สร้างเสร็จ</label>
+                    </div>
+                    <model-select
+                      :options="developModelSelect"
+                      v-model="building.develop"
+                      class="select"
+                      placeholder="เลือกปี"
+                    >
+                    </model-select>
+                    <!-- <fg-input
                       placeholder
                       label="ปีที่สร้างเสร็จ"
                       type="number"
                       v-model="building.develop"
-                    ></fg-input>
+                    ></fg-input> -->
                   </div>
                   <div class="col-md-2">
                     <div>
@@ -282,6 +299,16 @@
                     <div>
                       <label>สถานี</label>
                     </div>
+                    <model-select
+                      :options="transport.transportOption"
+                      v-model="transport.name"
+                      class="select"
+                      placeholder="เลือกสถานี"
+                    >
+                    </model-select>
+                    <!-- <div>
+                      <label>สถานี</label>
+                    </div>
                     <el-select class="select-primary" v-model="transport.name">
                       <el-option
                         v-for="option in transport.transportOption"
@@ -290,7 +317,7 @@
                         :label="option.label"
                         :key="option.label"
                       ></el-option>
-                    </el-select>
+                    </el-select> -->
                   </div>
                   <div class="col-md-2">
                     <div>
@@ -380,7 +407,6 @@ export default {
     [Tag.name]: Tag,
     ThailandAutoComplete,
     ModelSelect,
-    // TransportBox,
   },
 
   created: function () {
@@ -411,7 +437,7 @@ export default {
         this.amphoe = resp.data[0].amphoe;
         this.province = resp.data[0].province;
         this.zipcode = resp.data[0].zipcode;
-
+        this.facilityOther = resp.data[0].facilityOther;
         let f = 0;
         for (let value of this.facilitySelects.data) {
           let item = resp.data[0].facilities.indexOf(value.value);
@@ -475,6 +501,11 @@ export default {
           develop: "",
         },
       ],
+      developModelSelect: [
+        { value: "1999", text: "1999" },
+        { value: "2000", text: "2000" },
+        { value: "2001", text: "2001" },
+      ],
       transportTypeSelect: {
         select: "",
         data: [
@@ -488,6 +519,167 @@ export default {
         { text: "Yellow", value: "Yellow" },
         { text: "Green", value: "Green" },
         { text: "Blue", value: "Blue" },
+      ],
+      transportBTSSelect: [
+        { value: "[N17] วัดพระศรีมหาธาตุ", text: "[N17] วัดพระศรีมหาธาตุ" },
+        { value: "[N16] กรมทหารราบที่", text: "[N16] กรมทหารราบที่" },
+        { value: "[N15] บางบัว", text: "[N15] บางบัว" },
+        { value: "[N14] กรมป่าไม้", text: "[N14] กรมป่าไม้" },
+        {
+          value: "[N13] มหาวิทยาลัยเกษตรศาสตร์",
+          text: "[N13] มหาวิทยาลัยเกษตรศาสตร์",
+        },
+        { value: "[N12] เสนานิคม", text: "[N12] เสนานิคม" },
+        { value: "[N11] รัชโยธิน", text: "[N11] รัชโยธิน" },
+        { value: "[N10] พหลโยธิน", text: "[N10] พหลโยธิน" },
+        { value: "[N9] ห้าแยกลาดพร้าว", text: "[N9] ห้าแยกลาดพร้าว" },
+        { value: "[N8] หมอชิต", text: "[N8] หมอชิต" },
+        { value: "[N7] สะพานควาย", text: "[N7] สะพานควาย" },
+        { value: "[N5] อารีย์", text: "[N5] อารีย์" },
+        { value: "[N4] สนามเป้า", text: "[N4] สนามเป้า" },
+        {
+          value: "[N3] อนุสาวรีย์ชัยสมรภูมิ",
+          text: "[N3] อนุสาวรีย์ชัยสมรภูมิ",
+        },
+        { value: "[N2] พญาไท", text: "[N2] พญาไท" },
+        { value: "[N1] ราชเทวี", text: "[N1] ราชเทวี" },
+        { value: "[CEN] สยาม", text: "[CEN] สยาม" },
+        { value: "[E1] ชิดลม", text: "[E1] ชิดลม" },
+        { value: "[E2] เพลินจิต", text: "[E2] เพลินจิต" },
+        { value: "[E3] นานา", text: "[E3] นานา" },
+        { value: "[E4] อโศก", text: "[E4] อโศก" },
+        { value: "[E5] พร้อมพงษ์", text: "[E5] พร้อมพงษ์" },
+        { value: "[E6] ทองหล่อ", text: "[E6] ทองหล่อ" },
+        { value: "[E7] เอกมัย", text: "[E7] เอกมัย" },
+        { value: "[E8] พระโขนง", text: "[E8] พระโขนง" },
+        { value: "[E9] อ่อนนุช", text: "[E9] อ่อนนุช" },
+        { value: "[E10] บางจาก", text: "[E10] บางจาก" },
+        { value: "[E11] ปุณณวิถี", text: "[E11] ปุณณวิถี" },
+        { value: "[E12] อุดมสุข", text: "[E12] อุดมสุข" },
+        { value: "[E13] บางนา", text: "[E13] บางนา" },
+        { value: "[E14] แบริ่ง", text: "[E14] แบริ่ง" },
+        { value: "[E15] สำโรง", text: "[E15] สำโรง" },
+        { value: "[E16] ปู่เจ้า", text: "[E16] ปู่เจ้า" },
+        { value: "[E17] ช้างเอราวัณ", text: "[E17] ช้างเอราวัณ" },
+        { value: "[E19] ปากน้ำ", text: "[E19] ปากน้ำ" },
+        { value: "[E20] ศรีนครินทร์", text: "[E20] ศรีนครินทร์" },
+        { value: "[E21] แพรกษา", text: "[E21] แพรกษา" },
+        { value: "[E22] สายลวด", text: "[E22] สายลวด" },
+        { value: "[E23] เคหะฯ", text: "[E23] เคหะฯ" },
+        { value: "[W1] สนามกีฬาแห่งชาติ", text: "[W1] สนามกีฬาแห่งชาติ" },
+        { value: "[S1] ราชดำริ", text: "[S1] ราชดำริ" },
+        { value: "[S2] ศาลาแดง", text: "[S2] ศาลาแดง" },
+        { value: "[S3] ช่องนนทรี", text: "[S3] ช่องนนทรี" },
+        { value: "[S5] สุรศักดิ์", text: "[S5] สุรศักดิ์" },
+        { value: "[S6] สะพานตากสิน", text: "[S6] สะพานตากสิน" },
+        { value: "[S7] กรุงธนบุรี", text: "[S7] กรุงธนบุรี" },
+        { value: "[S8] วงเวียนใหญ่", text: "[S8] วงเวียนใหญ่" },
+        { value: "[S9] โพธิ์นิมิตร", text: "[S9] โพธิ์นิมิตร" },
+        { value: "[S10] ตลาดพลู", text: "[S10] ตลาดพลู" },
+        { value: "[S11] วุฒากาศ", text: "[S11] วุฒากาศ" },
+        { value: "[S12] บางหว้า", text: "[S12] บางหว้า" },
+      ],
+      transportMRTSelect: [
+        { value: "ท่าพระ (BL01)", text: "ท่าพระ (BL01)" },
+        { value: "จรัญฯ 13 (BL02)", text: "จรัญฯ 13 (BL02)" },
+        { value: "ไฟฉาย (BL03)", text: "ไฟฉาย (BL03)" },
+        { value: "บางขุนนนท์ (BL04)", text: "บางขุนนนท์ (BL04)" },
+        { value: "บางยี่ขัน (BL05)", text: "บางยี่ขัน (BL05)" },
+        { value: "สิรินธร (BL06)", text: "สิรินธร (BL06)" },
+        { value: "บางพลัด (BL07)", text: "บางพลัด (BL07)" },
+        { value: "บางอ้อ (BL08)", text: "บางอ้อ (BL08)" },
+        { value: "บางโพ (BL09)", text: "บางโพ (BL09)" },
+        { value: "เตาปูน (BL10)", text: "เตาปูน (BL10)" },
+        { value: "บางซื่อ (BL11)", text: "บางซื่อ (BL11)" },
+        { value: "กำแพงเพชร (BL12)", text: "กำแพงเพชร (BL12)" },
+        { value: "สวนจตุจักร (BL13)", text: "สวนจตุจักร (BL13)" },
+        { value: "พหลโยธิน (BL14)", text: "พหลโยธิน (BL14)" },
+        { value: "ลาดพร้าว (BL15)", text: "ลาดพร้าว (BL15)" },
+        { value: "รัชดาภิเษก (BL16)", text: "รัชดาภิเษก (BL16)" },
+        { value: "สุทธิสาร (BL17)", text: "สุทธิสาร (BL17)" },
+        { value: "ห้วยขวาง (BL18)", text: "ห้วยขวาง (BL18)" },
+        {
+          value: "ศูนย์วัฒนธรรมแห่งประเทศไทย (BL19)",
+          text: "ศูนย์วัฒนธรรมแห่งประเทศไทย (BL19)",
+        },
+        { value: "พระราม 9 (BL20)", text: "พระราม 9 (BL20)" },
+        { value: "เพชรบุรี (BL21)", text: "เพชรบุรี (BL21)" },
+        { value: "สุขุมวิท (BL22)", text: "สุขุมวิท (BL22)" },
+        {
+          value: "ศูนย์การประชุมแห่งชาติสิริกิติ์ (BL23) ",
+          text: "ศูนย์การประชุมแห่งชาติสิริกิติ์ (BL23)",
+        },
+        { value: "คลองเตย (BL24)", text: "คลองเตย (BL24)" },
+        { value: "ลุมพินี (BL25)", text: "ลุมพินี (BL25)" },
+        { value: "สีลม (BL26)", text: "สีลม (BL26)" },
+        { value: "สามย่าน (BL27)", text: "สามย่าน (BL27)" },
+        { value: "หัวลำโพง (BL28)", text: "หัวลำโพง (BL28)" },
+        { value: "วัดมังกร (BL29)", text: "วัดมังกร (BL29)" },
+        { value: "สามยอด (BL30)", text: "สามยอด (BL30)" },
+        { value: "สนามไชย (BL31)", text: "สนามไชย (BL31)" },
+        { value: "อิสรภาพ (BL32)", text: "อิสรภาพ (BL32)" },
+        { value: "บางไผ่ (BL33)", text: "บางไผ่ (BL33)" },
+        { value: "บางหว้า (BL34)", text: "บางหว้า (BL34)" },
+        { value: "เพชรเกษม 48 (BL35)", text: "เพชรเกษม 48 (BL35)" },
+        { value: "ภาษีเจริญ (BL36)", text: "ภาษีเจริญ (BL36)" },
+        { value: "บางแค (BL37)", text: "บางแค (BL37)" },
+        { value: "หลักสอง (BL38)", text: "หลักสอง (BL38)" },
+        { value: "คลองบางไผ่ (PP01)", text: "คลองบางไผ่ (PP01)" },
+        { value: "ตลาดบางใหญ่ (PP02)", text: "ตลาดบางใหญ่ (PP02)" },
+        { value: "สามแยกบางใหญ่ (PP03)", text: "สามแยกบางใหญ่ (PP03)" },
+        { value: "บางพลู (PP04)", text: "บางพลู (PP04)" },
+        { value: "บางรักใหญ่ (PP05)", text: "บางรักใหญ่ (PP05)" },
+        { value: "บางรักน้อยท่าอิฐ (PP06)", text: "บางรักน้อยท่าอิฐ (PP06)" },
+        { value: "ไทรม้า (PP07)", text: "ไทรม้า (PP07)" },
+        {
+          value: "สะพานพระนั่งเกล้า (PP08)",
+          text: "สะพานพระนั่งเกล้า (PP08)",
+        },
+        { value: "แยกนนทบุรี 1 (PP09)", text: "แยกนนทบุรี 1 (PP09)" },
+        { value: "บางกระสอ (PP10)", text: "บางกระสอ (PP10)" },
+        {
+          value: "ศูนย์ราชการนนทบุรี (PP11)",
+          text: "ศูนย์ราชการนนทบุรี (PP11)",
+        },
+        { value: "กระทรวงสาธารณสุข (PP12)", text: "กระทรวงสาธารณสุข (PP12)" },
+        { value: "แยกติวานนท์ (PP13)", text: "แยกติวานนท์ (PP13)" },
+        { value: "วงศ์สว่าง (PP14)", text: "วงศ์สว่าง (PP14)" },
+        { value: "บางซ่อน (PP15)", text: "บางซ่อน (PP15)" },
+        { value: "เตาปูน (PP16)", text: "เตาปูน (PP16)" },
+      ],
+      transportAIRLINKSelect: [
+        {
+          value: "สถานีพญาไท Phaya Thai Station",
+          text: "สถานีพญาไท Phaya Thai Station",
+        },
+        {
+          value: "สถานีปราชปรารภ Ratchaprarop Station",
+          text: "สถานีปราชปรารภ Ratchaprarop Station",
+        },
+        {
+          value: "สถานีมักกะสัน Makkasan Station",
+          text: "สถานีมักกะสัน Makkasan Station",
+        },
+        {
+          value: "สถานีรามคำแหง Ramkhamhaeng Station",
+          text: "สถานีรามคำแหง Ramkhamhaeng Station",
+        },
+        {
+          value: "สถานีหัวหมาก Hua Mak Station",
+          text: "สถานีหัวหมาก Hua Mak Station",
+        },
+        {
+          value: "สถานีบ้านทับช้าง Ban Thap Chang Station",
+          text: "สถานีบ้านทับช้าง Ban Thap Chang Station",
+        },
+        {
+          value: "สถานีลาดกระบัง Lat Krabang Station",
+          text: "สถานีลาดกระบัง Lat Krabang Station",
+        },
+        {
+          value: "สถานีสุวรรณภูมิ Suvarnabhumi (Airport) Station",
+          text: "สถานีสุวรรณภูมิ Suvarnabhumi (Airport) Station",
+        },
       ],
       zoneSelect: [
         { text: "Silom", value: "Silom" },
@@ -558,167 +750,167 @@ export default {
         { text: "MRT Sirindhorn", value: "MRT Sirindhorn" },
         { text: "MRT Bang Yi Khan", value: "MRT Bang Yi Khan" },
       ],
-      transportBTSSelect: [
-        { value: "[N17] วัดพระศรีมหาธาตุ", label: "[N17] วัดพระศรีมหาธาตุ" },
-        { value: "[N16] กรมทหารราบที่", label: "[N16] กรมทหารราบที่" },
-        { value: "[N15] บางบัว", label: "[N15] บางบัว" },
-        { value: "[N14] กรมป่าไม้", label: "[N14] กรมป่าไม้" },
-        {
-          value: "[N13] มหาวิทยาลัยเกษตรศาสตร์",
-          label: "[N13] มหาวิทยาลัยเกษตรศาสตร์",
-        },
-        { value: "[N12] เสนานิคม", label: "[N12] เสนานิคม" },
-        { value: "[N11] รัชโยธิน", label: "[N11] รัชโยธิน" },
-        { value: "[N10] พหลโยธิน", label: "[N10] พหลโยธิน" },
-        { value: "[N9] ห้าแยกลาดพร้าว", label: "[N9] ห้าแยกลาดพร้าว" },
-        { value: "[N8] หมอชิต", label: "[N8] หมอชิต" },
-        { value: "[N7] สะพานควาย", label: "[N7] สะพานควาย" },
-        { value: "[N5] อารีย์", label: "[N5] อารีย์" },
-        { value: "[N4] สนามเป้า", label: "[N4] สนามเป้า" },
-        {
-          value: "[N3] อนุสาวรีย์ชัยสมรภูมิ",
-          label: "[N3] อนุสาวรีย์ชัยสมรภูมิ",
-        },
-        { value: "[N2] พญาไท", label: "[N2] พญาไท" },
-        { value: "[N1] ราชเทวี", label: "[N1] ราชเทวี" },
-        { value: "[CEN] สยาม", label: "[CEN] สยาม" },
-        { value: "[E1] ชิดลม", label: "[E1] ชิดลม" },
-        { value: "[E2] เพลินจิต", label: "[E2] เพลินจิต" },
-        { value: "[E3] นานา", label: "[E3] นานา" },
-        { value: "[E4] อโศก", label: "[E4] อโศก" },
-        { value: "[E5] พร้อมพงษ์", label: "[E5] พร้อมพงษ์" },
-        { value: "[E6] ทองหล่อ", label: "[E6] ทองหล่อ" },
-        { value: "[E7] เอกมัย", label: "[E7] เอกมัย" },
-        { value: "[E8] พระโขนง", label: "[E8] พระโขนง" },
-        { value: "[E9] อ่อนนุช", label: "[E9] อ่อนนุช" },
-        { value: "[E10] บางจาก", label: "[E10] บางจาก" },
-        { value: "[E11] ปุณณวิถี", label: "[E11] ปุณณวิถี" },
-        { value: "[E12] อุดมสุข", label: "[E12] อุดมสุข" },
-        { value: "[E13] บางนา", label: "[E13] บางนา" },
-        { value: "[E14] แบริ่ง", label: "[E14] แบริ่ง" },
-        { value: "[E15] สำโรง", label: "[E15] สำโรง" },
-        { value: "[E16] ปู่เจ้า", label: "[E16] ปู่เจ้า" },
-        { value: "[E17] ช้างเอราวัณ", label: "[E17] ช้างเอราวัณ" },
-        { value: "[E19] ปากน้ำ", label: "[E19] ปากน้ำ" },
-        { value: "[E20] ศรีนครินทร์", label: "[E20] ศรีนครินทร์" },
-        { value: "[E21] แพรกษา", label: "[E21] แพรกษา" },
-        { value: "[E22] สายลวด", label: "[E22] สายลวด" },
-        { value: "[E23] เคหะฯ", label: "[E23] เคหะฯ" },
-        { value: "[W1] สนามกีฬาแห่งชาติ", label: "[W1] สนามกีฬาแห่งชาติ" },
-        { value: "[S1] ราชดำริ", label: "[S1] ราชดำริ" },
-        { value: "[S2] ศาลาแดง", label: "[S2] ศาลาแดง" },
-        { value: "[S3] ช่องนนทรี", label: "[S3] ช่องนนทรี" },
-        { value: "[S5] สุรศักดิ์", label: "[S5] สุรศักดิ์" },
-        { value: "[S6] สะพานตากสิน", label: "[S6] สะพานตากสิน" },
-        { value: "[S7] กรุงธนบุรี", label: "[S7] กรุงธนบุรี" },
-        { value: "[S8] วงเวียนใหญ่", label: "[S8] วงเวียนใหญ่" },
-        { value: "[S9] โพธิ์นิมิตร", label: "[S9] โพธิ์นิมิตร" },
-        { value: "[S10] ตลาดพลู", label: "[S10] ตลาดพลู" },
-        { value: "[S11] วุฒากาศ", label: "[S11] วุฒากาศ" },
-        { value: "[S12] บางหว้า", label: "[S12] บางหว้า" },
-      ],
-      transportMRTSelect: [
-        { value: "ท่าพระ (BL01)", label: "ท่าพระ (BL01)" },
-        { value: "จรัญฯ 13 (BL02)", label: "จรัญฯ 13 (BL02)" },
-        { value: "ไฟฉาย (BL03)", label: "ไฟฉาย (BL03)" },
-        { value: "บางขุนนนท์ (BL04)", label: "บางขุนนนท์ (BL04)" },
-        { value: "บางยี่ขัน (BL05)", label: "บางยี่ขัน (BL05)" },
-        { value: "สิรินธร (BL06)", label: "สิรินธร (BL06)" },
-        { value: "บางพลัด (BL07)", label: "บางพลัด (BL07)" },
-        { value: "บางอ้อ (BL08)", label: "บางอ้อ (BL08)" },
-        { value: "บางโพ (BL09)", label: "บางโพ (BL09)" },
-        { value: "เตาปูน (BL10)", label: "เตาปูน (BL10)" },
-        { value: "บางซื่อ (BL11)", label: "บางซื่อ (BL11)" },
-        { value: "กำแพงเพชร (BL12)", label: "กำแพงเพชร (BL12)" },
-        { value: "สวนจตุจักร (BL13)", label: "สวนจตุจักร (BL13)" },
-        { value: "พหลโยธิน (BL14)", label: "พหลโยธิน (BL14)" },
-        { value: "ลาดพร้าว (BL15)", label: "ลาดพร้าว (BL15)" },
-        { value: "รัชดาภิเษก (BL16)", label: "รัชดาภิเษก (BL16)" },
-        { value: "สุทธิสาร (BL17)", label: "สุทธิสาร (BL17)" },
-        { value: "ห้วยขวาง (BL18)", label: "ห้วยขวาง (BL18)" },
-        {
-          value: "ศูนย์วัฒนธรรมแห่งประเทศไทย (BL19)",
-          label: "ศูนย์วัฒนธรรมแห่งประเทศไทย (BL19)",
-        },
-        { value: "พระราม 9 (BL20)", label: "พระราม 9 (BL20)" },
-        { value: "เพชรบุรี (BL21)", label: "เพชรบุรี (BL21)" },
-        { value: "สุขุมวิท (BL22)", label: "สุขุมวิท (BL22)" },
-        {
-          value: "ศูนย์การประชุมแห่งชาติสิริกิติ์ (BL23) ",
-          label: "ศูนย์การประชุมแห่งชาติสิริกิติ์ (BL23)",
-        },
-        { value: "คลองเตย (BL24)", label: "คลองเตย (BL24)" },
-        { value: "ลุมพินี (BL25)", label: "ลุมพินี (BL25)" },
-        { value: "สีลม (BL26)", label: "สีลม (BL26)" },
-        { value: "สามย่าน (BL27)", label: "สามย่าน (BL27)" },
-        { value: "หัวลำโพง (BL28)", label: "หัวลำโพง (BL28)" },
-        { value: "วัดมังกร (BL29)", label: "วัดมังกร (BL29)" },
-        { value: "สามยอด (BL30)", label: "สามยอด (BL30)" },
-        { value: "สนามไชย (BL31)", label: "สนามไชย (BL31)" },
-        { value: "อิสรภาพ (BL32)", label: "อิสรภาพ (BL32)" },
-        { value: "บางไผ่ (BL33)", label: "บางไผ่ (BL33)" },
-        { value: "บางหว้า (BL34)", label: "บางหว้า (BL34)" },
-        { value: "เพชรเกษม 48 (BL35)", label: "เพชรเกษม 48 (BL35)" },
-        { value: "ภาษีเจริญ (BL36)", label: "ภาษีเจริญ (BL36)" },
-        { value: "บางแค (BL37)", label: "บางแค (BL37)" },
-        { value: "หลักสอง (BL38)", label: "หลักสอง (BL38)" },
-        { value: "คลองบางไผ่ (PP01)", label: "คลองบางไผ่ (PP01)" },
-        { value: "ตลาดบางใหญ่ (PP02)", label: "ตลาดบางใหญ่ (PP02)" },
-        { value: "สามแยกบางใหญ่ (PP03)", label: "สามแยกบางใหญ่ (PP03)" },
-        { value: "บางพลู (PP04)", label: "บางพลู (PP04)" },
-        { value: "บางรักใหญ่ (PP05)", label: "บางรักใหญ่ (PP05)" },
-        { value: "บางรักน้อยท่าอิฐ (PP06)", label: "บางรักน้อยท่าอิฐ (PP06)" },
-        { value: "ไทรม้า (PP07)", label: "ไทรม้า (PP07)" },
-        {
-          value: "สะพานพระนั่งเกล้า (PP08)",
-          label: "สะพานพระนั่งเกล้า (PP08)",
-        },
-        { value: "แยกนนทบุรี 1 (PP09)", label: "แยกนนทบุรี 1 (PP09)" },
-        { value: "บางกระสอ (PP10)", label: "บางกระสอ (PP10)" },
-        {
-          value: "ศูนย์ราชการนนทบุรี (PP11)",
-          label: "ศูนย์ราชการนนทบุรี (PP11)",
-        },
-        { value: "กระทรวงสาธารณสุข (PP12)", label: "กระทรวงสาธารณสุข (PP12)" },
-        { value: "แยกติวานนท์ (PP13)", label: "แยกติวานนท์ (PP13)" },
-        { value: "วงศ์สว่าง (PP14)", label: "วงศ์สว่าง (PP14)" },
-        { value: "บางซ่อน (PP15)", label: "บางซ่อน (PP15)" },
-        { value: "เตาปูน (PP16)", label: "เตาปูน (PP16)" },
-      ],
-      transportAIRLINKSelect: [
-        {
-          value: "สถานีพญาไท Phaya Thai Station",
-          label: "สถานีพญาไท Phaya Thai Station",
-        },
-        {
-          value: "สถานีปราชปรารภ Ratchaprarop Station",
-          label: "สถานีปราชปรารภ Ratchaprarop Station",
-        },
-        {
-          value: "สถานีมักกะสัน Makkasan Station",
-          label: "สถานีมักกะสัน Makkasan Station",
-        },
-        {
-          value: "สถานีรามคำแหง Ramkhamhaeng Station",
-          label: "สถานีรามคำแหง Ramkhamhaeng Station",
-        },
-        {
-          value: "สถานีหัวหมาก Hua Mak Station",
-          label: "สถานีหัวหมาก Hua Mak Station",
-        },
-        {
-          value: "สถานีบ้านทับช้าง Ban Thap Chang Station",
-          label: "สถานีบ้านทับช้าง Ban Thap Chang Station",
-        },
-        {
-          value: "สถานีลาดกระบัง Lat Krabang Station",
-          label: "สถานีลาดกระบัง Lat Krabang Station",
-        },
-        {
-          value: "สถานีสุวรรณภูมิ Suvarnabhumi (Airport) Station",
-          label: "สถานีสุวรรณภูมิ Suvarnabhumi (Airport) Station",
-        },
-      ],
+      // transportBTSSelect: [
+      //   { value: "[N17] วัดพระศรีมหาธาตุ", label: "[N17] วัดพระศรีมหาธาตุ" },
+      //   { value: "[N16] กรมทหารราบที่", label: "[N16] กรมทหารราบที่" },
+      //   { value: "[N15] บางบัว", label: "[N15] บางบัว" },
+      //   { value: "[N14] กรมป่าไม้", label: "[N14] กรมป่าไม้" },
+      //   {
+      //     value: "[N13] มหาวิทยาลัยเกษตรศาสตร์",
+      //     label: "[N13] มหาวิทยาลัยเกษตรศาสตร์",
+      //   },
+      //   { value: "[N12] เสนานิคม", label: "[N12] เสนานิคม" },
+      //   { value: "[N11] รัชโยธิน", label: "[N11] รัชโยธิน" },
+      //   { value: "[N10] พหลโยธิน", label: "[N10] พหลโยธิน" },
+      //   { value: "[N9] ห้าแยกลาดพร้าว", label: "[N9] ห้าแยกลาดพร้าว" },
+      //   { value: "[N8] หมอชิต", label: "[N8] หมอชิต" },
+      //   { value: "[N7] สะพานควาย", label: "[N7] สะพานควาย" },
+      //   { value: "[N5] อารีย์", label: "[N5] อารีย์" },
+      //   { value: "[N4] สนามเป้า", label: "[N4] สนามเป้า" },
+      //   {
+      //     value: "[N3] อนุสาวรีย์ชัยสมรภูมิ",
+      //     label: "[N3] อนุสาวรีย์ชัยสมรภูมิ",
+      //   },
+      //   { value: "[N2] พญาไท", label: "[N2] พญาไท" },
+      //   { value: "[N1] ราชเทวี", label: "[N1] ราชเทวี" },
+      //   { value: "[CEN] สยาม", label: "[CEN] สยาม" },
+      //   { value: "[E1] ชิดลม", label: "[E1] ชิดลม" },
+      //   { value: "[E2] เพลินจิต", label: "[E2] เพลินจิต" },
+      //   { value: "[E3] นานา", label: "[E3] นานา" },
+      //   { value: "[E4] อโศก", label: "[E4] อโศก" },
+      //   { value: "[E5] พร้อมพงษ์", label: "[E5] พร้อมพงษ์" },
+      //   { value: "[E6] ทองหล่อ", label: "[E6] ทองหล่อ" },
+      //   { value: "[E7] เอกมัย", label: "[E7] เอกมัย" },
+      //   { value: "[E8] พระโขนง", label: "[E8] พระโขนง" },
+      //   { value: "[E9] อ่อนนุช", label: "[E9] อ่อนนุช" },
+      //   { value: "[E10] บางจาก", label: "[E10] บางจาก" },
+      //   { value: "[E11] ปุณณวิถี", label: "[E11] ปุณณวิถี" },
+      //   { value: "[E12] อุดมสุข", label: "[E12] อุดมสุข" },
+      //   { value: "[E13] บางนา", label: "[E13] บางนา" },
+      //   { value: "[E14] แบริ่ง", label: "[E14] แบริ่ง" },
+      //   { value: "[E15] สำโรง", label: "[E15] สำโรง" },
+      //   { value: "[E16] ปู่เจ้า", label: "[E16] ปู่เจ้า" },
+      //   { value: "[E17] ช้างเอราวัณ", label: "[E17] ช้างเอราวัณ" },
+      //   { value: "[E19] ปากน้ำ", label: "[E19] ปากน้ำ" },
+      //   { value: "[E20] ศรีนครินทร์", label: "[E20] ศรีนครินทร์" },
+      //   { value: "[E21] แพรกษา", label: "[E21] แพรกษา" },
+      //   { value: "[E22] สายลวด", label: "[E22] สายลวด" },
+      //   { value: "[E23] เคหะฯ", label: "[E23] เคหะฯ" },
+      //   { value: "[W1] สนามกีฬาแห่งชาติ", label: "[W1] สนามกีฬาแห่งชาติ" },
+      //   { value: "[S1] ราชดำริ", label: "[S1] ราชดำริ" },
+      //   { value: "[S2] ศาลาแดง", label: "[S2] ศาลาแดง" },
+      //   { value: "[S3] ช่องนนทรี", label: "[S3] ช่องนนทรี" },
+      //   { value: "[S5] สุรศักดิ์", label: "[S5] สุรศักดิ์" },
+      //   { value: "[S6] สะพานตากสิน", label: "[S6] สะพานตากสิน" },
+      //   { value: "[S7] กรุงธนบุรี", label: "[S7] กรุงธนบุรี" },
+      //   { value: "[S8] วงเวียนใหญ่", label: "[S8] วงเวียนใหญ่" },
+      //   { value: "[S9] โพธิ์นิมิตร", label: "[S9] โพธิ์นิมิตร" },
+      //   { value: "[S10] ตลาดพลู", label: "[S10] ตลาดพลู" },
+      //   { value: "[S11] วุฒากาศ", label: "[S11] วุฒากาศ" },
+      //   { value: "[S12] บางหว้า", label: "[S12] บางหว้า" },
+      // ],
+      // transportMRTSelect: [
+      //   { value: "ท่าพระ (BL01)", label: "ท่าพระ (BL01)" },
+      //   { value: "จรัญฯ 13 (BL02)", label: "จรัญฯ 13 (BL02)" },
+      //   { value: "ไฟฉาย (BL03)", label: "ไฟฉาย (BL03)" },
+      //   { value: "บางขุนนนท์ (BL04)", label: "บางขุนนนท์ (BL04)" },
+      //   { value: "บางยี่ขัน (BL05)", label: "บางยี่ขัน (BL05)" },
+      //   { value: "สิรินธร (BL06)", label: "สิรินธร (BL06)" },
+      //   { value: "บางพลัด (BL07)", label: "บางพลัด (BL07)" },
+      //   { value: "บางอ้อ (BL08)", label: "บางอ้อ (BL08)" },
+      //   { value: "บางโพ (BL09)", label: "บางโพ (BL09)" },
+      //   { value: "เตาปูน (BL10)", label: "เตาปูน (BL10)" },
+      //   { value: "บางซื่อ (BL11)", label: "บางซื่อ (BL11)" },
+      //   { value: "กำแพงเพชร (BL12)", label: "กำแพงเพชร (BL12)" },
+      //   { value: "สวนจตุจักร (BL13)", label: "สวนจตุจักร (BL13)" },
+      //   { value: "พหลโยธิน (BL14)", label: "พหลโยธิน (BL14)" },
+      //   { value: "ลาดพร้าว (BL15)", label: "ลาดพร้าว (BL15)" },
+      //   { value: "รัชดาภิเษก (BL16)", label: "รัชดาภิเษก (BL16)" },
+      //   { value: "สุทธิสาร (BL17)", label: "สุทธิสาร (BL17)" },
+      //   { value: "ห้วยขวาง (BL18)", label: "ห้วยขวาง (BL18)" },
+      //   {
+      //     value: "ศูนย์วัฒนธรรมแห่งประเทศไทย (BL19)",
+      //     label: "ศูนย์วัฒนธรรมแห่งประเทศไทย (BL19)",
+      //   },
+      //   { value: "พระราม 9 (BL20)", label: "พระราม 9 (BL20)" },
+      //   { value: "เพชรบุรี (BL21)", label: "เพชรบุรี (BL21)" },
+      //   { value: "สุขุมวิท (BL22)", label: "สุขุมวิท (BL22)" },
+      //   {
+      //     value: "ศูนย์การประชุมแห่งชาติสิริกิติ์ (BL23) ",
+      //     label: "ศูนย์การประชุมแห่งชาติสิริกิติ์ (BL23)",
+      //   },
+      //   { value: "คลองเตย (BL24)", label: "คลองเตย (BL24)" },
+      //   { value: "ลุมพินี (BL25)", label: "ลุมพินี (BL25)" },
+      //   { value: "สีลม (BL26)", label: "สีลม (BL26)" },
+      //   { value: "สามย่าน (BL27)", label: "สามย่าน (BL27)" },
+      //   { value: "หัวลำโพง (BL28)", label: "หัวลำโพง (BL28)" },
+      //   { value: "วัดมังกร (BL29)", label: "วัดมังกร (BL29)" },
+      //   { value: "สามยอด (BL30)", label: "สามยอด (BL30)" },
+      //   { value: "สนามไชย (BL31)", label: "สนามไชย (BL31)" },
+      //   { value: "อิสรภาพ (BL32)", label: "อิสรภาพ (BL32)" },
+      //   { value: "บางไผ่ (BL33)", label: "บางไผ่ (BL33)" },
+      //   { value: "บางหว้า (BL34)", label: "บางหว้า (BL34)" },
+      //   { value: "เพชรเกษม 48 (BL35)", label: "เพชรเกษม 48 (BL35)" },
+      //   { value: "ภาษีเจริญ (BL36)", label: "ภาษีเจริญ (BL36)" },
+      //   { value: "บางแค (BL37)", label: "บางแค (BL37)" },
+      //   { value: "หลักสอง (BL38)", label: "หลักสอง (BL38)" },
+      //   { value: "คลองบางไผ่ (PP01)", label: "คลองบางไผ่ (PP01)" },
+      //   { value: "ตลาดบางใหญ่ (PP02)", label: "ตลาดบางใหญ่ (PP02)" },
+      //   { value: "สามแยกบางใหญ่ (PP03)", label: "สามแยกบางใหญ่ (PP03)" },
+      //   { value: "บางพลู (PP04)", label: "บางพลู (PP04)" },
+      //   { value: "บางรักใหญ่ (PP05)", label: "บางรักใหญ่ (PP05)" },
+      //   { value: "บางรักน้อยท่าอิฐ (PP06)", label: "บางรักน้อยท่าอิฐ (PP06)" },
+      //   { value: "ไทรม้า (PP07)", label: "ไทรม้า (PP07)" },
+      //   {
+      //     value: "สะพานพระนั่งเกล้า (PP08)",
+      //     label: "สะพานพระนั่งเกล้า (PP08)",
+      //   },
+      //   { value: "แยกนนทบุรี 1 (PP09)", label: "แยกนนทบุรี 1 (PP09)" },
+      //   { value: "บางกระสอ (PP10)", label: "บางกระสอ (PP10)" },
+      //   {
+      //     value: "ศูนย์ราชการนนทบุรี (PP11)",
+      //     label: "ศูนย์ราชการนนทบุรี (PP11)",
+      //   },
+      //   { value: "กระทรวงสาธารณสุข (PP12)", label: "กระทรวงสาธารณสุข (PP12)" },
+      //   { value: "แยกติวานนท์ (PP13)", label: "แยกติวานนท์ (PP13)" },
+      //   { value: "วงศ์สว่าง (PP14)", label: "วงศ์สว่าง (PP14)" },
+      //   { value: "บางซ่อน (PP15)", label: "บางซ่อน (PP15)" },
+      //   { value: "เตาปูน (PP16)", label: "เตาปูน (PP16)" },
+      // ],
+      // transportAIRLINKSelect: [
+      //   {
+      //     value: "สถานีพญาไท Phaya Thai Station",
+      //     label: "สถานีพญาไท Phaya Thai Station",
+      //   },
+      //   {
+      //     value: "สถานีปราชปรารภ Ratchaprarop Station",
+      //     label: "สถานีปราชปรารภ Ratchaprarop Station",
+      //   },
+      //   {
+      //     value: "สถานีมักกะสัน Makkasan Station",
+      //     label: "สถานีมักกะสัน Makkasan Station",
+      //   },
+      //   {
+      //     value: "สถานีรามคำแหง Ramkhamhaeng Station",
+      //     label: "สถานีรามคำแหง Ramkhamhaeng Station",
+      //   },
+      //   {
+      //     value: "สถานีหัวหมาก Hua Mak Station",
+      //     label: "สถานีหัวหมาก Hua Mak Station",
+      //   },
+      //   {
+      //     value: "สถานีบ้านทับช้าง Ban Thap Chang Station",
+      //     label: "สถานีบ้านทับช้าง Ban Thap Chang Station",
+      //   },
+      //   {
+      //     value: "สถานีลาดกระบัง Lat Krabang Station",
+      //     label: "สถานีลาดกระบัง Lat Krabang Station",
+      //   },
+      //   {
+      //     value: "สถานีสุวรรณภูมิ Suvarnabhumi (Airport) Station",
+      //     label: "สถานีสุวรรณภูมิ Suvarnabhumi (Airport) Station",
+      //   },
+      // ],
       facilityCheckboxSelects: [
         false,
         false,
@@ -810,8 +1002,14 @@ export default {
           // { value: "Club", label: "Club" },
           // { value: "CCTV", label: "CCTV" },
           { value: "Badminton hall", label: "Badminton hall (สนามแบดมินตัน)" },
-          { value: "Basement car park", label: "Basement car park (ที่จอดรถใต้ดิน)", },
-          { value: "Basketball court", label: "Basketball court (สนามบาสเกตบอล)", },
+          {
+            value: "Basement car park",
+            label: "Basement car park (ที่จอดรถใต้ดิน)",
+          },
+          {
+            value: "Basketball court",
+            label: "Basketball court (สนามบาสเกตบอล)",
+          },
           { value: "Billiards room", label: "Billiards room (ห้องสนุกเกอร์)" },
           { value: "Clubhouse", label: "Clubhouse" },
           { value: "Covered car park", label: "Covered car park" },
@@ -826,7 +1024,10 @@ export default {
           { value: "Lounge", label: "Lounge (ห้องนั่งเล่น)" },
           { value: "Mini golf range", label: "Mini golf range" },
           { value: "Mini mart", label: "Mini mart (ร้านสะดวกซื้อ)" },
-          { value: "Multi purpose hall", label: "Multi purpose hall (ห้องเอนกประสงค์)", },
+          {
+            value: "Multi purpose hall",
+            label: "Multi purpose hall (ห้องเอนกประสงค์)",
+          },
           { value: "Open car park", label: "Open car park (ที่จอดรถกลางแจ้ง)" },
           { value: "Playground", label: "Playground (สนามเด็กเล่น)" },
           { value: "Putting green", label: "Putting green" },
@@ -844,7 +1045,10 @@ export default {
           { value: "Club", label: "Club (สโมสร)" },
           { value: "CCTV", label: "CCTV (กล้องวงจรปิด)" },
           { value: "Elevator", label: "Elevator (ลิฟต์)" },
-          { value: "24-hours Security", label: "24-hours Security (ระบบรักษาความปลอดภัย 24 ชั่วโมง)",},
+          {
+            value: "24-hours Security",
+            label: "24-hours Security (ระบบรักษาความปลอดภัย 24 ชั่วโมง)",
+          },
           { value: "Restaurant", label: "Restaurant (ร้านอาหาร)" },
         ],
       },
@@ -863,6 +1067,7 @@ export default {
         address: "",
         zone: "",
         team: "",
+        facilityOther: "",
       },
       comment: "",
     };
@@ -932,7 +1137,7 @@ export default {
       }
     },
     openBoxComment() {
-      this.$prompt("Please input your comment", "comment", {
+      this.$prompt("ระบุรายละเอียดและเหตุผลของการแก้ไขข้อมูล", "comment", {
         confirmButtonText: "OK",
         cancelButtonText: "Cancel",
         inputValidator: this.validateComment,
@@ -970,6 +1175,7 @@ export default {
         zone: this.project.zone,
         team: this.project.team,
         comment: this.comment,
+        facilityOther: this.project.facilityOther,
       };
       if (this.$route.query.id) {
         path = "api/project/edit";
@@ -989,6 +1195,7 @@ export default {
           zone: this.project.zone,
           team: this.project.team,
           comment: this.comment,
+          facilityOther: this.project.facilityOther,
         };
       }
       console.log("postBody : " + JSON.stringify(postBody));

@@ -1,6 +1,6 @@
 <template>
   <div class="row">
-    <div class="col-md-9">
+    <div class="col-md-12">
       <card>
         <div class="card-header">
           <div class="row">
@@ -509,9 +509,9 @@
         </div>
       </card>
     </div>
-    <div class="col-md-3">
+    <!-- <div class="col-md-3">
       <DailyBar />
-    </div>
+    </div> -->
   </div>
 </template>
 <script>
@@ -546,9 +546,9 @@ export default {
   data() {
     return {
       pagination: {
-        perPage: 5,
+        perPage: 20,
         currentPage: 1,
-        perPageOptions: [5, 10, 25, 50],
+        perPageOptions: [10, 20, 30, 50],
         total: 0,
       },
       search: "",

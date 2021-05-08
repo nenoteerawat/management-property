@@ -587,7 +587,7 @@
                   :data-images="fileList"
                   idUpload="myIdUpload"
                   editUpload="myIdEdit"
-                  :maxImage="10"
+                  :maxImage="20"
                   browseText="Browse Photo"
                   dragText="click to upload"
                   primaryText="Primary"
