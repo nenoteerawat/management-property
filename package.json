@@ -15,7 +15,7 @@
     "@fullcalendar/timegrid": "4.4.2",
     "@fullcalendar/vue": "4.4.0",
     "@trevoreyre/autocomplete-vue": "^2.2.0",
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "bootstrap-vue": "^2.16.0",
     "chart.js": "^2.9.3",
     "core-js": "^3.6.5",
