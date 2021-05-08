@@ -1738,14 +1738,14 @@ export default {
     },
     validateComment(input) {
       if (input == null || input.length < 1) {
-        return "Comment Not Found";
+        return "ระบุรายละเอียดและเหตุผลของการแก้ไขข้อมูล";
       } else {
         this.comment = input;
         return true;
       }
     },
     openBoxComment() {
-      this.$prompt("Please input your comment", "comment", {
+      this.$prompt("Please input your comment", "Comment", {
         confirmButtonText: "OK",
         cancelButtonText: "Cancel",
         inputValidator: this.validateComment,

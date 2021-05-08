@@ -777,14 +777,14 @@ export default {
     validateComment(input) {
       console.log("input : " + input);
       if (input == null || input.length < 1) {
-        return "Comment Not Found";
+        return "ระบุรายละเอียดและเหตุผลของการแก้ไขข้อมูล";
       } else {
         this.comment = input;
         return true;
       }
     },
     openBoxComment() {
-      this.$prompt("Please input your comment", "comment", {
+      this.$prompt("Please input your comment", "Comment", {
         confirmButtonText: "OK",
         cancelButtonText: "Cancel",
         inputValidator: this.validateComment,
@@ -856,7 +856,7 @@ export default {
         .catch((err) => {
           this.fullscreenLoading = false;
           this.$notify({
-            message: "Error",
+            message: err.response.data,
             // icon: 'fa fa-gift',
             // component: NotificationTemplate,
             horizontalAlign: "center",

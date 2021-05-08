@@ -323,7 +323,7 @@ export default {
         let isIncluded = false;
         for (let key of this.propsToSearch) {
           let rowValue = row[key].toString();
-          if (rowValue.includes && rowValue.includes(this.searchQuery)) {
+          if (rowValue.includes && rowValue.toLowerCase().includes(this.searchQuery.toLowerCase())) {
             isIncluded = true;
           }
         }
