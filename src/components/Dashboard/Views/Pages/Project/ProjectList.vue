@@ -328,7 +328,7 @@ export default {
         for (let key of this.propsToSearch) {
           let rowTemp = row[key] == null ? "" : row[key].toString();
           let rowValue = rowTemp;
-          if (rowValue.includes && rowValue.includes(this.searchQuery)) {
+          if (rowValue.includes && rowValue.toLowerCase().includes(this.searchQuery.toLowerCase())) {
             isIncluded = true;
           }
         }

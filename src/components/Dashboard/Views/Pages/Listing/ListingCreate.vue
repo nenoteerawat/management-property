@@ -48,7 +48,7 @@
                         >Sale</p-checkbox
                       >
                       <p-checkbox :inline="true" v-model="typeAvailable"
-                        >Available</p-checkbox
+                        >Rent</p-checkbox
                       >
                       <p-checkbox :inline="true" v-model="typeSaleWithTenant"
                         >Sale with tenant</p-checkbox
@@ -326,6 +326,15 @@
                 </el-select>
               </div>
               <div class="col-md-6">
+                <div><label>ห้อง</label></div>
+                <el-select class="select-primary" placeholder="Select" v-model="roomTypeSelects.select">
+                  <el-option v-for="option in roomTypeSelects.data" class="select-primary" :value="option.value"
+                             :label="option.label" :key="option.label">
+
+                  </el-option>
+                </el-select>
+              </div>
+              <div class="col-md-6">
                 <div>
                   <label>ห้องน้ำ</label>
                 </div>
@@ -446,23 +455,117 @@
                   ></el-option>
                 </el-select>
               </div>
-              <div v-show="activeSell || typeSaleWithTenant" class="col-md-3">
-                <div>
-                  <label>รายละเอียดการซื้อ</label>
+<!--              <div v-show="activeSell || typeSaleWithTenant" class="col-md-3">-->
+<!--                <div>-->
+<!--                  <label>รายละเอียดการซื้อ</label>-->
+<!--                </div>-->
+<!--                <el-select-->
+<!--                  class="select-primary"-->
+<!--                  placeholder="Select"-->
+<!--                  v-model="sellDetailSelects.select"-->
+<!--                >-->
+<!--                  <el-option-->
+<!--                    v-for="option in sellDetailSelects.data"-->
+<!--                    class="select-primary"-->
+<!--                    :value="option.value"-->
+<!--                    :label="option.label"-->
+<!--                    :key="option.label"-->
+<!--                  ></el-option>-->
+<!--                </el-select>-->
+<!--              </div>-->
+              <div v-show="activeSell || typeSaleWithTenant" class="col-md-6">
+                <div class="row">
+                  <div class="col-md-12">
+                    <fieldset>
+                      <div class="form-group">
+                        <label class="control-label">ภาษี หัก ณ ที่จ่าย</label>
+                        <div class="col-md-12">
+                          <p-radio
+                            label="1"
+                            v-model="radios.tax"
+                            value="1"
+                            :inline="true"
+                          >ผู้ซื้อ</p-radio
+                          >
+                          <p-radio
+                            label="2"
+                            v-model="radios.tax"
+                            value="2"
+                            :inline="true"
+                          >ผู้ขาย</p-radio
+                          >
+                          <p-radio
+                            label="3"
+                            v-model="radios.tax"
+                            value="3"
+                            :inline="true"
+                          >50/50</p-radio
+                          >
+                        </div>
+                      </div>
+                    </fieldset>
+                  </div>
+                  <div class="col-md-12">
+                    <fieldset>
+                      <div class="form-group">
+                        <label class="control-label">ภาษีธุรกิจเฉพาะ หรือ อากรแสตมป์</label>
+                        <div class="col-md-12">
+                          <p-radio
+                            label="1"
+                            v-model="radios.businessTax"
+                            value="1"
+                            :inline="true"
+                          >ผู้ซื้อ</p-radio
+                          >
+                          <p-radio
+                            label="2"
+                            v-model="radios.businessTax"
+                            value="2"
+                            :inline="true"
+                          >ผู้ขาย</p-radio
+                          >
+                          <p-radio
+                            label="3"
+                            v-model="radios.businessTax"
+                            value="3"
+                            :inline="true"
+                          >50/50</p-radio
+                          >
+                        </div>
+                      </div>
+                    </fieldset>
+                  </div>
+                  <div class="col-md-12">
+                    <fieldset>
+                      <div class="form-group">
+                        <label class="control-label">ค่าโอน</label>
+                        <div class="col-md-12">
+                          <p-radio
+                            label="1"
+                            v-model="radios.transferFee"
+                            value="1"
+                            :inline="true"
+                          >ผู้ซื้อ</p-radio
+                          >
+                          <p-radio
+                            label="2"
+                            v-model="radios.transferFee"
+                            value="2"
+                            :inline="true"
+                          >ผู้ขาย</p-radio
+                          >
+                          <p-radio
+                            label="3"
+                            v-model="radios.transferFee"
+                            value="3"
+                            :inline="true"
+                          >50/50</p-radio
+                          >
+                        </div>
+                      </div>
+                    </fieldset>
+                  </div>
                 </div>
-                <el-select
-                  class="select-primary"
-                  placeholder="Select"
-                  v-model="sellDetailSelects.select"
-                >
-                  <el-option
-                    v-for="option in sellDetailSelects.data"
-                    class="select-primary"
-                    :value="option.value"
-                    :label="option.label"
-                    :key="option.label"
-                  ></el-option>
-                </el-select>
               </div>
               <div v-show="activeRent" class="col-md-3">
                 <fg-input
@@ -751,7 +854,10 @@ export default {
         this.positionSelects.select = resp.data[0].room.position;
         this.scenery = resp.data[0].room.scenery;
         this.featureSelects.select = resp.data[0].room.feature;
-        this.sellDetailSelects.select = resp.data[0].room.sellDetail;
+        // this.sellDetailSelects.select = resp.data[0].room.sellDetail;
+        this.radios.tax = resp.data[0].room.tax
+        this.radios.businessTax = resp.data[0].room.businessTax
+        this.radios.transferFee = resp.data[0].room.transferFee
         this.tags.dynamicTags = resp.data[0].room.tags;
         this.room.description = resp.data[0].room.description;
         this.room.remark = resp.data[0].room.remark;
@@ -819,6 +925,9 @@ export default {
       maxImage: 10,
       radios: {
         level: "",
+        tax: "",
+        businessTax: "",
+        transferFee: "",
       },
       typeSale: true,
       typeAvailable: false,
@@ -876,6 +985,17 @@ export default {
           { value: "4", label: "4 ห้องนอน" },
         ],
       },
+      roomTypeSelects: {
+        select: "",
+        data: [
+          { value: "0", label: "Single floor" },
+          { value: "1", label: "Loft" },
+          { value: "2", label: "Duplex" },
+          { value: "3", label: "Combine" },
+          { value: "4", label: "Mini penthouse" },
+          { value: "5", label: "Penthouse" },
+        ],
+      },
       toiletSelects: {
         select: "",
         data: [
@@ -899,14 +1019,14 @@ export default {
           { value: "8", label: "ใต้" },
         ],
       },
-      sellDetailSelects: {
-        select: "",
-        data: [
-          { value: "1", label: "ค่าโอนฯคนละครึ่ง" },
-          { value: "2", label: "รวมโอนฯ" },
-          { value: "3", label: "ภาษีทั้งหมดคนละครึ่ง" },
-        ],
-      },
+      // sellDetailSelects: {
+      //   select: "",
+      //   data: [
+      //     { value: "1", label: "ค่าโอนฯคนละครึ่ง" },
+      //     { value: "2", label: "รวมโอนฯ" },
+      //     { value: "3", label: "ภาษีทั้งหมดคนละครึ่ง" },
+      //   ],
+      // },
       positionSelects: {
         select: "",
         data: [
@@ -1004,13 +1124,13 @@ export default {
       event ? (this.activeSell = true) : (this.activeSell = false);
     },
     typeAvailable: function (event) {
-      if(event) 
+      if(event)
         this.activeRent = true
       else if(!event && !this.typeSaleWithTenant)
         this.activeRent = false
     },
     typeSaleWithTenant: function (event) {
-      if(event) 
+      if(event)
         this.activeRent = true
       else if(!event && !this.typeAvailable)
         this.activeRent = false
@@ -1234,12 +1354,12 @@ export default {
           feature = item.label;
         }
       });
-      let sellDetail = this.sellDetailSelects.select;
-      this.sellDetailSelects.data.filter(function (item) {
-        if (item.value == sellDetail) {
-          sellDetail = item.label;
-        }
-      });
+      // let sellDetail = this.sellDetailSelects.select;
+      // this.sellDetailSelects.data.filter(function (item) {
+      //   if (item.value == sellDetail) {
+      //     sellDetail = item.label;
+      //   }
+      // });
       // console.log("position : ", JSON.stringify(position));
 
       this.room.description =
@@ -1494,14 +1614,14 @@ export default {
     },
     validateComment(input) {
       if (input == null || input.length < 1) {
-        return "Comment Not Found";
+        return "ระบุรายละเอียดและเหตุผลของการแก้ไขข้อมูล";
       } else {
         this.comment = input;
         return true;
       }
     },
     openBoxComment() {
-      this.$prompt("Please input your comment", "comment", {
+      this.$prompt("Please input your comment", "Comment", {
         confirmButtonText: "OK",
         cancelButtonText: "Cancel",
         inputValidator: this.validateComment,
@@ -1545,6 +1665,7 @@ export default {
         grade: this.gradeSelects.select,
         toilet: this.toiletSelects.select,
         bed: this.bedSelects.select,
+        roomType: this.roomTypeSelects.select,
         area: this.room.area,
         floor: this.floorSelects.select,
         price: numberPrice,
@@ -1553,7 +1674,10 @@ export default {
         rentDetail: this.room.rentDetail,
         direction: this.directionSelects.select,
         position: this.positionSelects.select,
-        sellDetail: this.sellDetailSelects.select,
+        // sellDetail: this.sellDetailSelects.select,
+        tax: this.radios.tax,
+        businessTax: this.radios.businessTax,
+        transferFee: this.radios.transferFee,
         scenery: this.scenery,
         feature: this.featureSelects.select,
         tags: this.tags.dynamicTags,

@@ -155,6 +155,24 @@
                 ></el-option>
               </el-select>
               <div>
+                <label>ห้อง</label>
+              </div>
+              <el-select
+                class="select-primary"
+                placeholder="select"
+                v-model="roomTypeSelects.select"
+              >
+                <el-option
+                  v-for="option in roomTypeSelects.data"
+                  class="select-primary"
+                  :value="option.value"
+                  :label="option.label"
+                  :key="option.label"
+                ></el-option>
+              </el-select>
+            </div>
+            <div class="col-md-3">
+              <div>
                 <label>ห้องน้ำ</label>
               </div>
               <el-select
@@ -534,12 +552,12 @@ export default {
   },
 
   created: function () {
-    this.getListing();
     this.getProjectList();
     if (this.getUser.roles[0] == "ROLE_ADMIN") {
       this.getUserList();
     }
     this.getLead();
+    this.getListing();
     // this.getActionLog();
   },
 
@@ -555,7 +573,6 @@ export default {
       searchQuery: "",
       price: [],
       area: [],
-      tableColumns: [],
       tableMatchListing: [],
       modals: {
         classic: false,
@@ -602,6 +619,17 @@ export default {
           { value: "2", label: "2 ห้องนอน" },
           { value: "3", label: "3 ห้องนอน" },
           { value: "4", label: "4 ห้องนอน" },
+        ],
+      },
+      roomTypeSelects: {
+        select: "",
+        data: [
+          { value: "0", label: "Single floor" },
+          { value: "1", label: "Loft" },
+          { value: "2", label: "Duplex" },
+          { value: "3", label: "Combine" },
+          { value: "4", label: "Mini penthouse" },
+          { value: "5", label: "Penthouse" },
         ],
       },
       toiletSelects: {
@@ -843,7 +871,7 @@ export default {
       const AXIOS = axios.create({
         baseURL: process.env.VUE_APP_BACKEND_URL,
       });
-      
+
       var num = this.price[0];
       var numberPriceMin = num.replace(/[^\d.-]/g, "");
       var num = this.price[1];
@@ -859,6 +887,7 @@ export default {
           projectId: this.projectSelect,
           type: this.propertySelects.select,
           bed: this.bedSelects.select,
+          roomType: this.roomTypeSelects.select,
           toilet: this.toiletSelects.select,
           price: tmpPrice.toString(),
           area: tmpArea.toString(),
@@ -910,9 +939,10 @@ export default {
       this.projectSelect = "";
       this.propertySelects.select = "";
       this.bedSelects.select = "";
+      this.roomTypeSelects.select = "";
       this.toiletSelects.select = "";
-      this.price = ["", ""];
-      this.area = ["", ""];
+      this.price = [];
+      this.area = [];
       this.saleUserSelects = "";
       this.search = "";
       this.transport.type = "";
