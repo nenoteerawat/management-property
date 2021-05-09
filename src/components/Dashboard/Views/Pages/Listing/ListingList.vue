@@ -155,7 +155,7 @@
                 ></el-option>
               </el-select>
               <div>
-                <label>ห้อง</label>
+                <label>ประเภทห้อง</label>
               </div>
               <el-select
                 class="select-primary"

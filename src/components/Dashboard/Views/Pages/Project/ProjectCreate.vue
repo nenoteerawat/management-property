@@ -137,6 +137,13 @@
                 </model-select>
               </div>
               <div class="col-md-4">
+                <fg-input
+                  placeholder="subArea"
+                  label="subArea"
+                  v-model="project.subArea"
+                ></fg-input>
+              </div>
+              <div class="col-md-4">
                 <div>
                   <label>Team</label>
                 </div>
@@ -446,6 +453,7 @@ export default {
         }
         this.facilitySelects.selects = resp.data[0].facilities;
         this.project.zone = resp.data[0].zone;
+        this.project.subZone = resp.data[0].subZone;
         this.project.team = resp.data[0].team;
         this.transports.splice(0, 1);
         let i = 0;
@@ -1066,6 +1074,7 @@ export default {
         developer: "",
         address: "",
         zone: "",
+        subZone: "",
         team: "",
         facilityOther: "",
       },
@@ -1130,14 +1139,14 @@ export default {
     validateComment(input) {
       console.log("input : " + input);
       if (input == null || input.length < 1) {
-        return "ระบุรายละเอียดและเหตุผลของการแก้ไขข้อมูล";
+        return "โปรดระบุรายละเอียดและเหตุผลของการแก้ไขข้อมูล";
       } else {
         this.comment = input;
         return true;
       }
     },
     openBoxComment() {
-      this.$prompt("Please input your comment", "Comment", {
+      this.$prompt("ระบุรายละเอียดและเหตุผลของการแก้ไขข้อมูล", "Comment", {
         confirmButtonText: "OK",
         cancelButtonText: "Cancel",
         inputValidator: this.validateComment,
@@ -1176,6 +1185,7 @@ export default {
         team: this.project.team,
         comment: this.comment,
         facilityOther: this.project.facilityOther,
+        subZone: this.project.subZone,
       };
       if (this.$route.query.id) {
         path = "api/project/edit";
@@ -1196,6 +1206,7 @@ export default {
           team: this.project.team,
           comment: this.comment,
           facilityOther: this.project.facilityOther,
+          subZone: this.project.subZone,
         };
       }
       console.log("postBody : " + JSON.stringify(postBody));

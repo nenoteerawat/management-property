@@ -1738,14 +1738,14 @@ export default {
     },
     validateComment(input) {
       if (input == null || input.length < 1) {
-        return "ระบุรายละเอียดและเหตุผลของการแก้ไขข้อมูล";
+        return "โปรดระบุรายละเอียดและเหตุผลของการแก้ไขข้อมูล";
       } else {
         this.comment = input;
         return true;
       }
     },
     openBoxComment() {
-      this.$prompt("Please input your comment", "Comment", {
+      this.$prompt("ระบุรายละเอียดและเหตุผลของการแก้ไขข้อมูล", "Comment", {
         confirmButtonText: "OK",
         cancelButtonText: "Cancel",
         inputValidator: this.validateComment,

@@ -326,7 +326,7 @@
                 </el-select>
               </div>
               <div class="col-md-6">
-                <div><label>ห้อง</label></div>
+                <div><label>ประเภทห้อง</label></div>
                 <el-select class="select-primary" placeholder="Select" v-model="roomTypeSelects.select">
                   <el-option v-for="option in roomTypeSelects.data" class="select-primary" :value="option.value"
                              :label="option.label" :key="option.label">
@@ -1614,14 +1614,14 @@ export default {
     },
     validateComment(input) {
       if (input == null || input.length < 1) {
-        return "ระบุรายละเอียดและเหตุผลของการแก้ไขข้อมูล";
+        return "โปรดระบุรายละเอียดและเหตุผลของการแก้ไขข้อมูล";
       } else {
         this.comment = input;
         return true;
       }
     },
     openBoxComment() {
-      this.$prompt("Please input your comment", "Comment", {
+      this.$prompt("ระบุรายละเอียดและเหตุผลของการแก้ไขข้อมูล", "Comment", {
         confirmButtonText: "OK",
         cancelButtonText: "Cancel",
         inputValidator: this.validateComment,
