@@ -1,6 +1,6 @@
 <template>
   <div class="row">
-    <div class="col-md-9">
+    <div class="col-md-12">
       <card>
         <div class="card-header">
           <div class="row">
@@ -24,7 +24,14 @@
               <div>
                 <label>โครงการ</label>
               </div>
-              <el-select
+              <model-select
+                  :options="projectModelSelect"
+                  v-model="projectSelect"
+                  class="select"
+                  placeholder="select zone"
+                >
+                </model-select>
+              <!-- <el-select
                 class="select-primary"
                 placeholder="select"
                 v-model="projectSelects.select"
@@ -36,7 +43,7 @@
                   :label="option.label"
                   :key="option.label"
                 ></el-option>
-              </el-select>
+              </el-select> -->
 
               <div>
                 <label>การเดินทาง</label>
@@ -87,14 +94,6 @@
               </el-select>
             </div>
             <div class="col-md-3">
-              <!-- <div>
-                <label>ราคา (บาท)</label>
-              </div>
-              <el-slider
-                v-model="price"
-                range
-                :format-tooltip="formatTooltipPrice"
-              ></el-slider> -->
               <div class="row">
                 <div class="col-md-6">
                   <!-- <fg-input
@@ -119,14 +118,6 @@
                   ></fg-input>
                 </div>
               </div>
-              <!-- <div>
-                <label>พื้นที่ (ตร.ม.)</label>
-              </div>
-              <el-slider
-                v-model="area"
-                range
-                :format-tooltip="formatTooltipArea"
-              ></el-slider> -->
               <div class="row">
                 <div class="col-md-6">
                   <fg-input
@@ -202,7 +193,14 @@
               <div>
                 <label>sale</label>
               </div>
-              <el-select
+              <model-select
+                  :options="saleUserModelSelect"
+                  v-model="saleUserSelect"
+                  class="select"
+                  placeholder="select zone"
+                >
+                </model-select>
+              <!-- <el-select
                 class="select-primary"
                 placeholder="select"
                 v-model="userSelects.select"
@@ -214,7 +212,7 @@
                   :label="option.label"
                   :key="option.label"
                 ></el-option>
-              </el-select>
+              </el-select> -->
             </div>
             <div class="col-md-3">
               <fg-input placeholder label="search" v-model="search"></fg-input>
@@ -529,9 +527,9 @@
         </div>
       </card>
     </div>
-    <div class="col-md-3">
+    <!-- <div class="col-md-3">
       <DailyBar />
-    </div>
+    </div> -->
   </div>
 </template>
 <script>
@@ -541,6 +539,7 @@ import DailyBar from "../Daily/DailyBar";
 import { Card, Modal, Badge } from "src/components/UIComponents";
 import axios from "axios";
 import { mapGetters } from "vuex";
+import { ModelSelect } from "vue-search-select";
 
 export default {
   components: {
@@ -549,6 +548,7 @@ export default {
     DailyBar,
     Modal,
     PPagination,
+    ModelSelect
   },
 
   created: function () {
@@ -564,9 +564,9 @@ export default {
   data() {
     return {
       pagination: {
-        perPage: 5,
+        perPage: 20,
         currentPage: 1,
-        perPageOptions: [5, 10, 25, 50],
+        perPageOptions: [10, 20, 30, 50],
         total: 0,
       },
       search: "",
@@ -579,10 +579,12 @@ export default {
       },
       modalsIndex: {},
       modalsRow: {},
-      saleUserSelects: {
-        select: "",
-        data: [],
-      },
+      saleUserSelect: "",
+      saleUserModelSelect: [],
+      // saleUserSelects: {
+      //   select: "",
+      //   data: [],
+      // },
       leadSelects: {
         select: "",
         data: [],
@@ -591,14 +593,16 @@ export default {
         select: "",
         data: [],
       },
-      projectSelects: {
-        select: "",
-        data: [],
-      },
-      userSelects: {
-        select: "",
-        data: [],
-      },
+      projectSelect: "",
+      projectModelSelect: [],
+      // projectSelects: {
+      //   select: "",
+      //   data: [],
+      // },
+      // userSelects: {
+      //   select: "",
+      //   data: [],
+      // },
       propertySelects: {
         select: "",
         data: [
@@ -880,7 +884,7 @@ export default {
       let tmpArea = [numberAreaMin, numberAreaMax]
       let postBody = {
         roomSearchRequest: {
-          projectId: this.projectSelects.select,
+          projectId: this.projectSelect,
           type: this.propertySelects.select,
           bed: this.bedSelects.select,
           roomType: this.roomTypeSelects.select,
@@ -888,7 +892,7 @@ export default {
           price: tmpPrice.toString(),
           area: tmpArea.toString(),
         },
-        saleUser: this.userSelects.select,
+        saleUser: this.saleUserSelect,
         search: this.search,
         transportType: this.transport.type,
         transportName: this.transport.name,
@@ -932,14 +936,14 @@ export default {
         });
     },
     resetSearch: function () {
-      this.projectSelects.select = "";
+      this.projectSelect = "";
       this.propertySelects.select = "";
       this.bedSelects.select = "";
       this.roomTypeSelects.select = "";
       this.toiletSelects.select = "";
       this.price = [];
       this.area = [];
-      this.userSelects.select = "";
+      this.saleUserSelects = "";
       this.search = "";
       this.transport.type = "";
       this.transport.name = "";
@@ -960,10 +964,10 @@ export default {
         },
       }).then((resp) => {
         // console.log("getUser all resp : " + JSON.stringify(resp));
-        this.userSelects.data = resp.data.map((item) => {
+        this.saleUserModelSelect = resp.data.map((item) => {
           return {
             value: item.username,
-            label: item.firstName + " " + item.lastName,
+            text: item.firstName + " " + item.lastName,
           };
         });
       });
@@ -984,9 +988,9 @@ export default {
       })
         .then((resp) => {
           for (let value of resp.data) {
-            this.projectSelects.data.push({
+            this.projectModelSelect.push({
               value: value.id,
-              label: value.name,
+              text: value.name,
             });
           }
           // console.log("resp : " + JSON.stringify(this.tableData));
@@ -1012,8 +1016,8 @@ export default {
       })
         .then((resp) => {
           this.tableData = resp.data;
-          console.log("getListing : " + JSON.stringify(this.tableData));
-          console.log(this.tableData);
+          // console.log("getListing : " + JSON.stringify(this.tableData));
+          // console.log(this.tableData);
         })
         .catch((err) => {
           console.log("getListing err : " + JSON.stringify(err));
