@@ -1,6 +1,6 @@
 <template>
   <div class="row">
-    <div class="col-md-9">
+    <div class="col-md-12">
       <card>
         <div class="card-header">
           <div class="row">
@@ -109,9 +109,9 @@
         </div>
       </card>
     </div>
-    <div class="col-md-3">
+    <!-- <div class="col-md-3">
       <DailyBar />
-    </div>
+    </div> -->
   </div>
 </template>
 <script>

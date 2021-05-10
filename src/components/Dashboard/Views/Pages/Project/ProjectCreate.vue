@@ -223,16 +223,16 @@
                   <div class="col-md-2">
                     <fg-input
                       placeholder
-                      label="จำนวนชั้นทั้งหมด"
-                      type="number"
-                      v-model="building.floor"
+                      label="ตึก"
+                      v-model="building.building"
                     ></fg-input>
                   </div>
                   <div class="col-md-2">
                     <fg-input
                       placeholder
-                      label="จำนวนตึก"
-                      v-model="building.building"
+                      label="จำนวนชั้นทั้งหมด"
+                      type="number"
+                      v-model="building.floor"
                     ></fg-input>
                   </div>
                   <div class="col-md-2">
