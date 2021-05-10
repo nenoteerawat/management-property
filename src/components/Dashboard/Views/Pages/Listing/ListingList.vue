@@ -263,7 +263,7 @@
           <div class="col-md-12">
             <el-table :data="queriedData" thead-class="hidden_header">
               <el-table-column min-width="5" type="index"></el-table-column>
-              <el-table-column min-width="125" label>
+              <el-table-column min-width="125" label="">
                 <template slot-scope="props">
                   <div class="img-container">
                     <img
@@ -274,7 +274,7 @@
                   </div>
                 </template>
               </el-table-column>
-              <el-table-column min-width="180" label>
+              <el-table-column min-width="180" label="">
                 <template slot-scope="props">
                   <div class="row">
                     <div class="col-md-12">
@@ -293,7 +293,7 @@
                           >DDProperties
                         </badge>
                         <badge
-                          v-if="props.row.status == 'BOOKING'"
+                          v-if="props.row.status === 'BOOKING'"
                           slot="header"
                           type="warning"
                           >ติดจอง
@@ -349,7 +349,7 @@
                   <!-- <badge v-show="props.row.listing.exclusive" slot="header" type="success">M</badge> -->
                 </template>
               </el-table-column>
-              <el-table-column min-width="180" label>
+              <el-table-column min-width="180" label="">
                 <template slot-scope="props">
                   <div class="row">
                     <div class="col-md-6" style="margin: 10px 0">
@@ -398,14 +398,14 @@
                   </div>
                 </template>
               </el-table-column>
-              <el-table-column min-width="140" label>
+              <el-table-column min-width="140" label="">
                 <template slot-scope="props">
                   <div class="cell">
                     <h6>
                       S {{ Number(props.row.room.price).toLocaleString() }}
                     </h6>
                   </div>
-                  <div class="cell" v-show="props.row.room.type == 2">
+                  <div class="cell" v-show="props.row.room.type === 2">
                     <h6>
                       R {{ Number(props.row.room.priceRent).toLocaleString() }}
                     </h6>
@@ -435,7 +435,7 @@
               <el-table-column
                 class-name="action-buttons td-actions"
                 align="right"
-                label
+                label=""
                 min-width="70"
               >
                 <template slot-scope="props">
@@ -553,7 +553,7 @@ export default {
 
   created: function () {
     this.getProjectList();
-    if (this.getUser.roles[0] == "ROLE_ADMIN") {
+    if (this.getUser.roles[0] === "ROLE_ADMIN") {
       this.getUserList();
     }
     this.getLead();
@@ -872,14 +872,14 @@ export default {
         baseURL: process.env.VUE_APP_BACKEND_URL,
       });
 
-      var num = this.price[0];
-      var numberPriceMin = num.replace(/[^\d.-]/g, "");
-      var num = this.price[1];
-      var numberPriceMax = num.replace(/[^\d.-]/g, "");
-      var num = this.area[0];
-      var numberAreaMin = num.replace(/[^\d.-]/g, "");
-      var num = this.area[1];
-      var numberAreaMax = num.replace(/[^\d.-]/g, "");
+      let num = this.price[0];
+      const numberPriceMin = num.replace(/[^\d.-]/g, "");
+      num = this.price[1];
+      const numberPriceMax = num.replace(/[^\d.-]/g, "");
+      num = this.area[0];
+      const numberAreaMin = num.replace(/[^\d.-]/g, "");
+      num = this.area[1];
+      const numberAreaMax = num.replace(/[^\d.-]/g, "");
       let tmpPrice = [numberPriceMin, numberPriceMax]
       let tmpArea = [numberAreaMin, numberAreaMax]
       let postBody = {
