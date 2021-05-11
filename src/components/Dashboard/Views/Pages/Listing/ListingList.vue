@@ -173,6 +173,40 @@
             </div>
             <div class="col-md-3">
               <div>
+                <label>ห้องเมด</label>
+              </div>
+              <el-select
+                class="select-primary"
+                placeholder="select"
+                v-model="mateRoomSelects.select"
+              >
+                <el-option
+                  v-for="option in mateRoomSelects.data"
+                  class="select-primary"
+                  :value="option.value"
+                  :label="option.label"
+                  :key="option.label"
+                ></el-option>
+              </el-select>
+              <div>
+                <label>ห้องเก็บของ</label>
+              </div>
+              <el-select
+                class="select-primary"
+                placeholder="select"
+                v-model="storageRoomSelects.select"
+              >
+                <el-option
+                  v-for="option in storageRoomSelects.data"
+                  class="select-primary"
+                  :value="option.value"
+                  :label="option.label"
+                  :key="option.label"
+                ></el-option>
+              </el-select>
+            </div>
+            <div class="col-md-3">
+              <div>
                 <label>ห้องน้ำ</label>
               </div>
               <el-select
@@ -188,18 +222,18 @@
                   :key="option.label"
                 ></el-option>
               </el-select>
-            </div>
-            <div class="col-md-3" v-if="getUser.roles[0] == 'ROLE_ADMIN'">
-              <div>
-                <label>sale</label>
+              <div v-if="getUser.roles[0] == 'ROLE_ADMIN'">
+                <div>
+                  <label>sale</label>
+                </div>
+                <model-select
+                    :options="saleUserModelSelect"
+                    v-model="saleUserSelect"
+                    class="select"
+                    placeholder="select zone"
+                  >
+                  </model-select>
               </div>
-              <model-select
-                  :options="saleUserModelSelect"
-                  v-model="saleUserSelect"
-                  class="select"
-                  placeholder="select zone"
-                >
-                </model-select>
               <!-- <el-select
                 class="select-primary"
                 placeholder="select"
@@ -214,10 +248,10 @@
                 ></el-option>
               </el-select> -->
             </div>
-            <div class="col-md-3">
+            <div class="col-md-3 align-self-center">
               <fg-input placeholder label="search" v-model="search"></fg-input>
             </div>
-            <div class="col-md-3 ml-auto">
+            <div class="col-md-3 align-self-center">
               <div class="btn-group" style="margin-top: 13px">
                 <p-button
                   type="info"
@@ -632,6 +666,26 @@ export default {
           { value: "5", label: "Penthouse" },
         ],
       },
+      mateRoomSelects: {
+        select: "",
+        data: [
+          { value: "0", label: "ไม่มี" },
+          { value: "1", label: "1 ห้อง" },
+          { value: "2", label: "2 ห้อง" },
+          { value: "3", label: "3 ห้อง" },
+          { value: "4", label: "4 ห้อง" },
+        ],
+      },
+      storageRoomSelects: {
+        select: "",
+        data: [
+          { value: "0", label: "ไม่มี" },
+          { value: "1", label: "1 ห้อง" },
+          { value: "2", label: "2 ห้อง" },
+          { value: "3", label: "3 ห้อง" },
+          { value: "4", label: "4 ห้อง" },
+        ],
+      },
       toiletSelects: {
         select: "",
         data: [
@@ -888,6 +942,8 @@ export default {
           type: this.propertySelects.select,
           bed: this.bedSelects.select,
           roomType: this.roomTypeSelects.select,
+          mateRoom: this.mateRoomSelects.select,
+          storageRoom: this.storageRoomSelects.select,
           toilet: this.toiletSelects.select,
           price: tmpPrice.toString(),
           area: tmpArea.toString(),
@@ -940,9 +996,11 @@ export default {
       this.propertySelects.select = "";
       this.bedSelects.select = "";
       this.roomTypeSelects.select = "";
+      this.mateRoomSelects.select = "";
+      this.storageRoomSelects.select = "";
       this.toiletSelects.select = "";
-      this.price = [];
-      this.area = [];
+      this.price = ["", "'"];
+      this.area = ["", "'"];
       this.saleUserSelects = "";
       this.search = "";
       this.transport.type = "";

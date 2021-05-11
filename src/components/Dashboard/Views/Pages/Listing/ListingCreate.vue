@@ -336,6 +336,42 @@
               </div>
               <div class="col-md-6">
                 <div>
+                  <label>ห้องเมด</label>
+                </div>
+                <el-select
+                  class="select-primary"
+                  placeholder="Select"
+                  v-model="mateRoomSelects.select"
+                >
+                  <el-option
+                    v-for="option in mateRoomSelects.data"
+                    class="select-primary"
+                    :value="option.value"
+                    :label="option.label"
+                    :key="option.label"
+                  ></el-option>
+                </el-select>
+              </div>
+              <div class="col-md-6">
+                <div>
+                  <label>ห้องเก็บของ</label>
+                </div>
+                <el-select
+                  class="select-primary"
+                  placeholder="Select"
+                  v-model="storageRoomSelects.select"
+                >
+                  <el-option
+                    v-for="option in storageRoomSelects.data"
+                    class="select-primary"
+                    :value="option.value"
+                    :label="option.label"
+                    :key="option.label"
+                  ></el-option>
+                </el-select>
+              </div>
+              <div class="col-md-6">
+                <div>
                   <label>ห้องน้ำ</label>
                 </div>
                 <el-select
@@ -842,6 +878,9 @@ export default {
         this.standardSelects.select = resp.data[0].room.standard;
         this.gradeSelects.select = resp.data[0].room.grade;
         this.toiletSelects.select = resp.data[0].room.toilet;
+        this.roomTypeSelects.select = resp.data[0].room.roomType;
+        this.mateRoomSelects.select = resp.data[0].room.mateRoom;
+        this.storageRoomSelects.select = resp.data[0].room.storageRoom;
         this.bedSelects.select = resp.data[0].room.bed;
         this.room.area = resp.data[0].room.area;
         this.room.floor = resp.data[0].room.floor;
@@ -994,6 +1033,26 @@ export default {
           { value: "3", label: "Combine" },
           { value: "4", label: "Mini penthouse" },
           { value: "5", label: "Penthouse" },
+        ],
+      },
+      mateRoomSelects: {
+        select: "",
+        data: [
+          { value: "0", label: "ไม่มี" },
+          { value: "1", label: "1 ห้อง" },
+          { value: "2", label: "2 ห้อง" },
+          { value: "3", label: "3 ห้อง" },
+          { value: "4", label: "4 ห้อง" },
+        ],
+      },
+      storageRoomSelects: {
+        select: "",
+        data: [
+          { value: "0", label: "ไม่มี" },
+          { value: "1", label: "1 ห้อง" },
+          { value: "2", label: "2 ห้อง" },
+          { value: "3", label: "3 ห้อง" },
+          { value: "4", label: "4 ห้อง" },
         ],
       },
       toiletSelects: {
@@ -1666,6 +1725,8 @@ export default {
         toilet: this.toiletSelects.select,
         bed: this.bedSelects.select,
         roomType: this.roomTypeSelects.select,
+        mateRoom: this.mateRoomSelects.select,
+        storageRoom: this.storageRoomSelects.select,
         area: this.room.area,
         floor: this.floorSelects.select,
         price: numberPrice,
