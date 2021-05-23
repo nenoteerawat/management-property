@@ -134,7 +134,7 @@
                   ></fg-input>
                 </ValidationProvider>
               </div>
-              <div class="col-md-4">
+              <!-- <div class="col-md-4">
                 <div>
                   <label>Zone</label>
                 </div>
@@ -152,18 +152,44 @@
                     :key="option.label"
                   ></el-option>
                 </el-select>
-              </div>
-              <div class="col-md-4">
+              </div> -->
+              <div class="col-md-6">
                 <div>
-                  <label>Sub Zone</label>
+                  <label>Zone</label>
                 </div>
                 <model-select
-                  :options="subZoneSelect"
-                  v-model="subZone"
+                  :options="zoneSelect"
+                  v-model="users.zone"
                   class="select"
                   placeholder="เลือกโซนย่อย"
                 >
                 </model-select>
+              </div>
+              <div class="col-md-6">
+                <div>
+                  <label>Sub Zone</label>
+                </div>
+                <el-tag
+                  :key="tag"
+                  v-for="(tag, index) in subZoneTags.dynamicTags"
+                  size="small"
+                  type="primary"
+                  :closable="true"
+                  :close-transition="false"
+                  @close="handleClose(index)"
+                  >{{ tag }}</el-tag
+                >
+
+                <input
+                  type="text"
+                  placeholder="เพิ่ม"
+                  class="form-control input-new-tag"
+                  v-model="subZoneTags.inputValue"
+                  ref="saveTagInput"
+                  size="mini"
+                  @keyup.enter="handleInputConfirm"
+                  @blur="handleInputConfirm"
+                />
               </div>
             </div>
             <template slot="footer">
@@ -239,8 +265,8 @@ export default {
         this.users.email = resp.data[0].email;
         this.users.password = resp.data[0].password;
         this.roleSelects.select = resp.data[0].roles[0].name;
-        this.zoneSelect.select = resp.data[0].zone;
-        this.subZone = resp.data[0].subZone;
+        this.users.zone = resp.data[0].zone;
+        this.subZoneTags.dynamicTags = resp.data[0].subZoneTags;
       });
     }
   },
@@ -249,18 +275,11 @@ export default {
     return {
       fullscreenLoading: false,
       btnAction: "Add",
-      zoneSelect: {
-        select: "",
-        data: [
-          { value: "Silom", label: "Silom" },
-          { value: "Ratchada", label: "Ratchada" },
-          { value: "South Sukhumvit", label: "South Sukhumvit" },
-          { value: "North Sukhumvit", label: "North Sukhumvit" },
-        ],
-      },
-      subZone: "",
-      subZoneSelect: [],
-      subZoneSilomSelect: [
+      zoneSelect: [
+        { value: "Silom", text: "Silom" },
+        { value: "Ratchada", text: "Ratchada" },
+        { value: "South Sukhumvit", text: "South Sukhumvit" },
+        { value: "North Sukhumvit", text: "North Sukhumvit" },
         { value: "Sathorn", text: "Sathorn" },
         { value: "Charoenkrung", text: "Charoenkrung" },
         { value: "Rama3", text: "Rama3" },
@@ -271,8 +290,6 @@ export default {
         { value: "Bang Wa", text: "Bang Wa" },
         { value: "Bang Kae", text: "Bang Kae" },
         { value: "Rat Burana", text: "Rat Burana" },
-      ],
-      subZoneRatchadaSelect: [
         { value: "Ratchada", text: "Ratchada" },
         { value: "Asoke", text: "Asoke" },
         { value: "Phetchaburi", text: "Phetchaburi" },
@@ -290,8 +307,6 @@ export default {
         { value: "Ram Inthra", text: "Ram Inthra" },
         { value: "Liab duan Ram Inthra", text: "Liab duan Ram Inthra" },
         { value: "Nana", text: "Nana" },
-      ],
-      subZoneSouthSukhumvitSelect: [
         { value: "Rama4", text: "Rama4" },
         { value: "Pattanakan", text: "Pattanakan" },
         { value: "Srinagarindra", text: "Srinagarindra" },
@@ -310,8 +325,6 @@ export default {
         { value: "BTS Ekamai", text: "BTS Ekamai" },
         { value: "BTS Thong Lo", text: "BTS Thong Lo" },
         { value: "BTS Phrom Phong", text: "BTS Phrom Phong" },
-      ],
-      subZoneNorthSukhumvitSelect: [
         { value: "BTS Siam", text: "BTS Siam" },
         { value: "BTS Ratchathewi", text: "BTS Ratchathewi" },
         { value: "BTS Phaya Thai", text: "BTS Phaya Thai" },
@@ -339,7 +352,11 @@ export default {
           { value: "ROLE_SALE_MANAGER", label: "SALE_MANAGER" },
         ],
       },
-
+      subZoneTags: {
+        dynamicTags: [],
+        inputVisible: true,
+        inputValue: "",
+      },
       users: {
         firstName: "",
         lastName: "",
@@ -348,21 +365,25 @@ export default {
         email: "",
         password: "",
         roles: "",
+        zone: "",
       },
     };
   },
 
   methods: {
-    onChangeTransports(event) {
-      this.subZone = "";
-      this.subZoneSelect = [];
-      if (event == "Silom") this.subZoneSelect = this.subZoneSilomSelect;
-      else if (event == "Ratchada")
-        this.subZoneSelect = this.subZoneRatchadaSelect;
-      else if (event == "South Sukhumvit")
-        this.subZoneSelect = this.subZoneSouthSukhumvitSelect;
-      else if (event == "North Sukhumvit")
-        this.subZoneSelect = this.subZoneNorthSukhumvitSelect;
+    handleInputConfirm() {
+      let inputValue = this.subZoneTags.inputValue;
+      if (inputValue) {
+        this.subZoneTags.dynamicTags.push(inputValue);
+      }
+      this.subZoneTags.inputVisible = false;
+      this.subZoneTags.inputValue = "";
+    },
+    handleClose(tag) {
+      this.subZoneTags.dynamicTags.splice(
+        this.subZoneTags.dynamicTags.indexOf(tag),
+        1
+      );
     },
     submit() {
       this.createUser();
@@ -378,8 +399,8 @@ export default {
         username: this.users.username,
         email: this.users.email,
         password: this.users.password,
-        zone: this.zoneSelect.select,
-        subZone: this.subZone,
+        zone: this.users.zone,
+        subZoneTags: this.subZoneTags.dynamicTags,
         roles: roles,
       };
       if (this.$route.query.id) {
@@ -391,8 +412,8 @@ export default {
           username: this.users.username,
           email: this.users.email,
           password: this.users.password,
-          zone: this.zoneSelect.select,
-          subZone: this.subZone,
+          zone: this.users.zone,
+          subZoneTags: this.subZoneTags.dynamicTags,
           roles: roles,
         };
       }

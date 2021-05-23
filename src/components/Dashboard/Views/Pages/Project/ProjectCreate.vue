@@ -137,11 +137,30 @@
                 </model-select>
               </div>
               <div class="col-md-4">
-                <fg-input
-                  placeholder="subArea"
-                  label="subArea"
-                  v-model="project.subArea"
-                ></fg-input>
+                <div>
+                  <label>subArea</label>
+                </div>
+                <el-tag
+                  :key="tag"
+                  v-for="(tag, index) in subZoneTags.dynamicTags"
+                  size="small"
+                  type="primary"
+                  :closable="true"
+                  :close-transition="false"
+                  @close="handleClose(index)"
+                  >{{ tag }}</el-tag
+                >
+
+                <input
+                  type="text"
+                  placeholder="เพิ่ม"
+                  class="form-control input-new-tag"
+                  v-model="subZoneTags.inputValue"
+                  ref="saveTagInput"
+                  size="mini"
+                  @keyup.enter="handleInputConfirm"
+                  @blur="handleInputConfirm"
+                />
               </div>
               <div class="col-md-4">
                 <div>
@@ -192,12 +211,31 @@
                   </div>
                 </div>
               </div>
-              <div class="col-md-3">
-                <fg-input
-                  placeholder
-                  label="ส่วนกลาง อื่น ๆ"
-                  v-model="project.facilityOther"
-                ></fg-input>
+              <div class="col-md-4">
+                <div>
+                  <label>ส่วนกลางอื่น ๆ</label>
+                </div>
+                <el-tag
+                  :key="tag"
+                  v-for="(tag, index) in facilityOtherTags.dynamicTags"
+                  size="small"
+                  type="primary"
+                  :closable="true"
+                  :close-transition="false"
+                  @close="handleFacilityClose(index)"
+                  >{{ tag }}</el-tag
+                >
+
+                <input
+                  type="text"
+                  placeholder="เพิ่ม"
+                  class="form-control input-new-tag"
+                  v-model="facilityOtherTags.inputValue"
+                  ref="saveTagInput"
+                  size="mini"
+                  @keyup.enter="handleFacilityInputConfirm"
+                  @blur="handleFacilityInputConfirm"
+                />
               </div>
               <!-- <div class="col-md-12">
                 <div>
@@ -443,7 +481,6 @@ export default {
         this.amphoe = resp.data[0].amphoe;
         this.province = resp.data[0].province;
         this.zipcode = resp.data[0].zipcode;
-        this.facilityOther = resp.data[0].facilityOther;
         let f = 0;
         for (let value of this.facilitySelects.data) {
           let item = resp.data[0].facilities.indexOf(value.value);
@@ -452,14 +489,16 @@ export default {
         }
         this.facilitySelects.selects = resp.data[0].facilities;
         this.project.zone = resp.data[0].zone;
-        this.project.subZone = resp.data[0].subZone;
+        this.subZoneTags.dynamicTags = resp.data[0].subZoneTags;
+        this.facilityOtherTags.dynamicTags = resp.data[0].facilityOtherTags;
         this.project.team = resp.data[0].team;
         this.transports.splice(0, 1);
         let i = 0;
         for (let value of resp.data[0].transports) {
           let transportOption;
           console.log("value : " + JSON.stringify(value));
-          if (value.type === "BTS") transportOption = this.transportBTSSelect;
+          if (value.type === "BTS") 
+            transportOption = this.transportBTSSelect;
           else if (value.type === "MRT")
             transportOption = this.transportMRTSelect;
           else if (value.type === "AIRLINK")
@@ -984,6 +1023,16 @@ export default {
         false,
         false,
       ],
+      subZoneTags: {
+        dynamicTags: [],
+        inputVisible: true,
+        inputValue: "",
+      },
+      facilityOtherTags: {
+        dynamicTags: [],
+        inputVisible: true,
+        inputValue: "",
+      },
       facilitySelects: {
         selects: [],
         data: [
@@ -1104,7 +1153,6 @@ export default {
         zone: "",
         subZone: "",
         team: "",
-        facilityOther: "",
       },
       comment: "",
     };
@@ -1173,6 +1221,34 @@ export default {
         return true;
       }
     },
+    handleInputConfirm() {
+      let inputValue = this.subZoneTags.inputValue;
+      if (inputValue) {
+        this.subZoneTags.dynamicTags.push(inputValue);
+      }
+      this.subZoneTags.inputVisible = false;
+      this.subZoneTags.inputValue = "";
+    },
+    handleClose(tag) {
+      this.subZoneTags.dynamicTags.splice(
+        this.subZoneTags.dynamicTags.indexOf(tag),
+        1
+      );
+    },
+    handleFacilityInputConfirm() {
+      let inputValue = this.facilityOtherTags.inputValue;
+      if (inputValue) {
+        this.facilityOtherTags.dynamicTags.push(inputValue);
+      }
+      this.facilityOtherTags.inputVisible = false;
+      this.facilityOtherTags.inputValue = "";
+    },
+    handleFacilityClose(tag) {
+      this.facilityOtherTags.dynamicTags.splice(
+        this.facilityOtherTags.dynamicTags.indexOf(tag),
+        1
+      );
+    },
     openBoxComment() {
       this.$prompt("ระบุรายละเอียดและเหตุผลของการแก้ไขข้อมูล", "Comment", {
         confirmButtonText: "OK",
@@ -1212,8 +1288,8 @@ export default {
         zone: this.project.zone,
         team: this.project.team,
         comment: this.comment,
-        facilityOther: this.project.facilityOther,
-        subZone: this.project.subZone,
+        facilityOtherTags: this.facilityOtherTags.dynamicTags,
+        subZoneTags: this.subZoneTags.dynamicTags,
       };
       if (this.$route.query.id) {
         path = "api/project/edit";
@@ -1233,8 +1309,8 @@ export default {
           zone: this.project.zone,
           team: this.project.team,
           comment: this.comment,
-          facilityOther: this.project.facilityOther,
-          subZone: this.project.subZone,
+          facilityOtherTags: this.facilityOtherTags.dynamicTags,
+          subZoneTags: this.subZoneTags.dynamicTags,
         };
       }
       console.log("postBody : " + JSON.stringify(postBody));
