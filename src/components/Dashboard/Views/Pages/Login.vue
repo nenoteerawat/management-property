@@ -120,7 +120,7 @@ export default {
       } else {
         return ""
       }
-    }
+    },
   },
   watch: {
     'form.username'() {
