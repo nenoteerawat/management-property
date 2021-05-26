@@ -17,6 +17,7 @@
                     placeholder="First Name..."
                     :error="usernameIncorrect"
                     :required=true
+                    :disabled=loading
                   ></fg-input>
 
                   <fg-input
@@ -26,6 +27,7 @@
                     type="password"
                     :error="passwordIncorrect"
                     :required=true
+                    :disabled=loading
                   ></fg-input>
 
                   <br />
@@ -39,7 +41,7 @@
                     :disabled=loading
                   >
                     <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" v-if="loading" />
-                    Get started</p-button>
+                    {{loading ? "Loading..." : "Get started"}}</p-button>
                 </card>
               </form>
             </div>
