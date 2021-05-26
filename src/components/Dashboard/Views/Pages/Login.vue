@@ -15,6 +15,8 @@
                     v-model="form.username"
                     addon-left-icon="nc-icon nc-single-02"
                     placeholder="First Name..."
+                    :error="usernameIncorrect"
+                    :required=true
                   ></fg-input>
 
                   <fg-input
@@ -22,6 +24,8 @@
                     addon-left-icon="nc-icon nc-key-25"
                     placeholder="Password"
                     type="password"
+                    :error="passwordIncorrect"
+                    :required=true
                   ></fg-input>
 
                   <br />
@@ -32,7 +36,10 @@
                     round
                     block
                     class="mb-3"
-                  >Get started</p-button>
+                    :disabled=loading
+                  >
+                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" v-if="loading" />
+                    Get started</p-button>
                 </card>
               </form>
             </div>
@@ -69,12 +76,21 @@ export default {
       document.body.classList.remove("off-canvas-sidebar");
     },
     login() {
+      this.loading = true
       let username = this.form.username;
       let password = this.form.password;
       this.$store
         .dispatch("login", { username, password })
-        .then(() => this.$router.push("/"))
-        .catch((err) => console.log(err));
+        .then((response) => {
+          this.$router.push("/")
+          this.loading = false
+          this.loginResponseStatus = response.status
+          console.dir(response)
+        })
+        .catch((err) => {
+          this.loginResponseStatus = err.response.status
+          this.loading = false
+        });
     },
   },
   data() {
@@ -83,10 +99,36 @@ export default {
         username: "",
         password: "",
       },
+      loginResponseStatus: -1,
+      loading: false
     };
   },
   beforeDestroy() {
     this.closeMenu();
+  },
+  computed: {
+    passwordIncorrect() {
+      if ( this.loginResponseStatus === 401 ) {
+        return "Password ไม่ถูกต้อง"
+      } else {
+        return ""
+      }
+    },
+    usernameIncorrect(){
+      if ( this.loginResponseStatus === 404 ) {
+        return "ไม่มี Username นี้ในระบบ"
+      } else {
+        return ""
+      }
+    }
+  },
+  watch: {
+    'form.username'() {
+      this.loginResponseStatus = -1
+    },
+    'form.password'() {
+      this.loginResponseStatus = -1
+    }
   },
 };
 </script>
