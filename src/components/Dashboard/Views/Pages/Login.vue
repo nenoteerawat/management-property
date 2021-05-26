@@ -12,22 +12,24 @@
                   <h3 slot="header" class="header text-center">Login</h3>
 
                   <fg-input
-                    v-model="form.username"
+                    v-model="form.username.value"
                     addon-left-icon="nc-icon nc-single-02"
                     placeholder="First Name..."
                     :error="usernameIncorrect"
-                    :required=true
                     :disabled=loading
+                    @input="loginResponseStatus=-1"
+                    @focus="form.username.touched=true"
                   ></fg-input>
 
                   <fg-input
-                    v-model="form.password"
+                    v-model="form.password.value"
                     addon-left-icon="nc-icon nc-key-25"
                     placeholder="Password"
                     type="password"
                     :error="passwordIncorrect"
-                    :required=true
                     :disabled=loading
+                    @input="loginResponseStatus=-1"
+                    @focus="form.password.touched=true"
                   ></fg-input>
 
                   <br />
@@ -78,28 +80,39 @@ export default {
       document.body.classList.remove("off-canvas-sidebar");
     },
     login() {
-      this.loading = true
-      let username = this.form.username;
-      let password = this.form.password;
-      this.$store
-        .dispatch("login", { username, password })
-        .then((response) => {
-          this.$router.push("/")
-          this.loading = false
-          this.loginResponseStatus = response.status
-          console.dir(response)
-        })
-        .catch((err) => {
-          this.loginResponseStatus = err.response.status
-          this.loading = false
-        });
+      if(this.form.username.value !== "" && this.form.password.value !== "") {
+        this.loading = true
+        let username = this.form.username.value;
+        let password = this.form.password.value;
+        this.$store
+          .dispatch("login", {username, password})
+          .then((response) => {
+            this.$router.push("/")
+            this.loading = false
+            this.loginResponseStatus = response.status
+            console.dir(response)
+          })
+          .catch((err) => {
+            this.loginResponseStatus = err.response.status
+            this.loading = false
+          });
+      } else {
+        this.form.username.touched = true
+        this.form.password.touched = true
+      }
     },
   },
   data() {
     return {
       form: {
-        username: "",
-        password: "",
+        username: {
+          value: "",
+          touched: false,
+        },
+        password: {
+          value: "",
+          touched: false
+        },
       },
       loginResponseStatus: -1,
       loading: false
@@ -109,28 +122,24 @@ export default {
     this.closeMenu();
   },
   computed: {
-    passwordIncorrect() {
-      if ( this.loginResponseStatus === 401 ) {
-        return "Password ไม่ถูกต้อง"
-      } else {
-        return ""
-      }
-    },
     usernameIncorrect(){
-      if ( this.loginResponseStatus === 404 ) {
+      if ( this.form.username.touched && this.form.username.value === "") {
+        return "กรุณาใส่ Username"
+      } else if ( this.loginResponseStatus === 404 ) {
         return "ไม่มี Username นี้ในระบบ"
       } else {
         return ""
       }
     },
-  },
-  watch: {
-    'form.username'() {
-      this.loginResponseStatus = -1
+    passwordIncorrect() {
+      if ( this.form.password.touched && this.form.password.value === "" ) {
+        return "กรุณาใส่ Password"
+      } else if ( this.loginResponseStatus === 401 ) {
+        return "Password ไม่ถูกต้อง"
+      } else {
+        return ""
+      }
     },
-    'form.password'() {
-      this.loginResponseStatus = -1
-    }
   },
 };
 </script>
