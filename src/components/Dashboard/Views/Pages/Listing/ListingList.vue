@@ -6,15 +6,11 @@
           <div class="row">
             <div class="col-md-6">
               <h5 class="card-title">Listing</h5>
-            </div>
-            <div class="col-md-6">
-              <div class="pull-right">
-                <router-link to="listing/create">
-                  <p-button type="success" outline round>
+              <router-link to="listing/create">
+                  <p-button type="success" round>
                     <i class="nc-icon nc-simple-add"></i> Add
                   </p-button>
                 </router-link>
-              </div>
             </div>
           </div>
         </div>

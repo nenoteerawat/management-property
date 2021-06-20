@@ -105,157 +105,6 @@
                   placeholder="รหัสไปรษณีย์..."
                 />
               </div>
-              <!-- <div class="col-md-12">
-                <GmapMap
-                  :center="{ lat: 13.727739463595237, lng: 100.57668640850876 }"
-                  :zoom="15"
-                  map-type-id="terrain"
-                  style="width: 700px; height: 300px"
-                >
-                  <GmapMarker
-                    :key="index"
-                    v-for="(m, index) in markers"
-                    :position="m.position"
-                    :title="m.title"
-                    :clickable="true"
-                    :draggable="true"
-                    @dragend="updateCoordinates"
-                    @click="center = m.position"
-                  />
-                </GmapMap>
-              </div> -->
-              <div class="col-md-4">
-                <div>
-                  <label>Area</label>
-                </div>
-                <model-select
-                  :options="zoneSelect"
-                  v-model="project.zone"
-                  class="select"
-                  placeholder="select zone"
-                >
-                </model-select>
-              </div>
-              <div class="col-md-4">
-                <div>
-                  <label>subArea</label>
-                </div>
-                <el-tag
-                  :key="tag"
-                  v-for="(tag, index) in subZoneTags.dynamicTags"
-                  size="small"
-                  type="primary"
-                  :closable="true"
-                  :close-transition="false"
-                  @close="handleClose(index)"
-                  >{{ tag }}</el-tag
-                >
-
-                <input
-                  type="text"
-                  placeholder="เพิ่ม"
-                  class="form-control input-new-tag"
-                  v-model="subZoneTags.inputValue"
-                  ref="saveTagInput"
-                  size="mini"
-                  @keyup.enter="handleInputConfirm"
-                  @blur="handleInputConfirm"
-                />
-              </div>
-              <div class="col-md-4">
-                <div>
-                  <label>Team</label>
-                </div>
-                <model-select
-                  :options="teamSelect"
-                  v-model="project.team"
-                  class="select"
-                  placeholder="select team"
-                >
-                </model-select>
-              </div>
-              <!-- <div class="col-md-4">
-                <div>
-                  <label>Zone</label>
-                </div>
-                <el-select
-                  class="select-primary"
-                  placeholder="Select"
-                  v-model="zoneSelect.selects"
-                >
-                  <el-option
-                    v-for="option in zoneSelect.data"
-                    class="select-primary"
-                    :value="option.value"
-                    :label="option.label"
-                    :key="option.label"
-                  ></el-option>
-                </el-select>
-              </div> -->
-              <div class="col-md-12">
-                <div>
-                  <label>ส่วนกลาง</label>
-                </div>
-                <div class="row">
-                  <div
-                    class="col-md-3"
-                    v-for="(item, k) of facilitySelects.data"
-                    :key="k"
-                  >
-                    <p-checkbox
-                      :inline="true"
-                      v-model="facilityCheckboxSelects[k]"
-                      :value="item.value"
-                      >{{ item.label }}</p-checkbox
-                    >
-                  </div>
-                </div>
-              </div>
-              <div class="col-md-4">
-                <div>
-                  <label>ส่วนกลางอื่น ๆ</label>
-                </div>
-                <el-tag
-                  :key="tag"
-                  v-for="(tag, index) in facilityOtherTags.dynamicTags"
-                  size="small"
-                  type="primary"
-                  :closable="true"
-                  :close-transition="false"
-                  @close="handleFacilityClose(index)"
-                  >{{ tag }}</el-tag
-                >
-
-                <input
-                  type="text"
-                  placeholder="เพิ่ม"
-                  class="form-control input-new-tag"
-                  v-model="facilityOtherTags.inputValue"
-                  ref="saveTagInput"
-                  size="mini"
-                  @keyup.enter="handleFacilityInputConfirm"
-                  @blur="handleFacilityInputConfirm"
-                />
-              </div>
-              <!-- <div class="col-md-12">
-                <div>
-                  <label>ส่วนกลาง {{ facilitySelects.selects }}</label>
-                </div>
-                <el-select
-                  multiple
-                  class="select-primary select-width-100"
-                  placeholder="Select"
-                  v-model="facilitySelects.selects"
-                >
-                  <el-option
-                    v-for="option in facilitySelects.data"
-                    class="select-primary"
-                    :value="option.value"
-                    :label="option.label"
-                    :key="option.label"
-                  ></el-option>
-                </el-select>
-              </div> -->
               <div class="col-md-12">
                 <div class="row" v-for="(building, k) in buildings" :key="k">
                   <div class="col-md-2">
@@ -409,6 +258,158 @@
                   </div>
                 </div>
               </div>
+              <!-- <div class="col-md-12">
+                <GmapMap
+                  :center="{ lat: 13.727739463595237, lng: 100.57668640850876 }"
+                  :zoom="15"
+                  map-type-id="terrain"
+                  style="width: 700px; height: 300px"
+                >
+                  <GmapMarker
+                    :key="index"
+                    v-for="(m, index) in markers"
+                    :position="m.position"
+                    :title="m.title"
+                    :clickable="true"
+                    :draggable="true"
+                    @dragend="updateCoordinates"
+                    @click="center = m.position"
+                  />
+                </GmapMap>
+              </div> -->
+              <div class="col-md-4">
+                <div>
+                  <label>Area</label>
+                </div>
+                <model-select
+                  :options="zoneSelect"
+                  v-model="project.zone"
+                  class="select"
+                  placeholder="select zone"
+                >
+                </model-select>
+              </div>
+              <div class="col-md-4">
+                <div>
+                  <label>subArea</label>
+                </div>
+                <el-tag
+                  :key="tag"
+                  v-for="(tag, index) in subZoneTags.dynamicTags"
+                  size="small"
+                  type="primary"
+                  :closable="true"
+                  :close-transition="false"
+                  @close="handleClose(index)"
+                  >{{ tag }}</el-tag
+                >
+
+                <input
+                  type="text"
+                  placeholder="เพิ่ม"
+                  class="form-control input-new-tag"
+                  v-model="subZoneTags.inputValue"
+                  ref="saveTagInput"
+                  size="mini"
+                  @keyup.enter="handleInputConfirm"
+                  @blur="handleInputConfirm"
+                />
+              </div>
+              <div class="col-md-4">
+                <div>
+                  <label>Team</label>
+                </div>
+                <model-select
+                  :options="teamSelect"
+                  v-model="project.team"
+                  class="select"
+                  placeholder="select team"
+                >
+                </model-select>
+              </div>
+              <!-- <div class="col-md-4">
+                <div>
+                  <label>Zone</label>
+                </div>
+                <el-select
+                  class="select-primary"
+                  placeholder="Select"
+                  v-model="zoneSelect.selects"
+                >
+                  <el-option
+                    v-for="option in zoneSelect.data"
+                    class="select-primary"
+                    :value="option.value"
+                    :label="option.label"
+                    :key="option.label"
+                  ></el-option>
+                </el-select>
+              </div> -->
+              <div class="col-md-12">
+                <div>
+                  <label>ส่วนกลาง</label>
+                </div>
+                <div class="row">
+                  <div
+                    class="col-md-3"
+                    v-for="(item, k) of facilitySelects.data"
+                    :key="k"
+                  >
+                    <p-checkbox
+                      :inline="true"
+                      v-model="facilityCheckboxSelects[k]"
+                      :value="item.value"
+                      >{{ item.label }}</p-checkbox
+                    >
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div>
+                  <label>ส่วนกลางอื่น ๆ</label>
+                </div>
+                <el-tag
+                  :key="tag"
+                  v-for="(tag, index) in facilityOtherTags.dynamicTags"
+                  size="small"
+                  type="primary"
+                  :closable="true"
+                  :close-transition="false"
+                  @close="handleFacilityClose(index)"
+                  >{{ tag }}</el-tag
+                >
+
+                <input
+                  type="text"
+                  placeholder="เพิ่ม"
+                  class="form-control input-new-tag"
+                  v-model="facilityOtherTags.inputValue"
+                  ref="saveTagInput"
+                  size="mini"
+                  @keyup.enter="handleFacilityInputConfirm"
+                  @blur="handleFacilityInputConfirm"
+                />
+              </div>
+              <!-- <div class="col-md-12">
+                <div>
+                  <label>ส่วนกลาง {{ facilitySelects.selects }}</label>
+                </div>
+                <el-select
+                  multiple
+                  class="select-primary select-width-100"
+                  placeholder="Select"
+                  v-model="facilitySelects.selects"
+                >
+                  <el-option
+                    v-for="option in facilitySelects.data"
+                    class="select-primary"
+                    :value="option.value"
+                    :label="option.label"
+                    :key="option.label"
+                  ></el-option>
+                </el-select>
+              </div> -->
+              
             </div>
             <template slot="footer">
               <hr />
