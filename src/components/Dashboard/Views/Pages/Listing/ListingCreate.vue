@@ -62,11 +62,17 @@
               </div>
               <div class="col-md-6">
                 <div class="row">
-                  <div class="col-md-6">
+                  <div class="col-md-6" v-show="false">
                     <fg-input
                       disabled
                       label="Listing Code"
                       v-model="owner.listingCode"
+                    ></fg-input>
+                  </div>
+                  <div class="col-md-6">
+                    <fg-input
+                      label="Listing Code"
+                      v-model="owner.listingCodeManual"
                     ></fg-input>
                   </div>
                 </div>
@@ -871,9 +877,15 @@ export default {
         this.owner.phone = resp.data[0].owner.phone;
         this.owner.name = resp.data[0].owner.name;
         this.owner.email = resp.data[0].owner.email;
+        this.owner.listingCodeManual = resp.data[0].owner.listingCodeManual;
         this.userSelects.select = resp.data[0].saleUser;
         this.project.id = resp.data[0].room.projectId;
-        this.typeRoles = resp.data[0].room.type;
+        let types = resp.data[0].room.type.split(',')
+        this.typeSale = types[0] == 'true',
+        this.typeAvailable = types[1] == 'true',
+        this.typeSaleWithTenant = types[2] == 'true',
+        this.typeReSaleDownPayment = types[3] == 'true',
+        // this.typeRoles = resp.data[0].room.type;
         this.radios.level = resp.data[0].room.level;
         this.standardSelects.select = resp.data[0].room.standard;
         this.gradeSelects.select = resp.data[0].room.grade;
@@ -1119,6 +1131,7 @@ export default {
         phone: "",
         name: "",
         email: "",
+        listingCodeManual: "",
       },
       room: {
         area: "",
@@ -1707,6 +1720,7 @@ export default {
         line: this.owner.line,
         phone: this.owner.phone,
         email: this.owner.email,
+        listingCodeManual: this.owner.listingCodeManual
       };
       var num = this.room.price;
       var numberPrice = num.replace(/[^\d.-]/g, "");
@@ -1717,7 +1731,7 @@ export default {
       let room = {
         projectId: this.project.id,
         building: this.buildingSelects.select,
-        type: this.typeRoles,
+        type: this.typeSale + "," + this.typeAvailable + "," + this.typeSaleWithTenant + "," + this.typeReSaleDownPayment,
         propertyType: this.propertySelects.select,
         level: this.radios.level,
         standard: this.standardSelects.select,

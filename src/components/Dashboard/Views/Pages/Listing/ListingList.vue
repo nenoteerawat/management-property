@@ -8,7 +8,7 @@
               <h5 class="card-title">Listing</h5>
               <router-link to="listing/create">
                   <p-button type="success" round>
-                    <i class="nc-icon nc-simple-add"></i> Add
+                    <i class="nc-icon nc-simple-add"></i> Add New List
                   </p-button>
                 </router-link>
             </div>
@@ -244,8 +244,8 @@
                 ></el-option>
               </el-select> -->
             </div>
-            <div class="col-md-3 align-self-center">
-              <fg-input placeholder label="search" v-model="search"></fg-input>
+            <div class="col-md-3">
+              <fg-input placeholder label="search Listing Code" v-model="search"></fg-input>
             </div>
             <div class="col-md-3 align-self-center">
               <div class="btn-group" style="margin-top: 13px">
@@ -333,16 +333,16 @@
                     <div class="col-md-12">
                       <div class="row">
                         <div class="col-md-12">
-                          <span>เจ้าของ : {{ props.row.owner.name }}</span>
+                          <span>Code : {{ props.row.owner.listingCodeManual }}</span> <span>เจ้าของ : {{ props.row.owner.name }}</span>
                         </div>
-                        <div class="col-md-3">
+                        <!-- <div class="col-md-3">
                           <div class="pull-right">
                             <div class="row">
                               <div class="col-md-4">
                                 <i class="fa fa-eye"></i>
                               </div>
                               <div class="col-md-6" style="padding-left: 0">
-                                <!-- <span>14</span> -->
+                                <span>14</span>
                               </div>
                             </div>
                           </div>
@@ -354,7 +354,7 @@
                                 <i class="fa fa-paper-plane"></i>
                               </div>
                               <div class="col-md-6" style="padding-left: 0">
-                                <!-- <span>14</span> -->
+                                <span>14</span>
                               </div>
                             </div>
                           </div>
@@ -366,11 +366,11 @@
                                 <i class="fa fa-key"></i>
                               </div>
                               <div class="col-md-6" style="padding-left: 0">
-                                <!-- <span>14</span> -->
+                                <span>14</span>
                               </div>
                             </div>
                           </div>
-                        </div>
+                        </div> -->
                       </div>
                     </div>
                     <br />
@@ -583,9 +583,9 @@ export default {
 
   created: function () {
     this.getProjectList();
-    if (this.getUser.roles[0] === "ROLE_ADMIN") {
+    // if (this.getUser.roles[0] === "ROLE_ADMIN") {
       this.getUserList();
-    }
+    // }
     this.getLead();
     this.getListing();
     // this.getActionLog();
@@ -611,10 +611,6 @@ export default {
       modalsRow: {},
       saleUserSelect: "",
       saleUserModelSelect: [],
-      // saleUserSelects: {
-      //   select: "",
-      //   data: [],
-      // },
       leadSelects: {
         select: "",
         data: [],
@@ -997,7 +993,7 @@ export default {
       this.toiletSelects.select = "";
       this.price = ["", "'"];
       this.area = ["", "'"];
-      this.saleUserSelects = "";
+      this.saleUserSelect = "";
       this.search = "";
       this.transport.type = "";
       this.transport.name = "";
@@ -1024,6 +1020,7 @@ export default {
             text: item.firstName + " " + item.lastName,
           };
         });
+        this.saleUserSelect = this.getUser.username;
       });
     },
     getProjectList: function () {
