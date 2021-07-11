@@ -73,6 +73,7 @@
                     <fg-input
                       label="Listing Code"
                       v-model="owner.listingCodeManual"
+                      :error="listingCodeDublicateMsg"
                     ></fg-input>
                   </div>
                 </div>
@@ -1181,6 +1182,8 @@ export default {
         //     "https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100",
         // },
       ],
+      listingCodeDublicateMsg: "",
+      awaitingCheckListingCode: false,
     };
   },
 
@@ -1227,6 +1230,40 @@ export default {
       //   if (data.value == listing[0].room.direction) return true;
       // })[0].label;
     },
+    'owner.listingCodeManual'(value, event){
+      if(value != ''){
+        if(!this.awaitingCheckListingCode){
+          setTimeout(() => {
+            let postBody = {
+              code: value,
+              id: this.$route.query.id
+            }
+            const AXIOS = axios.create({
+              baseURL: process.env.VUE_APP_BACKEND_URL,
+            });
+            AXIOS.post(`api/listing/code`, postBody, {
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: "Bearer " + localStorage.getItem("token"),
+              },
+              })
+            .then((resp) => {
+              if(resp.data == null || resp.data.length == 0) {
+                this.listingCodeDublicateMsg = ""
+              } else {
+                this.listingCodeDublicateMsg = postBody.code + " มีการใช้งานแล้ว กรุณาเปลี่ยน"
+              }
+              })
+            .catch((err) => {
+              console.log("err : " + JSON.stringify(err));
+              reject(err);
+              });
+            this.awaitingCheckListingCode = false;
+          }, 200);
+        }
+        this.awaitingCheckListingCode = true;
+      }
+    }
   },
 
   methods: {
