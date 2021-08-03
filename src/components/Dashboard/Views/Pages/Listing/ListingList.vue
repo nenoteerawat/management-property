@@ -218,7 +218,7 @@
                   :key="option.label"
                 ></el-option>
               </el-select>
-              <div v-if="getUser.roles[0] == 'ROLE_ADMIN'">
+              <div>
                 <div>
                   <label>sale</label>
                 </div>
@@ -1020,6 +1020,10 @@ export default {
             text: item.firstName + " " + item.lastName,
           };
         });
+        this.saleUserModelSelect.push({
+          value: "ALL",
+          text: "ALL",
+        })
         this.saleUserSelect = this.getUser.username;
       });
     },
@@ -1055,6 +1059,7 @@ export default {
       let postBody = {
         role: "",
         id: "",
+        saleUser: this.getUser.username
       };
       const AXIOS = axios.create({
         baseURL: process.env.VUE_APP_BACKEND_URL,

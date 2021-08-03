@@ -93,7 +93,7 @@
                   ></fg-input>
                 </ValidationProvider>
               </div>
-              <div class="col-md-4">
+              <div class="col-md-4" v-show="otherUserView">
                 <ValidationProvider
                   name="email"
                   rules="email"
@@ -108,14 +108,14 @@
                   ></fg-input>
                 </ValidationProvider>
               </div>
-              <div class="col-md-4">
+              <div class="col-md-4" v-show="otherUserView">
                 <fg-input
                   placeholder="Line"
                   label="Line"
                   v-model="owner.line"
                 ></fg-input>
               </div>
-              <div class="col-md-4">
+              <div class="col-md-4" v-show="otherUserView">
                 <fg-input
                   placeholder="0123456789"
                   label="Phone"
@@ -483,7 +483,7 @@
                 <div class="row">
                   <div class="col-md-6" v-show="propertySelects.select != 3">
                     <div>
-                      <label>อยู่ชั้น</label>
+                      <label>{{ floorText }}</label>
                     </div>
                     <el-select
                       class="select-primary"
@@ -957,7 +957,13 @@ export default {
           Authorization: "Bearer " + localStorage.getItem("token"),
         },
       }).then((resp) => {
-        console.log("listing : " + JSON.stringify(resp.data[0]));
+        // console.log("listing : " + JSON.stringify(resp.data[0]));
+        let fullName = this.getUser.firstName + " " + this.getUser.lastName;
+        // console.log("fullName : " + fullName)
+
+        if (fullName == resp.data[0].createdBy) this.otherUserView = true;
+        else this.otherUserView = false;
+
         this.owner.listingCode = resp.data[0].owner.listingCode;
         this.owner.name = resp.data[0].owner.name;
         this.owner.line = resp.data[0].owner.line;
@@ -1032,6 +1038,7 @@ export default {
 
   data() {
     return {
+      otherUserView: true,
       slides: [
         // {
         //   src:
@@ -1256,6 +1263,7 @@ export default {
         price: "",
         zone: "",
       },
+      floorText: "อยู่ชั้น",
       floorSelects: {
         select: "",
         data: [],
@@ -1492,14 +1500,17 @@ export default {
       });
     },
     switchProperty(event) {
+      console.log("event : " + event);
       if (event == 1) {
+        this.floorText = "อยู่ชั้น";
         this.unit = "ตร.ม.";
         this.activeCondo = true;
-        this.activeHome = false;
+      } else if (event == 2) {
+        this.floorText = "จำนวนชั้น";
+        this.activeCondo = true;
       } else {
         this.unit = "ตร.ว.";
         this.activeCondo = false;
-        this.activeHome = false;
       }
     },
     switchBuilding(event) {
