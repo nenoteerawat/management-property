@@ -168,13 +168,12 @@ export default {
         total: 0,
       },
       searchQuery: "",
-      propsToSearch: ["name","team","floor","building","develop"],
+      propsToSearch: ["name", "team", "floor", "building", "develop"],
       tableColumns: [
-        // {
-        //   prop: "name",
-        //   label: "Name",
-        //   minWidth: 150,
-        // },
+        {
+          prop: "name",
+          label: "Name",
+        },
         {
           prop: "team",
           label: "Team",
@@ -189,8 +188,8 @@ export default {
         },
         {
           prop: "develop",
-          label: "ปีที่สร้างเสร็จ (ปี)",
-          minWidth: 100,
+          label: "ปีที่สร้างเสร็จ(ปี)",
+          minWidth: 110,
         },
       ],
       tableData: [],
@@ -216,8 +215,8 @@ export default {
       })
         .then((resp) => {
           this.tableData = resp.data;
-          console.log("resp : " + JSON.stringify(resp));
-          console.log("tableData : " + JSON.stringify(this.tableData));
+          // console.log("resp : " + JSON.stringify(resp));
+          // console.log("tableData : " + JSON.stringify(this.tableData));
         })
         .catch((err) => {
           console.log("err : " + JSON.stringify(err));
@@ -228,7 +227,7 @@ export default {
       alert(`Your clicked on Like button ${index}`);
     },
     handleEdit(index, row) {
-      console.log("row : " + row);
+      // console.log("row : " + row);
       this.$router.push("/admin/project/create?id=" + row.id);
       // alert(`Your want to edit ${row.name}`);
     },
@@ -237,7 +236,7 @@ export default {
         id: row.id,
         comment: this.comment,
       };
-      console.log("postBody : " + JSON.stringify(postBody));
+      // console.log("postBody : " + JSON.stringify(postBody));
       const AXIOS = axios.create({
         baseURL: process.env.VUE_APP_BACKEND_URL,
       });
@@ -255,7 +254,7 @@ export default {
       });
     },
     validateComment(input) {
-      console.log("input : " + input);
+      // console.log("input : " + input);
       if (input == null || input.length < 1) {
         return "Comment Not Found";
       } else {
@@ -328,7 +327,10 @@ export default {
         for (let key of this.propsToSearch) {
           let rowTemp = row[key] == null ? "" : row[key].toString();
           let rowValue = rowTemp;
-          if (rowValue.includes && rowValue.toLowerCase().includes(this.searchQuery.toLowerCase())) {
+          if (
+            rowValue.includes &&
+            rowValue.toLowerCase().includes(this.searchQuery.toLowerCase())
+          ) {
             isIncluded = true;
           }
         }

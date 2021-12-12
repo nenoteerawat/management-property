@@ -1360,7 +1360,7 @@ export default {
                 }
               })
               .catch((err) => {
-                console.log("err : " + JSON.stringify(err));
+                // console.log("err : " + JSON.stringify(err));
                 reject(err);
               });
             this.awaitingCheckListingCode = false;
@@ -1379,6 +1379,7 @@ export default {
       this.zipcode = address.zipcode;
     },
     calculatorUnit(num) {
+        console.log("debug 1");
       if (
         this.propertySelects.select == 2 ||
         this.propertySelects.select == 3
@@ -1393,6 +1394,7 @@ export default {
         var text = "";
         this.summaryUnit = text;
       }
+        console.log("debug 2");
     },
     formatCurrency(num, text) {
       num = num + "";
@@ -1500,7 +1502,7 @@ export default {
       });
     },
     switchProperty(event) {
-      console.log("event : " + event);
+      // console.log("event : " + event);
       if (event == 1) {
         this.floorText = "อยู่ชั้น";
         this.unit = "ตร.ม.";
@@ -1549,7 +1551,7 @@ export default {
         },
         params: paramsValue,
       }).then((resp) => {
-        console.log("getListingCode : " + JSON.stringify(resp.data));
+        // console.log("getListingCode : " + JSON.stringify(resp.data));
         this.owner.listingCode = resp.data;
       });
     },
@@ -1666,15 +1668,15 @@ export default {
       this.tags.dynamicTags.splice(this.tags.dynamicTags.indexOf(tag), 1);
     },
     markIsPrimary(index, fileList) {
-      console.log("mark", JSON.stringify(index), JSON.stringify(fileList));
+      // console.log("mark", JSON.stringify(index), JSON.stringify(fileList));
       this.fileList = fileList;
-      console.log("mark fileList", JSON.stringify(this.fileList));
+      // console.log("mark fileList", JSON.stringify(this.fileList));
     },
     uploadImageSuccess(formData, index, fileList) {
       this.fullscreenLoading = true;
       // console.log("formData", JSON.stringify(formData));
       // console.log("index", JSON.stringify(index));
-      console.log("fileList[index]", JSON.stringify(fileList[index]));
+      // console.log("fileList[index]", JSON.stringify(fileList[index]));
       // console.log(
       //   "fileList[index].path : ",
       //   JSON.stringify(fileList[index].path)
@@ -1763,7 +1765,7 @@ export default {
             verticalAlign: "top",
             type: "success",
           });
-          console.log("deleted resp : " + JSON.stringify(resp.data));
+          // console.log("deleted resp : " + JSON.stringify(resp.data));
           this.fileList = fileList;
           // this.fileList = this.fileList.filter(function (item) {
           //   if (item.id == file.id) {
@@ -1772,8 +1774,8 @@ export default {
           //   return true;
           // });
         });
-        console.log("fileList afterRemove", JSON.stringify(fileList));
-        console.log("this.fileList ", JSON.stringify(this.fileList));
+        // console.log("fileList afterRemove", JSON.stringify(fileList));
+        // console.log("this.fileList ", JSON.stringify(this.fileList));
       } else {
       }
     },
@@ -1826,7 +1828,7 @@ export default {
           verticalAlign: "top",
           type: "success",
         });
-        console.log("deleted resp : " + JSON.stringify(resp.data));
+        // console.log("deleted resp : " + JSON.stringify(resp.data));
         this.fileList = fileList;
         this.slides = this.slides.filter(function (item) {
           if (item.id == file.id) {
@@ -1953,7 +1955,7 @@ export default {
           saleUser: this.userSelects.select,
         };
       }
-      console.log("postBody : " + JSON.stringify(postBody));
+      // console.log("postBody : " + JSON.stringify(postBody));
       const AXIOS = axios.create({
         baseURL: process.env.VUE_APP_BACKEND_URL,
       });
@@ -1984,7 +1986,7 @@ export default {
             verticalAlign: "top",
             type: "warning",
           });
-          console.log("err : " + JSON.stringify(err));
+          // console.log("err : " + JSON.stringify(err));
           reject(err);
         });
     },
