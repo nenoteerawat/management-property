@@ -563,7 +563,6 @@
   </div>
 </template>
 <script>
-import Vue from "vue";
 import PPagination from "src/components/UIComponents/Pagination.vue";
 import DailyBar from "../Daily/DailyBar";
 import { Card, Modal, Badge } from "src/components/UIComponents";
@@ -1024,7 +1023,7 @@ export default {
           value: "ALL",
           text: "ALL",
         })
-        this.saleUserSelect = this.getUser.username;
+        this.saleUserSelect = "ALL";
       });
     },
     getProjectList: function () {
@@ -1059,7 +1058,7 @@ export default {
       let postBody = {
         role: "",
         id: "",
-        saleUser: this.getUser.username
+        saleUser: "ALL"
       };
       const AXIOS = axios.create({
         baseURL: process.env.VUE_APP_BACKEND_URL,
