@@ -1,4 +1,4 @@
-<template>
+o<template>
   <ValidationObserver v-slot="{ handleSubmit }">
     <form @submit.prevent="handleSubmit(submit)">
       <div class="row center">
@@ -346,10 +346,11 @@ export default {
         { value: "MRT Bang Yi Khan", text: "MRT Bang Yi Khan" },
       ],
       teamSelect: [
-        { text: "Red", value: "Red" },
-        { text: "Yellow", value: "Yellow" },
-        { text: "Green", value: "Green" },
-        { text: "Blue", value: "Blue" },
+        { text: "North Bangkok", value: "North Bangkok" },
+        { text: "Ratchada", value: "Ratchada" },
+        { text: "Silom", value: "Silom" },
+        { text: "South Sukhumvit", value: "South Sukhumvit" },
+        { text: "RW", value: "RW" },
       ],
       roleSelects: {
         select: "",
