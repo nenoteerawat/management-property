@@ -535,28 +535,30 @@
               Showing {{ from + 1 }} to {{ to }} of {{ total }} entries
             </p>
           </div>
-          <div class="col-md-6">
-            <p-pagination
-              class="pull-right"
-              v-model="pagination.currentPage"
-              :per-page="pagination.perPage"
-              :total="pagination.total"
-            ></p-pagination>
-          </div>
-          <div class="col-md-6">
-            <el-select
-              class="select-default"
-              v-model="pagination.perPage"
-              placeholder="Per page"
-            >
-              <el-option
+          <div class="row">
+            <div class="col-md-6">
+              <el-select
                 class="select-default"
-                v-for="item in pagination.perPageOptions"
-                :key="item"
-                :label="item"
-                :value="item"
-              ></el-option>
-            </el-select>
+                v-model="pagination.perPage"
+                placeholder="Per page"
+              >
+                <el-option
+                  class="select-default"
+                  v-for="item in pagination.perPageOptions"
+                  :key="item"
+                  :label="item"
+                  :value="item"
+                ></el-option>
+              </el-select>
+            </div>
+            <div class="col-md-3">
+              <p-pagination
+                v-model="pagination.currentPage"
+                :per-page="pagination.perPage"
+                :total="pagination.total"
+              ></p-pagination>
+            </div>
+            <div class="col-md-3"></div>
           </div>
         </div>
       </card>
@@ -598,9 +600,9 @@ export default {
   data() {
     return {
       pagination: {
-        perPage: 20,
+        perPage: 10,
         currentPage: 1,
-        perPageOptions: [10, 20, 30, 50],
+        perPageOptions: [10, 20, 50, 100, 200],
         total: 0,
       },
       search: "",
@@ -952,6 +954,8 @@ export default {
         search: this.search,
         transportType: this.transport.type,
         transportName: this.transport.name,
+        page: this.pagination.currentPage,
+        pageSize: 200,
       };
       console.log("postBody : " + JSON.stringify(postBody));
       AXIOS.post(`api/listing/list`, postBody, {
@@ -1062,6 +1066,8 @@ export default {
       let postBody = {
         role: "",
         id: "",
+        page: this.pagination.currentPage,
+        pageSize: 200,
       };
       const AXIOS = axios.create({
         baseURL: process.env.VUE_APP_BACKEND_URL,
