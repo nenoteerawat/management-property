@@ -954,7 +954,7 @@ export default {
         search: this.search,
         transportType: this.transport.type,
         transportName: this.transport.name,
-        page: this.pagination.currentPage,
+        page: 1,
         pageSize: 200,
       };
       console.log("postBody : " + JSON.stringify(postBody));
@@ -1066,7 +1066,7 @@ export default {
       let postBody = {
         role: "",
         id: "",
-        page: this.pagination.currentPage,
+        page: 1,
         pageSize: 200,
       };
       const AXIOS = axios.create({
