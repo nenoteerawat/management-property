@@ -1182,6 +1182,7 @@ export default {
       directionSelects: {
         select: "",
         data: [
+          { value: "0", label: "เลือกทิศ" },
           { value: "1", label: "เหนือ" },
           { value: "2", label: "ตะวันตกเฉียงใต้" },
           { value: "3", label: "ตะวันตกเฉียงเหนือ" },

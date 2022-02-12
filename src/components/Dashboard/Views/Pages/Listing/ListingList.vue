@@ -7,10 +7,10 @@
             <div class="col-md-6">
               <h5 class="card-title">Listing</h5>
               <router-link to="listing/create">
-                  <p-button type="success" round>
-                    <i class="nc-icon nc-simple-add"></i> Add New List
-                  </p-button>
-                </router-link>
+                <p-button type="success" round>
+                  <i class="nc-icon nc-simple-add"></i> Add New List
+                </p-button>
+              </router-link>
             </div>
           </div>
         </div>
@@ -21,12 +21,12 @@
                 <label>โครงการ</label>
               </div>
               <model-select
-                  :options="projectModelSelect"
-                  v-model="projectSelect"
-                  class="select"
-                  placeholder="select zone"
-                >
-                </model-select>
+                :options="projectModelSelect"
+                v-model="projectSelect"
+                class="select"
+                placeholder="select zone"
+              >
+              </model-select>
               <!-- <el-select
                 class="select-primary"
                 placeholder="select"
@@ -223,12 +223,12 @@
                   <label>sale</label>
                 </div>
                 <model-select
-                    :options="saleUserModelSelect"
-                    v-model="saleUserSelect"
-                    class="select"
-                    placeholder="select zone"
-                  >
-                  </model-select>
+                  :options="saleUserModelSelect"
+                  v-model="saleUserSelect"
+                  class="select"
+                  placeholder="select zone"
+                >
+                </model-select>
               </div>
               <!-- <el-select
                 class="select-primary"
@@ -245,7 +245,11 @@
               </el-select> -->
             </div>
             <div class="col-md-3">
-              <fg-input placeholder label="search Listing Code" v-model="search"></fg-input>
+              <fg-input
+                placeholder
+                label="search Listing Code"
+                v-model="search"
+              ></fg-input>
             </div>
             <div class="col-md-3 align-self-center">
               <div class="btn-group" style="margin-top: 13px">
@@ -292,7 +296,7 @@
           </div>
           <div class="col-md-12">
             <el-table :data="queriedData" thead-class="hidden_header">
-              <el-table-column min-width="5" type="index"></el-table-column>
+              <!-- <el-table-column min-width="5" type="index"></el-table-column> -->
               <el-table-column min-width="125" label="">
                 <template slot-scope="props">
                   <div class="img-container">
@@ -333,7 +337,11 @@
                     <div class="col-md-12">
                       <div class="row">
                         <div class="col-md-12">
-                          <span>Code : {{ props.row.owner.listingCodeManual }}</span> <span>เจ้าของ : {{ props.row.owner.name }}</span>
+                          <span
+                            >Code :
+                            {{ props.row.owner.listingCodeManual }}</span
+                          >
+                          <span>เจ้าของ : {{ props.row.owner.name }}</span>
                         </div>
                         <!-- <div class="col-md-3">
                           <div class="pull-right">
@@ -526,33 +534,35 @@
               </el-table-column>
             </el-table>
           </div>
-          <div class="col-md-6 pagination-info">
+          <div class="col-sm-6 pagination-info">
             <p class="category">
-              Showing {{ from + 1 }} to {{ to }} of {{ total }} entries
+              Showing {{ from + 1 }} to {{ to }} of {{ total }} Listing
             </p>
           </div>
-          <div class="col-md-6">
-            <p-pagination
-              class="pull-right"
-              v-model="pagination.currentPage"
-              :per-page="pagination.perPage"
-              :total="pagination.total"
-            ></p-pagination>
-          </div>
-          <div class="col-md-6">
-            <el-select
-              class="select-default"
-              v-model="pagination.perPage"
-              placeholder="Per page"
-            >
-              <el-option
+          <div class="row">
+            <div class="col-md-6">
+              <el-select
                 class="select-default"
-                v-for="item in pagination.perPageOptions"
-                :key="item"
-                :label="item"
-                :value="item"
-              ></el-option>
-            </el-select>
+                v-model="pagination.perPage"
+                placeholder="Per page"
+              >
+                <el-option
+                  class="select-default"
+                  v-for="item in pagination.perPageOptions"
+                  :key="item"
+                  :label="item"
+                  :value="item"
+                ></el-option>
+              </el-select>
+            </div>
+            <div class="col-sm-6">
+              <p-pagination
+                class="pull-right"
+                v-model="pagination.currentPage"
+                :per-page="pagination.perPage"
+                :total="pagination.total"
+              ></p-pagination>
+            </div>
           </div>
         </div>
       </card>
@@ -577,13 +587,13 @@ export default {
     DailyBar,
     Modal,
     PPagination,
-    ModelSelect
+    ModelSelect,
   },
 
   created: function () {
     this.getProjectList();
     // if (this.getUser.roles[0] === "ROLE_ADMIN") {
-      this.getUserList();
+    this.getUserList();
     // }
     this.getLead();
     this.getListing();
@@ -595,7 +605,7 @@ export default {
       pagination: {
         perPage: 20,
         currentPage: 1,
-        perPageOptions: [10, 20, 30, 50],
+        perPageOptions: [10, 20, 30, 50, 100],
         total: 0,
       },
       search: "",
@@ -925,8 +935,8 @@ export default {
       const numberAreaMin = num.replace(/[^\d.-]/g, "");
       num = this.area[1];
       const numberAreaMax = num.replace(/[^\d.-]/g, "");
-      let tmpPrice = [numberPriceMin, numberPriceMax]
-      let tmpArea = [numberAreaMin, numberAreaMax]
+      let tmpPrice = [numberPriceMin, numberPriceMax];
+      let tmpArea = [numberAreaMin, numberAreaMax];
       let postBody = {
         roomSearchRequest: {
           projectId: this.projectSelect,
@@ -1022,7 +1032,7 @@ export default {
         this.saleUserModelSelect.push({
           value: "ALL",
           text: "ALL",
-        })
+        });
         this.saleUserSelect = "ALL";
       });
     },
@@ -1058,7 +1068,7 @@ export default {
       let postBody = {
         role: "",
         id: "",
-        saleUser: "ALL"
+        saleUser: "ALL",
       };
       const AXIOS = axios.create({
         baseURL: process.env.VUE_APP_BACKEND_URL,

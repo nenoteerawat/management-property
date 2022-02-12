@@ -121,16 +121,33 @@
           </div>
           <div class="col-sm-6 pagination-info">
             <p class="category">
-              Showing {{ from + 1 }} to {{ to }} of {{ total }} entries
+              Showing {{ from + 1 }} to {{ to }} of {{ total }} Project
             </p>
           </div>
-          <div class="col-sm-6">
-            <p-pagination
-              class="pull-right"
-              v-model="pagination.currentPage"
-              :per-page="pagination.perPage"
-              :total="pagination.total"
-            ></p-pagination>
+          <div class="row">
+            <div class="col-md-6">
+              <el-select
+                class="select-default"
+                v-model="pagination.perPage"
+                placeholder="Per page"
+              >
+                <el-option
+                  class="select-default"
+                  v-for="item in pagination.perPageOptions"
+                  :key="item"
+                  :label="item"
+                  :value="item"
+                ></el-option>
+              </el-select>
+            </div>
+            <div class="col-sm-6">
+              <p-pagination
+                class="pull-right"
+                v-model="pagination.currentPage"
+                :per-page="pagination.perPage"
+                :total="pagination.total"
+              ></p-pagination>
+            </div>
           </div>
         </div>
       </card>
@@ -164,7 +181,7 @@ export default {
       pagination: {
         perPage: 10,
         currentPage: 1,
-        perPageOptions: [5, 10, 25, 50],
+        perPageOptions: [5, 10, 25, 50, 100],
         total: 0,
       },
       searchQuery: "",
