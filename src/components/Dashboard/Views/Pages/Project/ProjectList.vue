@@ -121,16 +121,33 @@
           </div>
           <div class="col-sm-6 pagination-info">
             <p class="category">
-              Showing {{ from + 1 }} to {{ to }} of {{ total }} entries
+              Showing {{ from + 1 }} to {{ to }} of {{ total }} Project
             </p>
           </div>
-          <div class="col-sm-6">
-            <p-pagination
-              class="pull-right"
-              v-model="pagination.currentPage"
-              :per-page="pagination.perPage"
-              :total="pagination.total"
-            ></p-pagination>
+          <div class="row">
+            <div class="col-md-6">
+              <el-select
+                class="select-default"
+                v-model="pagination.perPage"
+                placeholder="Per page"
+              >
+                <el-option
+                  class="select-default"
+                  v-for="item in pagination.perPageOptions"
+                  :key="item"
+                  :label="item"
+                  :value="item"
+                ></el-option>
+              </el-select>
+            </div>
+            <div class="col-sm-6">
+              <p-pagination
+                class="pull-right"
+                v-model="pagination.currentPage"
+                :per-page="pagination.perPage"
+                :total="pagination.total"
+              ></p-pagination>
+            </div>
           </div>
         </div>
       </card>
@@ -164,17 +181,16 @@ export default {
       pagination: {
         perPage: 10,
         currentPage: 1,
-        perPageOptions: [5, 10, 25, 50],
+        perPageOptions: [5, 10, 25, 50, 100],
         total: 0,
       },
       searchQuery: "",
-      propsToSearch: ["name","team","floor","building","develop"],
+      propsToSearch: ["name", "team", "floor", "building", "develop"],
       tableColumns: [
-        // {
-        //   prop: "name",
-        //   label: "Name",
-        //   minWidth: 150,
-        // },
+        {
+          prop: "name",
+          label: "Name",
+        },
         {
           prop: "team",
           label: "Team",
@@ -189,8 +205,8 @@ export default {
         },
         {
           prop: "develop",
-          label: "ปีที่สร้างเสร็จ (ปี)",
-          minWidth: 100,
+          label: "ปีที่สร้างเสร็จ(ปี)",
+          minWidth: 110,
         },
       ],
       tableData: [],
@@ -216,8 +232,8 @@ export default {
       })
         .then((resp) => {
           this.tableData = resp.data;
-          console.log("resp : " + JSON.stringify(resp));
-          console.log("tableData : " + JSON.stringify(this.tableData));
+          // console.log("resp : " + JSON.stringify(resp));
+          // console.log("tableData : " + JSON.stringify(this.tableData));
         })
         .catch((err) => {
           console.log("err : " + JSON.stringify(err));
@@ -228,7 +244,7 @@ export default {
       alert(`Your clicked on Like button ${index}`);
     },
     handleEdit(index, row) {
-      console.log("row : " + row);
+      // console.log("row : " + row);
       this.$router.push("/admin/project/create?id=" + row.id);
       // alert(`Your want to edit ${row.name}`);
     },
@@ -237,7 +253,7 @@ export default {
         id: row.id,
         comment: this.comment,
       };
-      console.log("postBody : " + JSON.stringify(postBody));
+      // console.log("postBody : " + JSON.stringify(postBody));
       const AXIOS = axios.create({
         baseURL: process.env.VUE_APP_BACKEND_URL,
       });
@@ -255,7 +271,7 @@ export default {
       });
     },
     validateComment(input) {
-      console.log("input : " + input);
+      // console.log("input : " + input);
       if (input == null || input.length < 1) {
         return "Comment Not Found";
       } else {
@@ -328,7 +344,10 @@ export default {
         for (let key of this.propsToSearch) {
           let rowTemp = row[key] == null ? "" : row[key].toString();
           let rowValue = rowTemp;
-          if (rowValue.includes && rowValue.toLowerCase().includes(this.searchQuery.toLowerCase())) {
+          if (
+            rowValue.includes &&
+            rowValue.toLowerCase().includes(this.searchQuery.toLowerCase())
+          ) {
             isIncluded = true;
           }
         }

@@ -6,15 +6,11 @@
           <div class="row">
             <div class="col-md-6">
               <h5 class="card-title">Listing</h5>
-            </div>
-            <div class="col-md-6">
-              <div class="pull-right">
-                <router-link to="listing/create">
-                  <p-button type="success" outline round>
-                    <i class="nc-icon nc-simple-add"></i> Add
-                  </p-button>
-                </router-link>
-              </div>
+              <router-link to="listing/create">
+                <p-button type="success" round>
+                  <i class="nc-icon nc-simple-add"></i> Add New List
+                </p-button>
+              </router-link>
             </div>
           </div>
         </div>
@@ -25,12 +21,12 @@
                 <label>โครงการ</label>
               </div>
               <model-select
-                  :options="projectModelSelect"
-                  v-model="projectSelect"
-                  class="select"
-                  placeholder="select zone"
-                >
-                </model-select>
+                :options="projectModelSelect"
+                v-model="projectSelect"
+                class="select"
+                placeholder="select zone"
+              >
+              </model-select>
               <!-- <el-select
                 class="select-primary"
                 placeholder="select"
@@ -222,17 +218,17 @@
                   :key="option.label"
                 ></el-option>
               </el-select>
-              <div v-if="getUser.roles[0] == 'ROLE_ADMIN'">
+              <div>
                 <div>
                   <label>sale</label>
                 </div>
                 <model-select
-                    :options="saleUserModelSelect"
-                    v-model="saleUserSelect"
-                    class="select"
-                    placeholder="select zone"
-                  >
-                  </model-select>
+                  :options="saleUserModelSelect"
+                  v-model="saleUserSelect"
+                  class="select"
+                  placeholder="select zone"
+                >
+                </model-select>
               </div>
               <!-- <el-select
                 class="select-primary"
@@ -248,8 +244,12 @@
                 ></el-option>
               </el-select> -->
             </div>
-            <div class="col-md-3 align-self-center">
-              <fg-input placeholder label="search" v-model="search"></fg-input>
+            <div class="col-md-3">
+              <fg-input
+                placeholder
+                label="search Listing Code"
+                v-model="search"
+              ></fg-input>
             </div>
             <div class="col-md-3 align-self-center">
               <div class="btn-group" style="margin-top: 13px">
@@ -296,7 +296,7 @@
           </div>
           <div class="col-md-12">
             <el-table :data="queriedData" thead-class="hidden_header">
-              <el-table-column min-width="5" type="index"></el-table-column>
+              <!-- <el-table-column min-width="5" type="index"></el-table-column> -->
               <el-table-column min-width="125" label="">
                 <template slot-scope="props">
                   <div class="img-container">
@@ -337,16 +337,20 @@
                     <div class="col-md-12">
                       <div class="row">
                         <div class="col-md-12">
+                          <span
+                            >Code :
+                            {{ props.row.owner.listingCodeManual }}</span
+                          >
                           <span>เจ้าของ : {{ props.row.owner.name }}</span>
                         </div>
-                        <div class="col-md-3">
+                        <!-- <div class="col-md-3">
                           <div class="pull-right">
                             <div class="row">
                               <div class="col-md-4">
                                 <i class="fa fa-eye"></i>
                               </div>
                               <div class="col-md-6" style="padding-left: 0">
-                                <!-- <span>14</span> -->
+                                <span>14</span>
                               </div>
                             </div>
                           </div>
@@ -358,7 +362,7 @@
                                 <i class="fa fa-paper-plane"></i>
                               </div>
                               <div class="col-md-6" style="padding-left: 0">
-                                <!-- <span>14</span> -->
+                                <span>14</span>
                               </div>
                             </div>
                           </div>
@@ -370,11 +374,11 @@
                                 <i class="fa fa-key"></i>
                               </div>
                               <div class="col-md-6" style="padding-left: 0">
-                                <!-- <span>14</span> -->
+                                <span>14</span>
                               </div>
                             </div>
                           </div>
-                        </div>
+                        </div> -->
                       </div>
                     </div>
                     <br />
@@ -530,9 +534,9 @@
               </el-table-column>
             </el-table>
           </div>
-          <div class="col-md-6 pagination-info">
+          <div class="col-sm-6 pagination-info">
             <p class="category">
-              Showing {{ from + 1 }} to {{ to }} of {{ total }} entries
+              Showing {{ from + 1 }} to {{ to }} of {{ total }} Listing
             </p>
           </div>
           <div class="row">
@@ -551,14 +555,14 @@
                 ></el-option>
               </el-select>
             </div>
-            <div class="col-md-3">
+            <div class="col-sm-6">
               <p-pagination
+                class="pull-right"
                 v-model="pagination.currentPage"
                 :per-page="pagination.perPage"
                 :total="pagination.total"
               ></p-pagination>
             </div>
-            <div class="col-md-3"></div>
           </div>
         </div>
       </card>
@@ -569,7 +573,6 @@
   </div>
 </template>
 <script>
-import Vue from "vue";
 import PPagination from "src/components/UIComponents/Pagination.vue";
 import DailyBar from "../Daily/DailyBar";
 import { Card, Modal, Badge } from "src/components/UIComponents";
@@ -584,14 +587,14 @@ export default {
     DailyBar,
     Modal,
     PPagination,
-    ModelSelect
+    ModelSelect,
   },
 
   created: function () {
     this.getProjectList();
-    if (this.getUser.roles[0] === "ROLE_ADMIN") {
-      this.getUserList();
-    }
+    // if (this.getUser.roles[0] === "ROLE_ADMIN") {
+    this.getUserList();
+    // }
     this.getLead();
     this.getListing();
     // this.getActionLog();
@@ -602,7 +605,7 @@ export default {
       pagination: {
         perPage: 10,
         currentPage: 1,
-        perPageOptions: [10, 20, 50, 100, 200],
+        perPageOptions: [10, 20, 30, 50, 100, 200],
         total: 0,
       },
       search: "",
@@ -617,10 +620,6 @@ export default {
       modalsRow: {},
       saleUserSelect: "",
       saleUserModelSelect: [],
-      // saleUserSelects: {
-      //   select: "",
-      //   data: [],
-      // },
       leadSelects: {
         select: "",
         data: [],
@@ -936,8 +935,8 @@ export default {
       const numberAreaMin = num.replace(/[^\d.-]/g, "");
       num = this.area[1];
       const numberAreaMax = num.replace(/[^\d.-]/g, "");
-      let tmpPrice = [numberPriceMin, numberPriceMax]
-      let tmpArea = [numberAreaMin, numberAreaMax]
+      let tmpPrice = [numberPriceMin, numberPriceMax];
+      let tmpArea = [numberAreaMin, numberAreaMax];
       let postBody = {
         roomSearchRequest: {
           projectId: this.projectSelect,
@@ -1005,7 +1004,7 @@ export default {
       this.toiletSelects.select = "";
       this.price = ["", "'"];
       this.area = ["", "'"];
-      this.saleUserSelects = "";
+      this.saleUserSelect = "";
       this.search = "";
       this.transport.type = "";
       this.transport.name = "";
@@ -1032,6 +1031,11 @@ export default {
             text: item.firstName + " " + item.lastName,
           };
         });
+        this.saleUserModelSelect.push({
+          value: "ALL",
+          text: "ALL",
+        });
+        this.saleUserSelect = "ALL";
       });
     },
     getProjectList: function () {
@@ -1068,6 +1072,7 @@ export default {
         id: "",
         page: 1,
         pageSize: 200,
+        saleUser: "ALL",
       };
       const AXIOS = axios.create({
         baseURL: process.env.VUE_APP_BACKEND_URL,

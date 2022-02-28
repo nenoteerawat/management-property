@@ -75,16 +75,16 @@ export default [
     roles: ["ROLE_ADMIN"]
   },
   {
-    name: 'Listing',
-    icon: 'nc-icon nc-shop',
-    path: '/admin/listing',
-    roles: ["ROLE_SALE","ROLE_ADMIN"]
-  },
-  {
     name: 'Project',
     icon: 'nc-icon nc-bank',
     path: '/admin/project',
     roles: ["ROLE_SALE", "ROLE_ADMIN"]
+  },
+  {
+    name: 'Listing',
+    icon: 'nc-icon nc-shop',
+    path: '/admin/listing',
+    roles: ["ROLE_SALE","ROLE_ADMIN"]
   },
   {
     name: 'lead',

@@ -1,4 +1,4 @@
-<template>
+o<template>
   <ValidationObserver v-slot="{ handleSubmit }">
     <form @submit.prevent="handleSubmit(submit)">
       <div class="row center">
@@ -155,11 +155,11 @@
               </div> -->
               <div class="col-md-6">
                 <div>
-                  <label>Zone</label>
+                  <label>Team</label>
                 </div>
                 <model-select
-                  :options="zoneSelect"
-                  v-model="users.zone"
+                  :options="teamSelect"
+                  v-model="users.team"
                   class="select"
                   placeholder="เลือกโซนย่อย"
                 >
@@ -265,7 +265,7 @@ export default {
         this.users.email = resp.data[0].email;
         this.users.password = resp.data[0].password;
         this.roleSelects.select = resp.data[0].roles[0].name;
-        this.users.zone = resp.data[0].zone;
+        this.users.team = resp.data[0].team;
         this.subZoneTags.dynamicTags = resp.data[0].subZoneTags;
       });
     }
@@ -345,6 +345,13 @@ export default {
         { value: "MRT Sirindhorn", text: "MRT Sirindhorn" },
         { value: "MRT Bang Yi Khan", text: "MRT Bang Yi Khan" },
       ],
+      teamSelect: [
+        { text: "North Bangkok", value: "North Bangkok" },
+        { text: "Ratchada", value: "Ratchada" },
+        { text: "Silom", value: "Silom" },
+        { text: "South Sukhumvit", value: "South Sukhumvit" },
+        { text: "RW", value: "RW" },
+      ],
       roleSelects: {
         select: "",
         data: [
@@ -366,6 +373,7 @@ export default {
         password: "",
         roles: "",
         zone: "",
+        team: "",
       },
     };
   },
@@ -399,7 +407,7 @@ export default {
         username: this.users.username,
         email: this.users.email,
         password: this.users.password,
-        zone: this.users.zone,
+        team: this.users.team,
         subZoneTags: this.subZoneTags.dynamicTags,
         roles: roles,
       };
@@ -412,7 +420,7 @@ export default {
           username: this.users.username,
           email: this.users.email,
           password: this.users.password,
-          zone: this.users.zone,
+          team: this.users.team,
           subZoneTags: this.subZoneTags.dynamicTags,
           roles: roles,
         };

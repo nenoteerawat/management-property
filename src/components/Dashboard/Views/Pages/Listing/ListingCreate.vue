@@ -2,7 +2,7 @@
   <ValidationObserver v-slot="{ handleSubmit }">
     <form @submit.prevent="handleSubmit(submit)">
       <div class="row center">
-        <div class="col-md-10">
+        <div class="col-md-11">
           <card>
             <h5 slot="header" class="card-title">
               Owner
@@ -62,11 +62,18 @@
               </div>
               <div class="col-md-6">
                 <div class="row">
-                  <div class="col-md-6">
+                  <div class="col-md-6" v-show="false">
                     <fg-input
                       disabled
                       label="Listing Code"
                       v-model="owner.listingCode"
+                    ></fg-input>
+                  </div>
+                  <div class="col-md-6">
+                    <fg-input
+                      label="Listing Code"
+                      v-model="owner.listingCodeManual"
+                      :error="listingCodeDublicateMsg"
                     ></fg-input>
                   </div>
                 </div>
@@ -86,7 +93,7 @@
                   ></fg-input>
                 </ValidationProvider>
               </div>
-              <div class="col-md-4">
+              <div class="col-md-4" v-show="otherUserView">
                 <ValidationProvider
                   name="email"
                   rules="email"
@@ -101,14 +108,14 @@
                   ></fg-input>
                 </ValidationProvider>
               </div>
-              <div class="col-md-4">
+              <div class="col-md-4" v-show="otherUserView">
                 <fg-input
                   placeholder="Line"
                   label="Line"
                   v-model="owner.line"
                 ></fg-input>
               </div>
-              <div class="col-md-4">
+              <div class="col-md-4" v-show="otherUserView">
                 <fg-input
                   placeholder="0123456789"
                   label="Phone"
@@ -134,14 +141,21 @@
                   ></el-option>
                 </el-select>
               </div>
+              <div class="col-md-6">
+                <fg-input
+                  placeholder="Link Google map"
+                  label="link Google map"
+                  v-model="owner.linkGoogleMap"
+                ></fg-input>
+              </div>
             </div>
           </card>
           <!-- end card -->
         </div>
-        <div class="col-md-10">
+        <div class="col-md-11">
           <card>
             <h5 slot="header" class="card-title">
-              Room
+              Listing
               <hr />
             </h5>
             <div class="row">
@@ -176,7 +190,7 @@
                   @submit="projectSearch"
                 ></autocomplete> -->
               </div>
-              <div class="col-md-3">
+              <div class="col-md-3" v-show="propertySelects.select != 3">
                 <div>
                   <label>ตึก</label>
                 </div>
@@ -215,7 +229,7 @@
                   ></el-option>
                 </el-select>
               </div>
-              <div class="col-md-6">
+              <div class="col-md-6" v-show="propertySelects.select != 3">
                 <div class="row">
                   <div class="col-md-4">
                     <fg-input
@@ -240,7 +254,7 @@
                   </div>
                 </div>
               </div>
-              <div class="col-md-6">
+              <div class="col-md-6" v-show="propertySelects.select != 3">
                 <fg-input
                   :disabled="true"
                   label="ที่อยู่"
@@ -248,7 +262,7 @@
                 ></fg-input>
               </div>
 
-              <div class="col-md-12">
+              <div class="col-md-12" v-show="propertySelects.select != 3">
                 <div class="row-">
                   <div>
                     <label>การเดินทาง</label>
@@ -271,7 +285,48 @@
                   </div>
                 </div>
               </div>
-              <div class="col-md-6">
+              <div class="col-md-12">
+                <div class="row">
+                  <div class="col-md-3" v-show="propertySelects.select != 1">
+                    <ThailandAutoComplete
+                      v-model="district"
+                      type="district"
+                      @select="select"
+                      label="ตำบล"
+                      placeholder="ตำบล..."
+                    />
+                  </div>
+                  <div class="col-md-3" v-show="propertySelects.select != 1">
+                    <ThailandAutoComplete
+                      v-model="amphoe"
+                      type="amphoe"
+                      @select="select"
+                      label="อำเภอ"
+                      placeholder="อำเภอ..."
+                    />
+                  </div>
+                  <div class="col-md-3" v-show="propertySelects.select != 1">
+                    <ThailandAutoComplete
+                      v-model="province"
+                      type="province"
+                      @select="select"
+                      label="จังหวัด"
+                      placeholder="จังหวัด..."
+                    />
+                  </div>
+                  <div class="col-md-3" v-show="propertySelects.select != 1">
+                    <ThailandAutoComplete
+                      v-model="zipcode"
+                      type="zipcode"
+                      @select="select"
+                      label="รหัสไปรษณีย์"
+                      placeholder="รหัสไปรษณีย์..."
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-6" v-show="propertySelects.select != 3">
                 <div>
                   <label>Standard</label>
                 </div>
@@ -289,7 +344,7 @@
                   ></el-option>
                 </el-select>
               </div>
-              <div class="col-md-6">
+              <div class="col-md-6" v-show="propertySelects.select != 3">
                 <div>
                   <label>Grade</label>
                 </div>
@@ -307,7 +362,7 @@
                   ></el-option>
                 </el-select>
               </div>
-              <div class="col-md-6">
+              <div class="col-md-6" v-show="propertySelects.select != 3">
                 <div>
                   <label>ห้องนอน</label>
                 </div>
@@ -325,16 +380,24 @@
                   ></el-option>
                 </el-select>
               </div>
-              <div class="col-md-6">
+              <div class="col-md-6" v-show="propertySelects.select != 3">
                 <div><label>ประเภทห้อง</label></div>
-                <el-select class="select-primary" placeholder="Select" v-model="roomTypeSelects.select">
-                  <el-option v-for="option in roomTypeSelects.data" class="select-primary" :value="option.value"
-                             :label="option.label" :key="option.label">
-
+                <el-select
+                  class="select-primary"
+                  placeholder="Select"
+                  v-model="roomTypeSelects.select"
+                >
+                  <el-option
+                    v-for="option in roomTypeSelects.data"
+                    class="select-primary"
+                    :value="option.value"
+                    :label="option.label"
+                    :key="option.label"
+                  >
                   </el-option>
                 </el-select>
               </div>
-              <div class="col-md-6">
+              <div class="col-md-6" v-show="propertySelects.select != 3">
                 <div>
                   <label>ห้องเมด</label>
                 </div>
@@ -352,7 +415,7 @@
                   ></el-option>
                 </el-select>
               </div>
-              <div class="col-md-6">
+              <div class="col-md-6" v-show="propertySelects.select != 3">
                 <div>
                   <label>ห้องเก็บของ</label>
                 </div>
@@ -370,7 +433,7 @@
                   ></el-option>
                 </el-select>
               </div>
-              <div class="col-md-6">
+              <div class="col-md-6" v-show="propertySelects.select != 3">
                 <div>
                   <label>ห้องน้ำ</label>
                 </div>
@@ -390,7 +453,7 @@
               </div>
               <div class="col-md-6">
                 <div>
-                  <label>พื้นที่</label>
+                  <label>พื้นที่ ({{ summaryUnit }})</label>
                 </div>
                 <div class="row">
                   <div class="col-md-7">
@@ -400,10 +463,13 @@
                         class="form-control"
                         placeholder="0"
                         v-model="room.area"
+                        @keyup="calculatorUnit(room.area)"
                       />
                       <div class="input-group-append">
-                        <span class="input-group-text bg-grey" id="basic-addon2"
-                          >ตร.ม.</span
+                        <span
+                          class="input-group-text bg-grey"
+                          id="basic-addon2"
+                          >{{ unit }}</span
                         >
                       </div>
                     </div>
@@ -411,10 +477,13 @@
                 </div>
               </div>
               <div class="col-md-6">
+                <div v-show="propertySelects.select == 3">
+                  <label>หน้ากว้าง</label>
+                </div>
                 <div class="row">
-                  <div class="col-md-6">
+                  <div class="col-md-6" v-show="propertySelects.select != 3">
                     <div>
-                      <label>อยู่ชั้น</label>
+                      <label>{{ floorText }}</label>
                     </div>
                     <el-select
                       class="select-primary"
@@ -430,6 +499,27 @@
                       ></el-option>
                     </el-select>
                     <!-- <fg-input type="number" label="อยู่ชั้น" v-model="room.floor"></fg-input> -->
+                  </div>
+                  <div class="col-md-6" v-show="propertySelects.select == 3">
+                    <div class="row">
+                      <div class="col-md-7">
+                        <div class="input-group">
+                          <input
+                            type="number"
+                            class="form-control"
+                            placeholder="0"
+                            v-model="room.widthLand"
+                          />
+                          <div class="input-group-append">
+                            <span
+                              class="input-group-text bg-grey"
+                              id="basic-addon2"
+                              >ม.</span
+                            >
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -471,7 +561,7 @@
                   </div>
                 </div>
               </div>
-              <div class="col-md-6">
+              <div class="col-md-6" v-show="propertySelects.select != 3">
                 <div>
                   <label>ตำแหน่งห้อง</label>
                 </div>
@@ -491,24 +581,24 @@
                   ></el-option>
                 </el-select>
               </div>
-<!--              <div v-show="activeSell || typeSaleWithTenant" class="col-md-3">-->
-<!--                <div>-->
-<!--                  <label>รายละเอียดการซื้อ</label>-->
-<!--                </div>-->
-<!--                <el-select-->
-<!--                  class="select-primary"-->
-<!--                  placeholder="Select"-->
-<!--                  v-model="sellDetailSelects.select"-->
-<!--                >-->
-<!--                  <el-option-->
-<!--                    v-for="option in sellDetailSelects.data"-->
-<!--                    class="select-primary"-->
-<!--                    :value="option.value"-->
-<!--                    :label="option.label"-->
-<!--                    :key="option.label"-->
-<!--                  ></el-option>-->
-<!--                </el-select>-->
-<!--              </div>-->
+              <!--              <div v-show="activeSell || typeSaleWithTenant" class="col-md-3">-->
+              <!--                <div>-->
+              <!--                  <label>รายละเอียดการซื้อ</label>-->
+              <!--                </div>-->
+              <!--                <el-select-->
+              <!--                  class="select-primary"-->
+              <!--                  placeholder="Select"-->
+              <!--                  v-model="sellDetailSelects.select"-->
+              <!--                >-->
+              <!--                  <el-option-->
+              <!--                    v-for="option in sellDetailSelects.data"-->
+              <!--                    class="select-primary"-->
+              <!--                    :value="option.value"-->
+              <!--                    :label="option.label"-->
+              <!--                    :key="option.label"-->
+              <!--                  ></el-option>-->
+              <!--                </el-select>-->
+              <!--              </div>-->
               <div v-show="activeSell || typeSaleWithTenant" class="col-md-6">
                 <div class="row">
                   <div class="col-md-12">
@@ -521,21 +611,21 @@
                             v-model="radios.tax"
                             value="1"
                             :inline="true"
-                          >ผู้ซื้อ</p-radio
+                            >ผู้ซื้อ</p-radio
                           >
                           <p-radio
                             label="2"
                             v-model="radios.tax"
                             value="2"
                             :inline="true"
-                          >ผู้ขาย</p-radio
+                            >ผู้ขาย</p-radio
                           >
                           <p-radio
                             label="3"
                             v-model="radios.tax"
                             value="3"
                             :inline="true"
-                          >50/50</p-radio
+                            >50/50</p-radio
                           >
                         </div>
                       </div>
@@ -544,28 +634,30 @@
                   <div class="col-md-12">
                     <fieldset>
                       <div class="form-group">
-                        <label class="control-label">ภาษีธุรกิจเฉพาะ หรือ อากรแสตมป์</label>
+                        <label class="control-label"
+                          >ภาษีธุรกิจเฉพาะ หรือ อากรแสตมป์</label
+                        >
                         <div class="col-md-12">
                           <p-radio
                             label="1"
                             v-model="radios.businessTax"
                             value="1"
                             :inline="true"
-                          >ผู้ซื้อ</p-radio
+                            >ผู้ซื้อ</p-radio
                           >
                           <p-radio
                             label="2"
                             v-model="radios.businessTax"
                             value="2"
                             :inline="true"
-                          >ผู้ขาย</p-radio
+                            >ผู้ขาย</p-radio
                           >
                           <p-radio
                             label="3"
                             v-model="radios.businessTax"
                             value="3"
                             :inline="true"
-                          >50/50</p-radio
+                            >50/50</p-radio
                           >
                         </div>
                       </div>
@@ -581,21 +673,21 @@
                             v-model="radios.transferFee"
                             value="1"
                             :inline="true"
-                          >ผู้ซื้อ</p-radio
+                            >ผู้ซื้อ</p-radio
                           >
                           <p-radio
                             label="2"
                             v-model="radios.transferFee"
                             value="2"
                             :inline="true"
-                          >ผู้ขาย</p-radio
+                            >ผู้ขาย</p-radio
                           >
                           <p-radio
                             label="3"
                             v-model="radios.transferFee"
                             value="3"
                             :inline="true"
-                          >50/50</p-radio
+                            >50/50</p-radio
                           >
                         </div>
                       </div>
@@ -637,12 +729,9 @@
                 </el-select>
               </div>
               <div class="col-md-4 col-offset-8">
-                <fg-input
-                    label="วิว"
-                    v-model="scenery"
-                  ></fg-input>
+                <fg-input label="วิว" v-model="scenery"></fg-input>
               </div>
-              <div class="col-md-12">
+              <div class="col-md-12" v-show="propertySelects.select != 3">
                 <div>
                   <label>ส่วนกลาง</label>
                 </div>
@@ -662,7 +751,7 @@
                   ></el-option>
                 </el-select>
               </div>
-              <div class="col-md-12">
+              <div class="col-md-12" v-show="propertySelects.select != 3">
                 <div>
                   <label>คุณสมบัติพิเศษ</label>
                 </div>
@@ -809,6 +898,8 @@ import { mapGetters } from "vuex";
 import VuePreview from "vue-preview";
 import VueUploadMultipleImage from "vue-upload-multiple-image";
 import { ModelSelect } from "vue-search-select";
+import ThailandAutoComplete from "vue-thailand-address-autocomplete";
+import { Select } from "element-ui";
 
 // defalut install
 Vue.use(VuePreview);
@@ -822,6 +913,8 @@ export default {
     PSwitch,
     VueUploadMultipleImage,
     ModelSelect,
+    ThailandAutoComplete,
+    [Select.name]: Select,
   },
 
   created: function () {
@@ -865,16 +958,29 @@ export default {
         },
       }).then((resp) => {
         // console.log("listing : " + JSON.stringify(resp.data[0]));
+        let fullName = this.getUser.firstName + " " + this.getUser.lastName;
+        // console.log("fullName : " + fullName)
+
+        if (fullName == resp.data[0].createdBy) this.otherUserView = true;
+        else this.otherUserView = false;
+
         this.owner.listingCode = resp.data[0].owner.listingCode;
         this.owner.name = resp.data[0].owner.name;
         this.owner.line = resp.data[0].owner.line;
         this.owner.phone = resp.data[0].owner.phone;
         this.owner.name = resp.data[0].owner.name;
         this.owner.email = resp.data[0].owner.email;
+        this.owner.listingCodeManual = resp.data[0].owner.listingCodeManual;
+        this.owner.linkGoogleMap = resp.data[0].owner.linkGoogleMap;
         this.userSelects.select = resp.data[0].saleUser;
         this.project.id = resp.data[0].room.projectId;
-        this.typeRoles = resp.data[0].room.type;
-        this.radios.level = resp.data[0].room.level;
+        let types = resp.data[0].room.type.split(",");
+        (this.typeSale = types[0] == "true"),
+          (this.typeAvailable = types[1] == "true"),
+          (this.typeSaleWithTenant = types[2] == "true"),
+          (this.typeReSaleDownPayment = types[3] == "true"),
+          // this.typeRoles = resp.data[0].room.type;
+          (this.radios.level = resp.data[0].room.level);
         this.standardSelects.select = resp.data[0].room.standard;
         this.gradeSelects.select = resp.data[0].room.grade;
         this.toiletSelects.select = resp.data[0].room.toilet;
@@ -894,15 +1000,20 @@ export default {
         this.scenery = resp.data[0].room.scenery;
         this.featureSelects.select = resp.data[0].room.feature;
         // this.sellDetailSelects.select = resp.data[0].room.sellDetail;
-        this.radios.tax = resp.data[0].room.tax
-        this.radios.businessTax = resp.data[0].room.businessTax
-        this.radios.transferFee = resp.data[0].room.transferFee
+        this.radios.tax = resp.data[0].room.tax;
+        this.radios.businessTax = resp.data[0].room.businessTax;
+        this.radios.transferFee = resp.data[0].room.transferFee;
         this.tags.dynamicTags = resp.data[0].room.tags;
         this.room.description = resp.data[0].room.description;
         this.room.remark = resp.data[0].room.remark;
         this.exclusive = resp.data[0].room.exclusive;
         this.room.exclusiveDate = resp.data[0].room.exclusiveDate;
+        this.district = resp.data[0].room.district;
+        this.amphoe = resp.data[0].room.amphoe;
+        this.province = resp.data[0].room.province;
+        this.zipcode = resp.data[0].room.zipcode;
         this.fileList = resp.data[0].files;
+        this.room.widthLand = resp.data[0].room.widthLand;
         // for (let value of resp.data[0].files) {
         //   this.slides.push({
         //     id: value.id,
@@ -927,6 +1038,7 @@ export default {
 
   data() {
     return {
+      otherUserView: true,
       slides: [
         // {
         //   src:
@@ -949,6 +1061,8 @@ export default {
         //   h: 900,
         // },
       ],
+      summaryUnit: "",
+      unit: "ตร.ม.",
       fieldRequired: "The field is required",
       btnAction: "Add",
       activeCondo: false,
@@ -985,7 +1099,7 @@ export default {
         data: [
           { value: "1", label: "คอนโด" },
           { value: "2", label: "บ้าน" },
-          { value: "3", label: "ทาวน์เฮาส์" },
+          { value: "3", label: "ที่ดิน" },
         ],
       },
       userSelects: {
@@ -1068,6 +1182,7 @@ export default {
       directionSelects: {
         select: "",
         data: [
+          { value: "0", label: "เลือกทิศ" },
           { value: "1", label: "เหนือ" },
           { value: "2", label: "ตะวันตกเฉียงใต้" },
           { value: "3", label: "ตะวันตกเฉียงเหนือ" },
@@ -1112,6 +1227,10 @@ export default {
         inputVisible: true,
         inputValue: "",
       },
+      district: "",
+      amphoe: "",
+      province: "",
+      zipcode: "",
       owner: {
         listingCode: "",
         name: "",
@@ -1119,6 +1238,8 @@ export default {
         phone: "",
         name: "",
         email: "",
+        listingCodeManual: "",
+        linkGoogleMap: "",
       },
       room: {
         area: "",
@@ -1130,6 +1251,7 @@ export default {
         exclusiveDate: "",
         description: "",
         remark: "",
+        widthLand: "",
       },
       project: {
         id: "",
@@ -1142,6 +1264,7 @@ export default {
         price: "",
         zone: "",
       },
+      floorText: "อยู่ชั้น",
       floorSelects: {
         select: "",
         data: [],
@@ -1168,6 +1291,8 @@ export default {
         //     "https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100",
         // },
       ],
+      listingCodeDublicateMsg: "",
+      awaitingCheckListingCode: false,
     };
   },
 
@@ -1183,16 +1308,12 @@ export default {
       event ? (this.activeSell = true) : (this.activeSell = false);
     },
     typeAvailable: function (event) {
-      if(event)
-        this.activeRent = true
-      else if(!event && !this.typeSaleWithTenant)
-        this.activeRent = false
+      if (event) this.activeRent = true;
+      else if (!event && !this.typeSaleWithTenant) this.activeRent = false;
     },
     typeSaleWithTenant: function (event) {
-      if(event)
-        this.activeRent = true
-      else if(!event && !this.typeAvailable)
-        this.activeRent = false
+      if (event) this.activeRent = true;
+      else if (!event && !this.typeAvailable) this.activeRent = false;
     },
     exclusive: function (event) {
       if (event) this.exclusiveShow = true;
@@ -1214,9 +1335,68 @@ export default {
       //   if (data.value == listing[0].room.direction) return true;
       // })[0].label;
     },
+    "owner.listingCodeManual"(value, event) {
+      if (value != "") {
+        if (!this.awaitingCheckListingCode) {
+          setTimeout(() => {
+            let postBody = {
+              code: value,
+              id: this.$route.query.id,
+            };
+            const AXIOS = axios.create({
+              baseURL: process.env.VUE_APP_BACKEND_URL,
+            });
+            AXIOS.post(`api/listing/code`, postBody, {
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: "Bearer " + localStorage.getItem("token"),
+              },
+            })
+              .then((resp) => {
+                if (resp.data == null || resp.data.length == 0) {
+                  this.listingCodeDublicateMsg = "";
+                } else {
+                  this.listingCodeDublicateMsg =
+                    postBody.code + " มีการใช้งานแล้ว กรุณาเปลี่ยน";
+                }
+              })
+              .catch((err) => {
+                // console.log("err : " + JSON.stringify(err));
+                reject(err);
+              });
+            this.awaitingCheckListingCode = false;
+          }, 200);
+        }
+        this.awaitingCheckListingCode = true;
+      }
+    },
   },
 
   methods: {
+    select(address) {
+      this.district = address.district;
+      this.amphoe = address.amphoe;
+      this.province = address.province;
+      this.zipcode = address.zipcode;
+    },
+    calculatorUnit(num) {
+        console.log("debug 1");
+      if (
+        this.propertySelects.select == 2 ||
+        this.propertySelects.select == 3
+      ) {
+        var farmUnit = num / 400;
+        var jobUnit = (num % 400) / 100;
+        var vaUnit = (num % 400) % 100;
+        var text =
+          "ไร่ : " + farmUnit + " งาน : " + jobUnit + " ตารางวา : " + vaUnit;
+        this.summaryUnit = text;
+      } else {
+        var text = "";
+        this.summaryUnit = text;
+      }
+        console.log("debug 2");
+    },
     formatCurrency(num, text) {
       num = num + "";
       var number = num.replace(/[^\d.-]/g, "");
@@ -1271,10 +1451,6 @@ export default {
       this.project.floor = "";
       this.project.develop = "";
       this.project.address = "";
-      this.district = "";
-      this.amphoe = "";
-      this.province = "";
-      this.zipcode = "";
       this.project.floor = "";
       this.project.building = "";
       this.project.develop = "";
@@ -1307,10 +1483,6 @@ export default {
         this.project.develop = resp.data[0].develop;
         this.project.address = resp.data[0].address;
         this.project.zone = resp.data[0].zone;
-        this.district = resp.data[0].district;
-        this.amphoe = resp.data[0].amphoe;
-        this.province = resp.data[0].province;
-        this.zipcode = resp.data[0].zipcode;
         this.facilitySelects.selects = resp.data[0].facilities;
         this.propertySelects.select = resp.data[0].type;
         this.buildingSelects.data = resp.data[0].buildings.map((item) => {
@@ -1331,12 +1503,17 @@ export default {
       });
     },
     switchProperty(event) {
+      // console.log("event : " + event);
       if (event == 1) {
+        this.floorText = "อยู่ชั้น";
+        this.unit = "ตร.ม.";
         this.activeCondo = true;
-        this.activeHome = false;
+      } else if (event == 2) {
+        this.floorText = "จำนวนชั้น";
+        this.activeCondo = true;
       } else {
+        this.unit = "ตร.ว.";
         this.activeCondo = false;
-        this.activeHome = false;
       }
     },
     switchBuilding(event) {
@@ -1375,7 +1552,7 @@ export default {
         },
         params: paramsValue,
       }).then((resp) => {
-        console.log("getListingCode : " + JSON.stringify(resp.data));
+        // console.log("getListingCode : " + JSON.stringify(resp.data));
         this.owner.listingCode = resp.data;
       });
     },
@@ -1420,7 +1597,7 @@ export default {
       //   }
       // });
       // console.log("position : ", JSON.stringify(position));
-
+      var listSellDetail = ["ผู้ซื้อ", "ผู้ขาย", "50/50"];
       this.room.description =
         this.project.name +
         "\n" +
@@ -1456,9 +1633,8 @@ export default {
         "\n" +
         "*** " +
         this.room.price +
-        ".- (" +
-        sellDetail +
-        ") ****\n" +
+        "*** " +
+        "\n" +
         "_________________________________________\n" +
         "\n" +
         "เรานำเสนอบริการด้านอสังหาริมทรัพย์ ให้กับทุกๆท่านที่กำลังหาซื้อ หรือเช่า คอนโด, บ้าน, ทาวน์เฮ้าส์, ที่ดิน และอื่นๆอีกมากมาย หรือท่านอาจเป็นเจ้าของทรัพย์ ที่กำลังต้องการฝากขายหรือให้เช่าทรัพย์ของท่าน กับบริษัทที่มีความเชี่ยวชาญและเชื่อถือได้ เรายินดีให้บริการท่านเสมอ!\n" +
@@ -1493,15 +1669,15 @@ export default {
       this.tags.dynamicTags.splice(this.tags.dynamicTags.indexOf(tag), 1);
     },
     markIsPrimary(index, fileList) {
-      console.log("mark", JSON.stringify(index), JSON.stringify(fileList));
+      // console.log("mark", JSON.stringify(index), JSON.stringify(fileList));
       this.fileList = fileList;
-      console.log("mark fileList", JSON.stringify(this.fileList));
+      // console.log("mark fileList", JSON.stringify(this.fileList));
     },
     uploadImageSuccess(formData, index, fileList) {
       this.fullscreenLoading = true;
       // console.log("formData", JSON.stringify(formData));
       // console.log("index", JSON.stringify(index));
-      console.log("fileList[index]", JSON.stringify(fileList[index]));
+      // console.log("fileList[index]", JSON.stringify(fileList[index]));
       // console.log(
       //   "fileList[index].path : ",
       //   JSON.stringify(fileList[index].path)
@@ -1590,7 +1766,7 @@ export default {
             verticalAlign: "top",
             type: "success",
           });
-          console.log("deleted resp : " + JSON.stringify(resp.data));
+          // console.log("deleted resp : " + JSON.stringify(resp.data));
           this.fileList = fileList;
           // this.fileList = this.fileList.filter(function (item) {
           //   if (item.id == file.id) {
@@ -1599,8 +1775,8 @@ export default {
           //   return true;
           // });
         });
-        console.log("fileList afterRemove", JSON.stringify(fileList));
-        console.log("this.fileList ", JSON.stringify(this.fileList));
+        // console.log("fileList afterRemove", JSON.stringify(fileList));
+        // console.log("this.fileList ", JSON.stringify(this.fileList));
       } else {
       }
     },
@@ -1653,7 +1829,7 @@ export default {
           verticalAlign: "top",
           type: "success",
         });
-        console.log("deleted resp : " + JSON.stringify(resp.data));
+        // console.log("deleted resp : " + JSON.stringify(resp.data));
         this.fileList = fileList;
         this.slides = this.slides.filter(function (item) {
           if (item.id == file.id) {
@@ -1707,6 +1883,8 @@ export default {
         line: this.owner.line,
         phone: this.owner.phone,
         email: this.owner.email,
+        listingCodeManual: this.owner.listingCodeManual,
+        linkGoogleMap: this.owner.linkGoogleMap,
       };
       var num = this.room.price;
       var numberPrice = num.replace(/[^\d.-]/g, "");
@@ -1717,7 +1895,14 @@ export default {
       let room = {
         projectId: this.project.id,
         building: this.buildingSelects.select,
-        type: this.typeRoles,
+        type:
+          this.typeSale +
+          "," +
+          this.typeAvailable +
+          "," +
+          this.typeSaleWithTenant +
+          "," +
+          this.typeReSaleDownPayment,
         propertyType: this.propertySelects.select,
         level: this.radios.level,
         standard: this.standardSelects.select,
@@ -1746,6 +1931,11 @@ export default {
         remark: this.room.remark,
         exclusive: this.exclusive,
         exclusiveDate: this.room.exclusiveDate,
+        district: this.district,
+        amphoe: this.amphoe,
+        province: this.province,
+        zipcode: this.zipcode,
+        widthLand: this.room.widthLand,
       };
       let path = "api/listing/create";
       let postBody = {
@@ -1766,7 +1956,7 @@ export default {
           saleUser: this.userSelects.select,
         };
       }
-      console.log("postBody : " + JSON.stringify(postBody));
+      // console.log("postBody : " + JSON.stringify(postBody));
       const AXIOS = axios.create({
         baseURL: process.env.VUE_APP_BACKEND_URL,
       });
@@ -1797,13 +1987,13 @@ export default {
             verticalAlign: "top",
             type: "warning",
           });
-          console.log("err : " + JSON.stringify(err));
+          // console.log("err : " + JSON.stringify(err));
           reject(err);
         });
     },
 
     goToPageCreateProject: function () {
-      this.$confirm("ข้อมูลที่กรอกจะหายครับx ", "Warning", {
+      this.$confirm("ข้อมูลที่กรอกจะหายครับ", "Warning", {
         confirmButtonText: "OK",
         cancelButtonText: "Cancel",
         type: "warning",
