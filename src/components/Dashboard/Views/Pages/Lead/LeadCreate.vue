@@ -65,7 +65,6 @@
                 <fg-input
                   placeholder
                   label="phone"
-                  type="number"
                   v-model="lead.phone"
                 ></fg-input>
               </div>
@@ -162,7 +161,7 @@
               <div class="col-md-12">
                 <h5>LifeStyle (A)</h5>
               </div>
-              <div class="col-md-4">
+              <div class="col-md-12">
                 <div>
                   <label>Project</label>
                 </div>
@@ -275,7 +274,7 @@
               <div class="col-md-12">
                 <h5>Detail (B)</h5>
               </div>
-              <div class="col-md-4">
+              <div class="col-md-12">
                 <div>
                   <label>Project</label>
                 </div>
@@ -653,7 +652,7 @@
               <div class="col-md-12">
                 <h5>LifeStyle (A)</h5>
               </div>
-              <div class="col-md-4">
+              <div class="col-md-12">
                 <div>
                   <label>Project</label>
                 </div>
@@ -784,7 +783,7 @@
               <div class="col-md-12">
                 <h5>Detail (B)</h5>
               </div>
-              <div class="col-md-4">
+              <div class="col-md-12">
                 <div>
                   <label>Project</label>
                 </div>
@@ -1078,7 +1077,7 @@ export default {
       zipcode: "",
 
       radios: {
-        typePay: "1",
+        typePay: "0",
       },
       difficulty: 0,
       rapport: 0,
@@ -1341,7 +1340,7 @@ export default {
       })
         .then((resp) => {
           this.projects = resp.data;
-          // console.log("resp : " + JSON.stringify(this.tableData));
+          // console.log("resp getProjectList : " + JSON.stringify(this.tableData));
         })
         .catch((err) => {
           console.log("err : " + JSON.stringify(err));
@@ -1368,19 +1367,19 @@ export default {
           for (let value of resp.data) {
             this.listingSelects1.push({
               value: value.id,
-              text: value.projects[0].name + " - " + value.owner.listingCode,
+              text: value.projects[0].name + " - " + value.owner.listingCodeManual,
             });
             this.listingSelects2.push({
               value: value.id,
-              text: value.projects[0].name + " - " + value.owner.listingCode,
+              text: value.projects[0].name + " - " + value.owner.listingCodeManual,
             });
             this.listingSelects3.push({
               value: value.id,
-              text: value.projects[0].name + " - " + value.owner.listingCode,
+              text: value.projects[0].name + " - " + value.owner.listingCodeManual,
             });
             this.listingSelects4.push({
               value: value.id,
-              text: value.projects[0].name + " - " + value.owner.listingCode,
+              text: value.projects[0].name + " - " + value.owner.listingCodeManual,
             });
           }
           this.listingSelects1.push({

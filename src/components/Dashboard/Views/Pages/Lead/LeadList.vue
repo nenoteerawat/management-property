@@ -1,6 +1,6 @@
 <template>
   <div class="row">
-    <div class="col-md-9">
+    <div class="col-md-12">
       <card>
         <div class="card-header">
           <div class="row">
@@ -92,12 +92,6 @@
                       {{ props.row.createdBy.username }}
                     </span>
                   </div>
-                  <div class="cell">
-                    <span>
-                      <i class="fa fa-clock-o" aria-hidden="true"></i>
-                      {{ props.row.createdDateTime }}
-                    </span>
-                  </div>
                 </template>
               </el-table-column>
               <el-table-column
@@ -149,15 +143,15 @@
         </div>
       </card>
     </div>
-    <div class="col-md-3">
+    <!-- <div class="col-md-3">
       <DailyBar />
-    </div>
+    </div> -->
   </div>
 </template>
 <script>
 import Vue from "vue";
 import PPagination from "src/components/UIComponents/Pagination.vue";
-import DailyBar from "../Daily/DailyBar";
+// import DailyBar from "../Daily/DailyBar";
 import { Card } from "src/components/UIComponents";
 import axios from "axios";
 import en from "element-ui/lib/locale/lang/en.js";
@@ -167,7 +161,6 @@ Vue.use({ locale: en });
 export default {
   components: {
     Card,
-    DailyBar,
     PPagination,
   },
 
