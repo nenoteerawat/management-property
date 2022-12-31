@@ -51,13 +51,13 @@
     "vuex-persistedstate": "^3.1.0"
   },
   "devDependencies": {
-    "@vue/cli-plugin-babel": "^4.3.1",
-    "@vue/cli-plugin-pwa": "^4.3.1",
+    "@vue/cli-plugin-babel": "^5.0.8",
+    "@vue/cli-plugin-pwa": "^5.0.8",
     "@vue/cli-plugin-vuex": "~4.5.0",
-    "@vue/cli-service": "^4.3.1",
+    "@vue/cli-service": "^5.0.8",
     "babel-plugin-component": "^1.1.1",
     "sass": "^1.49.0",
-    "sass-loader": "^8.0.2",
+    "sass-loader": "^13.2.0",
     "vue-cli-plugin-element": "~1.0.1",
     "vue-template-compiler": "^2.6.11"
   },
